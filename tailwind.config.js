@@ -78,14 +78,7 @@ const config = {
         '4/3': '4 / 3',
         '3/4': '3 / 4',
       },
-      // colors: {
-      //   background: 'rgb(243, 243, 243)',
-      //   foreground: '#1a1a1a',
-      //   primary: {
-      //     DEFAULT: '#f59e0b',
-      //     hover: '#d97706',
-      //   },
-      // },
+
       fontFamily: {
         sans: ['var(--font-funnel-sans)'],
         mono: ['var(--font-mono)'],

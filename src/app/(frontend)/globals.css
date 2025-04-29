@@ -2,13 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #fefde7;
-  --foreground: #1a1a1a;
-  --accent: #f59e0b;
-  --accent-hover: #d97706;
-}
-
 @layer base {
   body {
     background-color: var(--background);
