@@ -1,7 +1,7 @@
+export { Labels } from './Labels'
 export { Lists } from './Lists'
 export { Media } from './Media'
 export { default as OtherProjects } from './OtherProjects'
 export { default as ProductDesigns } from './ProductDesigns'
 export { default as ProductFiles } from './ProductFiles'
-export { Labels } from './Labels'
 export { Users } from './Users'

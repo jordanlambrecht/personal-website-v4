@@ -13,7 +13,7 @@ export default async function ProductDesignPage() {
     collection: 'product-designs',
     limit: 100,
     sort: '-datePublished', // Sort by date initially
-    where: { status: { equals: 'published' } }, // Ensure only published are fetched
+    where: { _status: { equals: 'published' } }, // Ensure only published are fetched
     depth: 1, // Ensure image is populated
   })
 

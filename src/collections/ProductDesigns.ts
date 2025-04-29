@@ -47,7 +47,7 @@ export const ProductDesigns: CollectionConfig = {
   admin: {
     useAsTitle: 'title',
     // --- Add projectType to default columns if desired ---
-    defaultColumns: ['title', 'projectType', 'status', 'updatedAt'],
+    defaultColumns: ['title', 'projectType', '_status', 'updatedAt'],
   },
   versions: {
     drafts: {
@@ -60,10 +60,23 @@ export const ProductDesigns: CollectionConfig = {
   access: {
     read: () => true,
   },
-  // --- Add the collection hook ---
   hooks: {
     beforeChange: [ensureProductDesignProjectType],
+    beforeValidate: [
+      ({ data }) => {
+        // Auto-generate slug from title if not provided
+        if (!data.slug && data?.title) {
+          data.slug = data.title
+            .toLowerCase()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+        }
+        return data
+      },
+    ],
   },
+
   fields: [
     {
       type: 'tabs',
@@ -169,7 +182,30 @@ export const ProductDesigns: CollectionConfig = {
         },
       ],
     },
-
+    {
+      name: 'visibility',
+      type: 'group',
+      label: 'Visibility',
+      admin: {
+        position: 'sidebar',
+      },
+      fields: [
+        {
+          name: 'visibility-home',
+          type: 'checkbox',
+          label: 'Home Page',
+          defaultValue: true,
+          index: true,
+        },
+        {
+          name: 'visibility-collection-page',
+          type: 'checkbox',
+          label: 'Collection Page',
+          defaultValue: true,
+          index: true,
+        },
+      ],
+    },
     {
       type: 'collapsible',
       label: 'Links & Such',
@@ -247,10 +283,6 @@ export const ProductDesigns: CollectionConfig = {
         readOnly: true, // Make it read-only in the admin UI
         position: 'sidebar', // Place it in the sidebar
         description: 'Automatically assigned to the "Product Design" type.',
-        // --- Optionally add a Cell component if needed for list view ---
-        // components: {
-        //   Cell: './components/payload/ProjectTypeCell.tsx', // #file:ProjectTypeCell.tsx
-        // },
       },
     },
 
@@ -263,21 +295,6 @@ export const ProductDesigns: CollectionConfig = {
         },
         position: 'sidebar',
       },
-    },
-
-    {
-      name: 'status',
-      label: 'Status',
-      type: 'select',
-      admin: {
-        position: 'sidebar',
-      },
-      options: [
-        { label: 'Published', value: 'published' },
-        { label: 'Draft', value: 'draft' },
-      ],
-      required: true,
-      defaultValue: 'draft',
     },
     {
       name: 'tags',
@@ -298,21 +315,6 @@ export const ProductDesigns: CollectionConfig = {
       admin: {
         position: 'sidebar',
         description: 'URL-friendly version of the title (auto-generated if left blank)',
-      },
-      hooks: {
-        beforeValidate: [
-          ({ value, data }) => {
-            // Auto-generate slug from title if not provided
-            if (!value && data?.title) {
-              return data.title
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-            }
-            return value
-          },
-        ],
       },
     },
   ],

@@ -25,7 +25,7 @@ export const OtherProjects: CollectionConfig = {
   slug: 'other-projects',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['title', 'projectType', 'status', 'updatedAt'],
+    defaultColumns: ['title', 'projectType', '_status', 'updatedAt'],
   },
   versions: {
     drafts: {
@@ -168,6 +168,30 @@ export const OtherProjects: CollectionConfig = {
       ],
     },
     {
+      name: 'visibility',
+      type: 'group',
+      label: 'Visibility',
+      admin: {
+        position: 'sidebar',
+      },
+      fields: [
+        {
+          name: 'visibility-home',
+          type: 'checkbox',
+          label: 'Home Page',
+          defaultValue: true,
+          index: true,
+        },
+        {
+          name: 'visibility-collection-page',
+          type: 'checkbox',
+          label: 'Collection Page',
+          defaultValue: true,
+          index: true,
+        },
+      ],
+    },
+    {
       name: 'projectLabel',
       label: 'Project Label',
       type: 'relationship',
@@ -230,20 +254,7 @@ export const OtherProjects: CollectionConfig = {
         position: 'sidebar',
       },
     },
-    {
-      name: 'status',
-      label: 'Status',
-      type: 'select',
-      admin: {
-        position: 'sidebar',
-      },
-      options: [
-        { label: 'Published', value: 'published' },
-        { label: 'Draft', value: 'draft' },
-      ],
-      required: true,
-      defaultValue: 'draft',
-    },
+
     {
       name: 'tags',
       type: 'array',

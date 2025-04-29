@@ -160,6 +160,30 @@ export const Lists: CollectionConfig = {
       },
     },
     {
+      name: 'visibility',
+      type: 'group',
+      label: 'Visibility',
+      admin: {
+        position: 'sidebar',
+      },
+      fields: [
+        {
+          name: 'visibility-home',
+          type: 'checkbox',
+          label: 'Home Page',
+          defaultValue: true,
+          index: true,
+        },
+        {
+          name: 'visibility-collection-page',
+          type: 'checkbox',
+          label: 'Collection Page',
+          defaultValue: true,
+          index: true,
+        },
+      ],
+    },
+    {
       name: 'projectType',
       type: 'relationship',
       relationTo: 'labels',

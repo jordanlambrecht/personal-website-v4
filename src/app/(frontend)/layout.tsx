@@ -26,8 +26,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <head>
         <PlausibleAnalytics />
       </head>
-      <body>
-        <div className="flex min-h-screen flex-col bg-[#fefde7]">
+      <body className="bg-background">
+        <div className="flex flex-col min-h-screen ">
           <Navbar />
 
           <main className="container flex flex-col justify-start flex-grow w-full md:pt-16 max-w-7xl">
