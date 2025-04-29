@@ -1,4 +1,4 @@
-// /src/components/ui/icons/index.tsx
+// src/components/ui/icons/index.tsx
 
 import { IconSvgProps } from '@/types'
 
