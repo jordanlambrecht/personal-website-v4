@@ -8,7 +8,6 @@ import { PinIcon } from 'lucide-react'
 import Link from 'next/link'
 
 export default async function ProductDesignPage() {
-  // Fetch designs, sorting only by datePublished initially via Payload
   const productDesignsData = await getDocuments<ProductDesign>({
     collection: 'product-design',
     limit: 100,
@@ -17,7 +16,7 @@ export default async function ProductDesignPage() {
       _status: { equals: 'published' },
       'visibility.visibility-collection-page': { equals: true },
     },
-    depth: 1,
+    depth: 2,
   })
 
   // --- Manually sort the array after fetching ---
@@ -59,14 +58,29 @@ export default async function ProductDesignPage() {
               <Skeleton className="absolute inset-0 w-full h-full" />
 
               {design.image && typeof design.image !== 'number' && design.image.url ? (
-                <Image
-                  src={design.image.url}
-                  alt={design.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  unoptimized={true} //leave this since images are animated
-                  className="relative z-10 object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                />
+                design.image.mimeType === 'video/webm' ? (
+                  <video
+                    src={design.image.url}
+                    width={design.image.width || undefined}
+                    height={design.image.height || undefined}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    className="relative z-10 object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <Image
+                    src={design.image.url}
+                    alt={design.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    unoptimized={true} //leave this since images are animated
+                    className="relative z-10 object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                  />
+                )
               ) : (
                 <div className="relative z-10 flex items-center justify-center w-full h-full bg-gray-100">
                   {' '}

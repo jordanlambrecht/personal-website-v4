@@ -101,14 +101,29 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
             <Skeleton className="absolute inset-0 w-full h-full" />
             {/* Actual Image or Fallback */}
             {image && image.url ? (
-              <Image
-                src={image.url}
-                alt={design.title}
-                width={image.width}
-                height={image.height}
-                unoptimized={true}
-                className="relative z-10 object-cover w-full h-full" // Added relative and z-10
-              />
+              image.mimeType === 'video/webm' ? (
+                <video
+                  src={image.url}
+                  width={image.width || undefined} // Use dimensions from media if available
+                  height={image.height || undefined}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline // Important for mobile browsers
+                  className="relative z-10 object-cover w-full h-full" // Match existing Image classes
+                >
+                  Your browser does not support the video tag.
+                </video>
+              ) : (
+                <Image
+                  src={image.url}
+                  alt={design.title}
+                  width={image.width}
+                  height={image.height}
+                  unoptimized={true}
+                  className="relative z-10 object-cover w-full h-full" // Added relative and z-10
+                />
+              )
             ) : (
               <div className="relative z-10 flex items-center justify-center w-full h-full">
                 <p className="text-lg text-muted-foreground">No image available.</p>{' '}

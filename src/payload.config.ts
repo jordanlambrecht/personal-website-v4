@@ -1,5 +1,5 @@
 // src/payload.config.ts
-
+// import { s3Storage } from '@payloadcms/storage-s3'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -15,6 +15,7 @@ import {
   Media,
   ProductDesigns,
   OtherProjects,
+  // MediaWithPrefix,
   ProductFiles,
   Labels,
 } from '@/collections'
@@ -46,6 +47,20 @@ export default buildConfig({
   sharp,
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
+    // s3Storage({
+    //   collections: {
+    //     media: true,
+    //   },
+    //   bucket: process.env.S3_BUCKET,
+    //   config: {
+    //     credentials: {
+    //       accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    //       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    //     },
+    //     region: process.env.S3_REGION,
+    //     // ... Other S3 configuration
+    //   },
+    // }),
     seoPlugin({
       collections: ['product-design', 'lists', 'other-projects'],
       uploadsCollection: 'media',
