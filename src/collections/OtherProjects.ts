@@ -234,6 +234,16 @@ export const OtherProjects: CollectionConfig = {
           type: 'checkbox',
           label: 'Pin this project',
         },
+        {
+          name: 'favorited',
+          label: 'Favorited',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            position: 'sidebar',
+            description: 'Mark this list as a favorite.',
+          },
+        },
 
         {
           name: 'projectLink',
