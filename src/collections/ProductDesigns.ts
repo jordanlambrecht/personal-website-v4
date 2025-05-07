@@ -9,7 +9,6 @@ import {
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
 
-// --- Define the hook specifically for Product Designs ---
 const ensureProductDesignProjectType: CollectionBeforeChangeHook = async ({
   data,
   req,
@@ -18,8 +17,8 @@ const ensureProductDesignProjectType: CollectionBeforeChangeHook = async ({
   try {
     // --- Query the 'labels' collection ---
     const designTypeQuery = await req.payload.find({
-      collection: 'labels', // Correct collection slug
-      where: { name: { equals: 'Product Design' } }, // Find the specific label
+      collection: 'labels',
+      where: { name: { equals: 'Product Design' } },
       limit: 1,
       depth: 0,
     })
@@ -27,26 +26,20 @@ const ensureProductDesignProjectType: CollectionBeforeChangeHook = async ({
     if (designTypeQuery.docs.length > 0) {
       const designTypeId = designTypeQuery.docs[0].id
       console.log(`(${operation}) Setting projectType for Product Design to ID: ${designTypeId}`)
-      data.projectType = designTypeId // Assign the ID to the data object
+      data.projectType = designTypeId
     } else {
-      // Log an error if the specific label is missing
       console.error('CRITICAL: Could not find Label named "Product Design". Please create it.')
-      // Optionally throw an error to prevent saving if this label is mandatory
-      // throw new Error('Cannot save Product Design without "Product Design" Label defined.');
     }
   } catch (error) {
     console.error(`(${operation}) Error fetching/setting Label "Product Design":`, error)
-    // Optionally throw an error
-    // throw new Error('Failed to set Label for Product Design.');
   }
   return data // Return the modified data
 }
 
 export const ProductDesigns: CollectionConfig = {
-  slug: 'product-designs',
+  slug: 'product-design',
   admin: {
     useAsTitle: 'title',
-    // --- Add projectType to default columns if desired ---
     defaultColumns: ['title', 'projectType', '_status', 'updatedAt'],
   },
   versions: {
@@ -84,7 +77,6 @@ export const ProductDesigns: CollectionConfig = {
         {
           label: 'Content',
           fields: [
-            // required
             {
               name: 'title',
               type: 'text',
@@ -224,6 +216,16 @@ export const ProductDesigns: CollectionConfig = {
           },
         },
         {
+          name: 'favorited',
+          label: 'Favorited',
+          type: 'checkbox',
+          defaultValue: false,
+          admin: {
+            position: 'sidebar',
+            description: 'Mark this list as a favorite.',
+          },
+        },
+        {
           type: 'checkbox',
           name: 'enableMakerworld',
           label: 'Enable Makerworld',
@@ -272,16 +274,16 @@ export const ProductDesigns: CollectionConfig = {
       ],
     },
 
-    // --- Add the projectType field ---
+    // --- projectType field ---
     {
       name: 'projectType',
-      label: 'Project Type', // Label for the admin UI
+      label: 'Project Type',
       type: 'relationship',
-      relationTo: 'labels', // Relates to the Labels collection
-      required: false, // Keep false unless hook failure should block save
+      relationTo: 'labels',
+      required: false, // Keep false
       admin: {
-        readOnly: true, // Make it read-only in the admin UI
-        position: 'sidebar', // Place it in the sidebar
+        readOnly: true,
+        position: 'sidebar',
         description: 'Automatically assigned to the "Product Design" type.',
       },
     },
