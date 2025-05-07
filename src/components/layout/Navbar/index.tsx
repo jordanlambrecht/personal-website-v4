@@ -7,9 +7,17 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/utils/helpers'
 import { Logo } from './Logo'
-import { siteConfig } from '@/lib/config/site'
 
-export function Navbar() {
+interface NavItem {
+  href: string
+  label: string
+}
+
+interface NavbarProps {
+  navItems: NavItem[]
+}
+
+export function Navbar({ navItems }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
 
@@ -46,13 +54,13 @@ export function Navbar() {
 
         {/* Desktop navigation */}
         <div className="hidden md:flex md:items-center md:gap-x-8">
-          {siteConfig.navItems.map((item) => (
+          {navItems.map((item) => (
             <Link
-              key={item.path}
-              href={item.path}
+              key={item.href}
+              href={item.href}
               className={cn(
                 'text-lg transition-colors hover:text-amber-600',
-                isActive(item.path) ? 'font-medium text-amber-600' : 'text-gray-700',
+                isActive(item.href) ? 'font-medium text-amber-600' : 'text-gray-700',
               )}
             >
               {item.label}
@@ -65,13 +73,13 @@ export function Navbar() {
       {isMenuOpen && (
         <div className="md:hidden" id="mobile-menu">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-            {siteConfig.navItems.map((item) => (
+            {navItems.map((item) => (
               <Link
-                key={item.path}
-                href={item.path}
+                key={item.href}
+                href={item.href}
                 className={cn(
                   'block px-3 py-2 rounded-md text-base font-medium transition-colors',
-                  isActive(item.path)
+                  isActive(item.href)
                     ? 'bg-amber-50 text-amber-600'
                     : 'text-gray-700 hover:bg-gray-100 hover:text-amber-600',
                 )}

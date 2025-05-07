@@ -19,6 +19,7 @@ import {
   ProductFiles,
   Labels,
 } from '@/collections'
+import { SiteSettings } from '@/globals/SiteSettings'
 import { getServerSideURL } from '@/utils/getURL'
 
 const filename = fileURLToPath(import.meta.url)
@@ -31,6 +32,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+  globals: [SiteSettings],
   collections: [ProductDesigns, OtherProjects, ProductFiles, Users, Media, Lists, Labels],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

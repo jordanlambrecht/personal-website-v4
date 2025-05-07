@@ -1,14 +1,24 @@
 'use server'
 
 import { getDocuments } from '@/utils/getDocument'
-import { ProductDesign, OtherProject, List, Label } from '@/payload-types'
+import { ProductDesign, OtherProject, List, Label, SiteSetting } from '@/payload-types' // Add SiteSettings
 import type { UnifiedProject } from '@/app/(frontend)/page'
+import { getPayload } from 'payload' // Import getPayload
+import config from '@payload-config' // Import your payload config
 
 export async function fetchProjectsPage(
   page: number = 1,
   limit: number = 20,
   labelId?: number | null,
 ): Promise<{ projects: UnifiedProject[]; hasNextPage: boolean }> {
+  const payload = await getPayload({ config }) // Get payload instance
+
+  // Fetch Site Settings
+  const siteSettings = (await payload.findGlobal({
+    slug: 'siteSettings',
+    depth: 0,
+  })) as SiteSetting // Cast to SiteSettings type
+
   const labelsData = await getDocuments<Label>({ collection: 'labels', limit: 100, depth: 0 })
   const allLabels = labelsData.docs
   const listLabel = allLabels.find((l) => l.name === 'List')
@@ -27,26 +37,32 @@ export async function fetchProjectsPage(
     'visibility.visibility-home': { equals: true },
   }
 
-  let fetchPD = true
-  let fetchOP = true
-  let fetchL = true
+  let fetchPD = siteSettings.showProductDesigns // Initialize with site settings
+  let fetchOP = siteSettings.showOtherProjects
+  let fetchL = siteSettings.showLists
+
   if (labelId) {
     const selectedLabelInfo = allLabels.find((l) => l.id === labelId)
     if (listLabel && selectedLabelInfo?.id === listLabel.id) {
-      fetchPD = false
+      fetchPD = false // Only fetch lists if list label is selected
       fetchOP = false
-      fetchL = true
+      fetchL = siteSettings.showLists // Still respect global toggle for lists
     } else if (productDesignLabel && selectedLabelInfo?.id === productDesignLabel.id) {
       productDesignWhere['projectType'] = { equals: labelId }
-      fetchPD = true
+      fetchPD = siteSettings.showProductDesigns // Respect global toggle
       fetchOP = false
       fetchL = false
     } else {
       otherProjectWhere['projectLabel'] = { equals: labelId }
       fetchPD = false
-      fetchOP = true
+      fetchOP = siteSettings.showOtherProjects // Respect global toggle
       fetchL = false
     }
+  } else {
+    // If no labelId, respect global toggles for all
+    fetchPD = siteSettings.showProductDesigns
+    fetchOP = siteSettings.showOtherProjects
+    fetchL = siteSettings.showLists
   }
 
   // Note: This fetches all matching documents up to largeLimit and sorts/paginates in memory.

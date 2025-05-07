@@ -7,6 +7,9 @@ import { Footer } from '@/components/layout/Footer'
 import './globals.css'
 import { fontFunnelSans, fontFunnelDisplay, fontQuasimoda, fontMono, fontFields } from '@/lib/fonts'
 import { PlausibleAnalytics } from '@/components/analytics/Plausible'
+import { getPayload } from 'payload'
+import config from '@payload-config'
+import { SiteSetting } from '@/payload-types'
 
 export const metadata: Metadata = {
   title: 'Jordan Lambrecht - Designer & Developer',
@@ -17,19 +20,48 @@ export const metadata: Metadata = {
   },
 }
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export interface NavItem {
+  href: string
+  label: string
+}
+
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const payload = await getPayload({ config })
+
+  const siteSettings = (await payload.findGlobal({
+    slug: 'siteSettings',
+    depth: 0,
+  })) as SiteSetting
+
+  const allPossibleNavItems: (NavItem & { setting?: keyof SiteSetting })[] = [
+    { href: '/pixel-bakery', label: 'Pixel Bakery', setting: 'showPixelBakery' },
+    { href: '/product-design', label: 'Product Design', setting: 'showProductDesigns' },
+    { href: '/other-projects', label: 'Other Projects', setting: 'showOtherProjects' },
+    { href: '/lists', label: 'Lists', setting: 'showLists' },
+  ]
+
+  const navItems: NavItem[] = allPossibleNavItems
+    .filter((item) => {
+      // If a setting key is defined for the item, check its value in siteSettings
+      // Otherwise, always include the item
+      if (item.setting) {
+        return siteSettings[item.setting]
+      }
+      return true
+    })
+    .map(({ href, label }) => ({ href, label }))
   return (
     <html
       lang="en"
       className={`${fontFunnelSans.variable} ${fontQuasimoda.variable} ${fontFunnelDisplay.variable} ${fontFields.variable} ${fontMono.variable} antialiased`}
+      suppressHydrationWarning
     >
       <head>
         <PlausibleAnalytics />
       </head>
       <body className="bg-primary">
         <div className="flex flex-col min-h-screen ">
-          <Navbar />
-
+          <Navbar navItems={navItems} />
           <main className="container flex flex-col justify-start w-full grow md:pt-16 max-w-7xl">
             {children}
           </main>

@@ -1,9 +1,9 @@
 // /src/app/(frontend)/page.tsx
 
 import Image from 'next/image'
-
+// import { notFound } from 'next/navigation'
 import { getDocuments } from '@/utils/getDocument'
-import { Label, Media } from '@/payload-types'
+import { Label, Media, SiteSetting } from '@/payload-types'
 import ComeFindMe from '@/components/home/ComeFindMe'
 import Distractions from '@/components/home/Distractions'
 import IntroText from '@/components/home/IntroText'
@@ -32,6 +32,12 @@ export interface UnifiedProject {
 
 export default async function HomePage() {
   const payload = await getPayload({ config })
+
+  // --- Fetch Site Settings ---
+  const siteSettings = (await payload.findGlobal({
+    slug: 'siteSettings',
+    depth: 0,
+  })) as SiteSetting
 
   // --- Fetch Labels ---
   const labelsData = await getDocuments<Label>({
@@ -65,11 +71,8 @@ export default async function HomePage() {
       )
 
       try {
-        // Count Product Designs
-        // *** Should we query PD only if isProductDesignLabel is true, OR always if not isListLabel? ***
-        // Let's query if the label *could* be a PD label for now.
-        if (isProductDesignLabel) {
-          // Query only if it's the designated PD label
+        if (isProductDesignLabel && siteSettings.showProductDesigns) {
+          // Check global toggle
           console.log(`  Querying Product Designs for projectType: ${labelId}`)
           const pdCountData = await payload.find({
             collection: 'product-design',
@@ -80,16 +83,11 @@ export default async function HomePage() {
           console.log(`  Product Designs count: ${pdCountData.totalDocs}`)
           count += pdCountData.totalDocs
         } else {
-          console.log(
-            `  Skipping Product Designs query (Label is not the designated 'Product Design' label).`,
-          )
+          console.log(`  Skipping Product Designs query (Label is not PD or PD section disabled).`)
         }
 
-        // Count Other Projects
-        // *** Should we query OP only if isOtherLabel is true? ***
-        // Let's query if the label *could* be an OP label.
-        if (isOtherLabel) {
-          // Query only if it's not List and not PD label
+        if (isOtherLabel && siteSettings.showOtherProjects) {
+          // Check global toggle
           console.log(`  Querying Other Projects for projectLabel: ${labelId}`)
           const opCountData = await payload.find({
             collection: 'other-projects',
@@ -101,13 +99,12 @@ export default async function HomePage() {
           count += opCountData.totalDocs
         } else {
           console.log(
-            `  Skipping Other Projects query (Label is List or designated 'Product Design' label).`,
+            `  Skipping Other Projects query (Label is not Other or OP section disabled).`,
           )
         }
 
-        // Count Lists
-        if (isListLabel) {
-          // Query only if it's the designated List label
+        if (isListLabel && siteSettings.showLists) {
+          // Check global toggle
           console.log(`  Querying Lists count`)
           const listCountData = await payload.find({
             collection: 'lists',
@@ -118,7 +115,7 @@ export default async function HomePage() {
           console.log(`  Lists count: ${listCountData.totalDocs}`)
           count += listCountData.totalDocs
         } else {
-          console.log(`  Skipping Lists query (Label is not the designated 'List' label).`)
+          console.log(`  Skipping Lists query (Label is not List or Lists section disabled).`)
         }
 
         console.log(`  ==> Final calculated count for "${labelName}": ${count}`)
