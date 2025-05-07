@@ -20,13 +20,11 @@ export const Gallery: React.FC<GalleryProps> = ({ images, heroImage }) => {
   const [open, setOpen] = useState(false) // Control lightbox visibility
   const [index, setIndex] = useState(0) // Track which image is active
 
-  // Create slides array for the lightbox
   const slides = images.map((image) => ({
     src: image.url,
     alt: image.alt || 'Image',
   }))
 
-  // Add hero image to the beginning if it exists
   if (heroImage && heroImage.url) {
     slides.unshift({ src: heroImage.url, alt: heroImage.alt })
   }
@@ -39,9 +37,9 @@ export const Gallery: React.FC<GalleryProps> = ({ images, heroImage }) => {
           <div
             key={idx + 1}
             role="button"
-            className="relative aspect-[4/3] cursor-pointer overflow-hidden rounded-md"
+            className="relative aspect-4/3 cursor-pointer overflow-hidden rounded-md"
             onClick={() => {
-              setIndex(idx + 1) // +1 because hero image is at index 0
+              setIndex(idx + 1)
               setOpen(true)
             }}
           >

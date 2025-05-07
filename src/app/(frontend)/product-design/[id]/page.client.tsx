@@ -39,9 +39,9 @@ export const Gallery: React.FC<GalleryProps> = ({ images, heroImage }) => {
           <div
             key={idx + 1}
             role="button"
-            className="relative aspect-[4/3] cursor-pointer overflow-hidden rounded-md"
+            className="relative aspect-4/3 cursor-pointer overflow-hidden rounded-md"
             onClick={() => {
-              setIndex(idx + 1) // +1 because hero image is at index 0
+              setIndex(idx + 1)
               setOpen(true)
             }}
           >

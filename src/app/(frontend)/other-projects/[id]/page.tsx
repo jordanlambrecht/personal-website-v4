@@ -1,4 +1,5 @@
 // /src/app/(frontend)/other-projects/[id]/page.tsx
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { getPayload } from 'payload'
@@ -20,7 +21,7 @@ export default async function OtherProjectDetailPage(props: { params: Promise<{ 
     .findByID({
       collection: 'other-projects',
       id,
-      depth: 1, // Load media references
+      depth: 1,
     })
     .catch(() => null)
 
@@ -43,7 +44,7 @@ export default async function OtherProjectDetailPage(props: { params: Promise<{ 
 
   const image = project.image && typeof project.image !== 'number' ? project.image : null
 
-  // Handle extra images for gallery - now using hasMany format
+  // Handle extra images for gallery
   const extraImages =
     project.extraImages && Array.isArray(project.extraImages)
       ? (project.extraImages
@@ -61,20 +62,6 @@ export default async function OtherProjectDetailPage(props: { params: Promise<{ 
       ? { url: image.url, alt: image.alt || project.title || 'Project image' }
       : null
 
-  // Function to determine the label
-  const getProjectTypeLabel = (type: string) => {
-    switch (type) {
-      case 'github':
-        return 'GitHub Repository'
-      case 'woodworking':
-        return 'Woodworking Project'
-      case 'pottery':
-        return 'Pottery Project'
-      default:
-        return 'Other Project'
-    }
-  }
-
   return (
     <article className="flex flex-col gap-y-3 md:gap-y-6">
       <div className="w-full">
@@ -85,7 +72,7 @@ export default async function OtherProjectDetailPage(props: { params: Promise<{ 
         {/* CONTENT */}
         <div className="w-full md:w-3/5">
           {image && image.url ? (
-            <div className="mb-4 overflow-hidden rounded aspect-4/3">
+            <div className="mb-4 overflow-hidden rounded-sm aspect-4/3">
               <Image
                 src={image.url}
                 alt={project.title}
@@ -95,7 +82,7 @@ export default async function OtherProjectDetailPage(props: { params: Promise<{ 
               />
             </div>
           ) : (
-            <div className="flex items-center justify-center bg-gray-100 rounded h-96">
+            <div className="flex items-center justify-center bg-gray-100 rounded-sm h-96">
               <p className="text-gray-400">No image available</p>
             </div>
           )}
@@ -104,13 +91,15 @@ export default async function OtherProjectDetailPage(props: { params: Promise<{ 
         {/* RIGHT COLUMN */}
         <div className="flex flex-col justify-between w-full h-auto text-left md:w-2/5 md:gap-y-6">
           <div className="mb-4">
-            {project.projectType && (
-              <div className="mb-4">
-                <span className="px-3 py-1 text-sm text-blue-800 bg-blue-100 rounded-full">
-                  {getProjectTypeLabel(project.projectType)}
-                </span>
-              </div>
-            )}
+            {project.projectLabel &&
+              typeof project.projectLabel === 'object' &&
+              project.projectLabel.name && (
+                <div className="mb-4">
+                  <span className="px-3 py-1 text-sm text-blue-800 bg-blue-100 rounded-full">
+                    {project.projectLabel.name}
+                  </span>
+                </div>
+              )}
 
             {/* Show Rich Text if available, otherwise fallback to description */}
             {project.details ? (

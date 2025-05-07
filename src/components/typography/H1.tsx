@@ -6,12 +6,17 @@ import { cn } from '@/utils/helpers'
 interface H1Props extends HTMLAttributes<HTMLHeadingElement> {
   children: ReactNode
   className?: string
+  id?: string
 }
 
-const H1 = ({ children, className, ...props }: H1Props) => {
+const H1 = ({ children, className, id, ...props }: H1Props) => {
   return (
     <h1
-      className={cn('font-display text-4xl font-bold leading-tight mb-2 md:mb-4', className)}
+      id={id}
+      className={cn(
+        'text-secondary-dark-400 font-display text-4xl font-bold leading-tight mb-2 md:mb-4',
+        className,
+      )}
       {...props}
     >
       {children}

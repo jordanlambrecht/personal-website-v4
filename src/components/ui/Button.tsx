@@ -5,7 +5,7 @@ import { cn } from '@/utils/helpers'
 import { forwardRef } from 'react'
 
 const buttonVariants = cva(
-  'inline-flex flex-grow items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background duration-300 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed', // Base styles
+  'inline-flex grow items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background duration-300 transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed', // Base styles
   {
     variants: {
       variant: {

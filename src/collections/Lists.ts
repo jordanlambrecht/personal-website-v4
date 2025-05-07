@@ -22,16 +22,16 @@ const ensureListProjectType: CollectionBeforeChangeHook = async ({ data, req, op
     if (listTypeQuery.docs.length > 0) {
       const listTypeId = listTypeQuery.docs[0].id
       console.log(`(${operation}) Setting projectType for List to ID: ${listTypeId}`)
-      data.projectType = listTypeId // Modify the data object
+      data.projectType = listTypeId
     } else {
       console.error('CRITICAL: Could not find ProjectType named "List". Please create it.')
-      // Consider throwing error if "List" type is mandatory
+      throw new Error('ProjectType "List" is mandatory.')
     }
   } catch (error) {
     console.error(`(${operation}) Error fetching/setting ProjectType "List":`, error)
-    // Consider throwing error if setting type is mandatory
+    throw new Error('Failed to set ProjectType due to an error.')
   }
-  return data // Return the modified data object
+  return data
 }
 
 export const Lists: CollectionConfig = {
@@ -141,14 +141,13 @@ export const Lists: CollectionConfig = {
     {
       name: 'pinned',
       label: 'Pinned',
-      type: 'checkbox', // Use checkbox for a boolean toggle
-      defaultValue: false, // Default to not pinned
+      type: 'checkbox',
+      defaultValue: false,
       admin: {
-        position: 'sidebar', // Place it in the sidebar with status/date
-        description: 'Pinned lists may be displayed more prominently.', // Optional help text
+        position: 'sidebar',
+        description: 'Pinned lists may be displayed more prominently.',
       },
     },
-    // --- Add Favorited Field ---
     {
       name: 'favorited',
       label: 'Favorited',
@@ -187,21 +186,12 @@ export const Lists: CollectionConfig = {
       name: 'projectType',
       type: 'relationship',
       relationTo: 'labels',
-      required: false, // Keep false unless hook failure should block save
-      // filterOptions removed - not needed for readOnly field set by hook
+      required: false, // Keep false
       admin: {
         readOnly: true,
         position: 'sidebar',
         description: 'Automatically assigned to the "List" project type.',
       },
-      // --- REMOVE Field Level Hook ---
-      // hooks: {
-      //   beforeChange: [ensureListProjectType],
-      // },
     },
-    // ... commented out status field ...
   ],
-  // --- Remove upload: true unless this is an upload collection ---
-  // upload: true,
 }
-// Remove 'as CollectionConfig' if not needed

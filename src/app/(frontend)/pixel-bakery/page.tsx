@@ -9,7 +9,6 @@ export default function PixelBakeryPage() {
 
       <div className="mb-10">
         <div className="relative mb-8 overflow-hidden bg-gray-100 rounded-lg h-80">
-          {/* Replace with Pixel Bakery image */}
           <div className="flex items-center justify-center h-full">
             <p className="text-gray-400">Pixel Bakery Image</p>
           </div>
@@ -48,15 +47,15 @@ export default function PixelBakeryPage() {
       <div className="mb-10">
         <h2 className="mb-4 text-2xl font-bold">Services</h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-sm">
+          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-xs">
             <h3 className="mb-2 text-xl font-semibold">Animation</h3>
             <p className="text-gray-700">2D and 3D animation services for brands and businesses.</p>
           </div>
-          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-sm">
+          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-xs">
             <h3 className="mb-2 text-xl font-semibold">Design</h3>
             <p className="text-gray-700">Branding, print, and digital design that stands out.</p>
           </div>
-          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-sm">
+          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-xs">
             <h3 className="mb-2 text-xl font-semibold">Development</h3>
             <p className="text-gray-700">Web development and interactive experiences.</p>
           </div>

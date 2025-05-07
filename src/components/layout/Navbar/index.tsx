@@ -24,7 +24,7 @@ export function Navbar() {
     <nav className="container px-4 py-6 mx-auto ">
       <div className="flex items-center justify-between mt-12 mb-12">
         {/* Logo */}
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Link href="/" className="block">
             <Logo />
           </Link>
@@ -35,7 +35,7 @@ export function Navbar() {
           <button
             type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="inline-flex items-center justify-center p-2 text-gray-700 rounded-md hover:text-amber-600 hover:bg-amber-50 focus:outline-none"
+            className="inline-flex items-center justify-center p-2 text-gray-700 rounded-md hover:text-amber-600 hover:bg-amber-50 focus:outline-hidden"
             aria-controls="mobile-menu"
             aria-expanded="false"
           >

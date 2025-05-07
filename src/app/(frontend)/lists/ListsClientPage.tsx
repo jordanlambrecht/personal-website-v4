@@ -7,7 +7,6 @@ import autoAnimate from '@formkit/auto-animate'
 import { cn } from '@/utils/helpers'
 import { H2 } from '@typography'
 
-// Define props expected from the server component
 interface ListsClientPageProps {
   initialLists: List[]
   availableYears: number[]
@@ -15,17 +14,16 @@ interface ListsClientPageProps {
 
 export function ListsClientPage({ initialLists, availableYears }: ListsClientPageProps) {
   const [selectedYears, setSelectedYears] = useState<number[]>([])
-  const [showFavoritesOnly, setShowFavoritesOnly] = useState<boolean>(false) // State for favorites filter
-  const parentRef = useRef<HTMLDivElement>(null) // Create a ref for the list container
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState<boolean>(false)
+  const parentRef = useRef<HTMLDivElement>(null)
 
-  // Initialize auto-animate on the container
+  // Initialize auto-animate
   useEffect(() => {
     if (parentRef.current) {
       autoAnimate(parentRef.current)
     }
-  }, [parentRef]) // Re-run if ref changes (shouldn't, but good practice)
+  }, [parentRef])
 
-  // --- Updated Filter Handlers ---
   const handleYearToggle = (year: number) => {
     setShowFavoritesOnly(false) // Disable favorites filter when a year is clicked
     setSelectedYears((prevYears) =>
@@ -38,16 +36,12 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
     setSelectedYears([]) // Clear selected years
   }
 
-  // --- Modified handleSelectFavorites ---
   const handleSelectFavorites = () => {
     // Toggle the showFavoritesOnly state
     setShowFavoritesOnly((prevShowFavorites) => !prevShowFavorites)
-    // Always clear year selection when toggling favorites
     setSelectedYears([])
   }
-  // --- End Modified handleSelectFavorites ---
 
-  // --- Updated Filtered List Logic ---
   const filteredLists = useMemo(() => {
     if (showFavoritesOnly) {
       // If showing only favorites, filter by the favorited flag
@@ -64,7 +58,6 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
       })
     }
   }, [initialLists, selectedYears, showFavoritesOnly]) // Add showFavoritesOnly to dependency array
-  // --- End Updated Filtered List Logic ---
 
   return (
     <div className="w-full">
@@ -102,7 +95,6 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
         <button
           onClick={handleSelectFavorites}
           className={`p-2 duration-300 transition-colors flex items-center${
-            // Added flex/gap
             showFavoritesOnly ? ' text-black' : ''
           }`}
         >
@@ -115,17 +107,12 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                 : 'text-gray-400 hover:text-yellow-400 hover:fill-yellow-400',
             )}
           />{' '}
-          {/* Added Star Icon */}
         </button>
         {/* --- End Favorites Button --- */}
       </div>
 
       {/* List Display */}
-      {/* Add ref and min-h-* to the list container */}
-      <div
-        ref={parentRef} // Attach the ref here
-        className="mt-8 flex flex-wrap gap-6 min-h-[150px]" // Added min-h-[150px] (adjust as needed)
-      >
+      <div ref={parentRef} className="mt-8 flex flex-wrap gap-6 min-h-[150px]">
         {/* Render items only if there are filtered results */}
         {filteredLists.length > 0
           ? filteredLists.map((list) => (
@@ -137,7 +124,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                   transition-colors duration-200
                   min-w-[150px] max-w-xs relative
                   ${
-                    list.favorited // Conditional background and border
+                    list.favorited
                       ? 'bg-black border-black hover:bg-gray-800'
                       : 'border-black hover:bg-amber-50'
                   }
@@ -150,7 +137,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                   )}
                   {list.pinned && (
                     <PinIcon
-                      className={`h-4 w-4 flex-shrink-0 ${
+                      className={`h-4 w-4 shrink-0 ${
                         list.favorited ? 'text-gray-400' : 'text-black fill-black' // Adjust pin color on dark bg
                       }`}
                     />
@@ -160,13 +147,10 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
 
                 {/* --- Emoji and Title --- */}
                 <div className="flex items-start w-full pr-8 mt-4 mb-1 gap-x-4">
-                  {' '}
-                  {/* Added pr-8 to avoid overlap with icons */}
-                  {/* Emoji in grey box */}
                   {list.emoji && (
                     <div
                       className={cn(
-                        'flex-shrink-0 mt-1  rounded w-8 h-8 flex items-center justify-center',
+                        'shrink-0 mt-1  rounded-sm w-8 h-8 flex items-center justify-center',
                         list.favorited ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-100',
                       )}
                     >
@@ -174,8 +158,8 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                     </div>
                   )}
                   <H2
-                    className={`  hyphens-auto flex-grow ${
-                      list.favorited ? 'text-white' : 'text-black' // Conditional text color
+                    className={`  hyphens-auto grow ${
+                      list.favorited ? 'text-white' : 'text-black'
                     }`}
                   >
                     {list.title}
@@ -186,11 +170,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                 {/* Container for Date and Arrow */}
                 <div className="flex items-end justify-between w-full mt-auto gap-x-2 ">
                   {list.publishedAt && (
-                    <p
-                      className={`text-xs ${
-                        list.favorited ? 'text-gray-400' : 'text-gray-500' // Conditional date color
-                      }`}
-                    >
+                    <p className={`text-xs ${list.favorited ? 'text-gray-400' : 'text-gray-500'}`}>
                       {new Date(list.publishedAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -198,10 +178,10 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                       })}
                     </p>
                   )}
-                  {!list.publishedAt && <div className="flex-grow"></div>}
+                  {!list.publishedAt && <div className="grow"></div>}
                   <span
-                    className={`text-lg md:text-xl font-bold flex-shrink-0 ${
-                      list.favorited ? 'text-gray-400' : 'text-black' // Conditional arrow color
+                    className={`text-lg md:text-xl font-bold shrink-0 ${
+                      list.favorited ? 'text-gray-400' : 'text-black'
                     }`}
                   >
                     →
@@ -209,14 +189,10 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                 </div>
               </Link>
             ))
-          : // This message is now outside the animated container if empty
-            null}
+          : null}
       </div>
-      {/* Display "No lists found" message separately */}
       {filteredLists.length === 0 && (
         <p className="mt-8 text-center text-gray-500 min-h-[150px] flex items-center justify-center">
-          {' '}
-          {/* Added padding/centering */}
           No lists found
           {showFavoritesOnly
             ? ' marked as favorite.'

@@ -13,7 +13,7 @@ export default async function OtherProjectsPage() {
     collection: 'other-projects',
     limit: 100,
     sort: '-dateCompleted',
-    depth: 1, // Load media references
+    depth: 1,
   })
 
   return (
@@ -46,14 +46,22 @@ export default async function OtherProjectsPage() {
                 </div>
               )}
 
-              <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/70 to-transparent group-hover:opacity-100">
+              <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-linear-to-t from-black/70 to-transparent group-hover:opacity-100">
                 <div className="absolute bottom-0 left-0 p-4 text-white">
                   <h3 className="mb-1 text-lg font-bold">{project.title}</h3>
-                  {project.projectType && (
-                    <span className="inline-block px-2 py-1 mb-2 text-xs text-white rounded-full bg-amber-500">
-                      {project.projectType}
-                    </span>
-                  )}
+                  {project.projectLabel &&
+                    typeof project.projectLabel === 'object' &&
+                    project.projectLabel.name && (
+                      <span
+                        className="inline-block px-2 py-1 mb-2 text-xs rounded-full"
+                        style={{
+                          backgroundColor: project.projectLabel.bgColor || '#f59e0b',
+                          color: project.projectLabel.textColor || '#ffffff',
+                        }}
+                      >
+                        {project.projectLabel.name}
+                      </span>
+                    )}
                   {project.dateCompleted && (
                     <p className="text-sm text-gray-200">
                       {new Date(project.dateCompleted).toLocaleDateString()}
