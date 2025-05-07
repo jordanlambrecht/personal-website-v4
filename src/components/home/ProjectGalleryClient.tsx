@@ -233,13 +233,28 @@ export function ProjectGalleryClient({
                   {typeof project.image === 'object' &&
                   project.image !== null &&
                   project.image.url ? (
-                    <Image
-                      src={project.image.url}
-                      alt={project.image.alt || project.title}
-                      fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-                      className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
-                    />
+                    project.image.mimeType === 'video/webm' ? ( // Check for WebM
+                      <video
+                        src={project.image.url}
+                        width={(project.image.width as number) || undefined}
+                        height={(project.image.height as number) || undefined}
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                      >
+                        Your browser does not support the video tag.
+                      </video>
+                    ) : (
+                      <Image
+                        src={project.image.url}
+                        alt={project.image.alt || project.title}
+                        fill
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
+                        className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                      />
+                    )
                   ) : (
                     <div
                       className="flex items-center justify-center w-full h-full p-4 transition-opacity duration-300 bg-opacity-100 hover:bg-opacity-50 bg-blue"
