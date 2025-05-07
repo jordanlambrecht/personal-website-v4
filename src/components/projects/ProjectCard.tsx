@@ -6,7 +6,7 @@ import { formatDate, truncateText } from '@/utils/helpers'
 
 interface ProjectCardProps {
   project: Project
-  collection: 'product-designs' | 'other-projects'
+  collection: 'product-design' | 'other-projects'
 }
 
 export function ProjectCard({ project, collection }: ProjectCardProps) {
@@ -16,7 +16,7 @@ export function ProjectCard({ project, collection }: ProjectCardProps) {
   const projectUrl = `/${collection}/${id}`
 
   return (
-    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-sm transition-all hover:shadow-md">
+    <div className="overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xs transition-all hover:shadow-md">
       <div className="relative h-48 w-full overflow-hidden">
         {imageUrl ? (
           <Image
@@ -56,7 +56,7 @@ export function ProjectCard({ project, collection }: ProjectCardProps) {
         <div className="mt-4 flex space-x-3">
           <Link
             href={projectUrl}
-            className="inline-flex items-center rounded bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="inline-flex items-center rounded-sm bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
             View Details
           </Link>
@@ -66,7 +66,7 @@ export function ProjectCard({ project, collection }: ProjectCardProps) {
               href={link}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center rounded border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="inline-flex items-center rounded-sm border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
             >
               Visit Project
             </a>

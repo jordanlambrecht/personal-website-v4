@@ -18,7 +18,7 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
   const { id } = params
 
   const design = await getDocument<ProductDesign>({
-    collection: 'product-designs',
+    collection: 'product-design',
     id,
     depth: 2,
   })
@@ -42,7 +42,6 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
 
   const image = design.image && typeof design.image !== 'number' ? design.image : null
 
-  // Handle extra images for gallery - now using hasMany format
   const extraImages =
     design.extraImages && Array.isArray(design.extraImages)
       ? (design.extraImages
@@ -97,10 +96,8 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
         {/* CONTENT */}
         <div className="w-full md:w-3/5">
           {/* Container for Image and Skeleton */}
-          <div className="relative mb-4 overflow-hidden rounded aspect-4/3 bg-muted">
-            {' '}
-            {/* Added relative and bg-muted */}
-            {/* Skeleton Loader - positioned behind */}
+          <div className="relative mb-4 overflow-hidden rounded-sm aspect-4/3 bg-muted">
+            {/* Skeleton Loader*/}
             <Skeleton className="absolute inset-0 w-full h-full" />
             {/* Actual Image or Fallback */}
             {image && image.url ? (
@@ -110,15 +107,11 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
                 width={image.width}
                 height={image.height}
                 unoptimized={true}
-                // Use 'priority' for LCP image, 'fill' might be better if aspect ratio is fixed
                 className="relative z-10 object-cover w-full h-full" // Added relative and z-10
               />
             ) : (
               <div className="relative z-10 flex items-center justify-center w-full h-full">
-                {' '}
-                {/* Added relative and z-10 */}
                 <p className="text-lg text-muted-foreground">No image available.</p>{' '}
-                {/* Use theme color */}
               </div>
             )}
           </div>
@@ -134,7 +127,6 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
               ← Back to all product designs
             </Link>
             <H1 className="hidden md:block">{design.title}</H1>
-            {/* Show Rich Text if available, otherwise fallback to description */}
             {design.details ? (
               <div className="mb-4 prose">
                 <RichText data={design.details} />
@@ -142,7 +134,7 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
             ) : design.description ? (
               <P className="text-gray-700 whitespace-pre-line">{design.description}</P>
             ) : null}
-            {/* 
+            {/*
             {design.datePublished && (
               <p className="mt-4 text-gray-600">Published on {formatDate(design.datePublished)}</p>
             )} */}

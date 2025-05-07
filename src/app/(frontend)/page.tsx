@@ -3,39 +3,37 @@
 import Image from 'next/image'
 
 import { getDocuments } from '@/utils/getDocument'
-import { Label } from '@/payload-types' // Add List and Label
+import { Label, Media } from '@/payload-types'
 import ComeFindMe from '@/components/home/ComeFindMe'
 import Distractions from '@/components/home/Distractions'
 import IntroText from '@/components/home/IntroText'
-import { ProjectGalleryClient } from '@/components/home/ProjectGalleryClient' // Import the new client component
-import { fetchProjectsPage } from '@/app/actions' // Import the server action
-
+import { ProjectGalleryClient } from '@/components/home/ProjectGalleryClient'
+import { fetchProjectsPage } from '@/app/actions'
 import { H2 } from '@typography'
-import { getPayload } from 'payload' // Or your utility to get payload
-import config from '@payload-config' // Adjust path if needed
+import { getPayload } from 'payload'
+import config from '@payload-config'
 
-const PAGE_SIZE = 20 // Define how many items per page
+const PAGE_SIZE = 20
 
-// Define an extended Label type to include the count
 interface LabelWithCount extends Label {
   projectCount: number
 }
 
-// --- Ensure this type definition exists and is exported ---
-export type UnifiedProject = {
+export interface UnifiedProject {
   id: string | number
   title: string
-  image: { url?: string; alt?: string } | null // Or your specific image type
-  collectionSlug: 'product-designs' | 'other-projects' | 'lists'
-  date?: string | null // Ensure date is optional or always present
+  image: Media | null
+  collectionSlug: 'product-design' | 'other-projects' | 'lists'
+  date?: string | null
   pinned?: boolean | null
-  label: Label | null // Use the Label type from payload-types
+  favorited?: boolean | null
+  label: Label | null
 }
 
 export default async function HomePage() {
-  const payload = await getPayload({ config }) // Get payload instance
+  const payload = await getPayload({ config })
 
-  // --- Fetch Labels (Still need all for filtering) ---
+  // --- Fetch Labels ---
   const labelsData = await getDocuments<Label>({
     collection: 'labels',
     limit: 100,
@@ -51,13 +49,13 @@ export default async function HomePage() {
     allLabelsRaw.map(async (label): Promise<LabelWithCount> => {
       let count = 0
       const labelId = label.id
-      const labelName = label.name // For logging
+      const labelName = label.name
 
       // Determine which collections *could* have this label based on its definition
       const isListLabel = listLabelDefinition && label.id === listLabelDefinition.id
       const isProductDesignLabel =
         productDesignLabelDefinition && label.id === productDesignLabelDefinition.id
-      // *** IMPORTANT: Re-evaluate this logic. Does it correctly capture all cases? ***
+      // *** TODO: Need to re-evaluate this logic later***
       // If a label can apply to BOTH PD and OP, this logic is flawed.
       const isOtherLabel = !isListLabel && !isProductDesignLabel
 
@@ -74,7 +72,7 @@ export default async function HomePage() {
           // Query only if it's the designated PD label
           console.log(`  Querying Product Designs for projectType: ${labelId}`)
           const pdCountData = await payload.find({
-            collection: 'product-designs',
+            collection: 'product-design',
             where: { _status: { equals: 'published' }, projectType: { equals: labelId } },
             limit: 0,
             depth: 0,
@@ -142,10 +140,8 @@ export default async function HomePage() {
   )
 
   // --- Fetch Initial Page (Page 1) using the Server Action logic ---
-  // We can call the action directly on the server too
   const initialData = await fetchProjectsPage(1, PAGE_SIZE) // Fetch page 1
 
-  // --- Render Page ---
   return (
     <div className="max-w-7xl">
       {/* --- Intro Section --- */}
@@ -172,13 +168,12 @@ export default async function HomePage() {
         <Distractions className="col-span-4" />
       </section>
 
-      {/* --- Recent Projects Section (Using Client Component) --- */}
+      {/* --- Recent Projects --- */}
       <div className="mt-16">
         <H2>Recent Projects</H2>
-        {/* Pass initial projects, labels with projects, and pagination info */}
         <ProjectGalleryClient
           initialProjects={initialData.projects}
-          availableLabels={availableLabelsWithProjects} // Pass labels that have projects
+          availableLabels={availableLabelsWithProjects}
           initialHasMore={initialData.hasNextPage}
           pageSize={PAGE_SIZE}
         />

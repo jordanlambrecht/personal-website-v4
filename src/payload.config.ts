@@ -47,13 +47,13 @@ export default buildConfig({
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
     seoPlugin({
-      collections: ['product-designs', 'lists', 'other-projects'],
+      collections: ['product-design', 'lists', 'other-projects'],
       uploadsCollection: 'media',
       generateTitle: ({ doc }) => `Website.com — ${doc.title}`,
       generateDescription: ({ doc }) => doc.excerpt,
     }),
     redirectsPlugin({
-      collections: ['product-designs', 'lists', 'other-projects'],
+      collections: ['product-design', 'lists', 'other-projects'],
       overrides: {
         fields: ({ defaultFields }) => {
           return [

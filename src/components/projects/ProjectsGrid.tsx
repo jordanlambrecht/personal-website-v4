@@ -4,7 +4,7 @@ import { ProjectCard } from './ProjectCard'
 
 interface ProjectsGridProps {
   projects: Project[]
-  collection: 'product-designs' | 'other-projects'
+  collection: 'product-design' | 'other-projects'
 }
 
 export function ProjectsGrid({ projects, collection }: ProjectsGridProps) {

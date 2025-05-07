@@ -6,7 +6,7 @@ import { Project } from '@/types'
 
 type ProjectCardProps = {
   project: Project
-  collection: 'product-designs' | 'other-projects'
+  collection: 'product-design' | 'other-projects'
   size?: 'small' | 'medium' | 'large'
   date?: Date | string | undefined
   dateCompleted?: Date | string | undefined
@@ -17,7 +17,6 @@ function ProjectCard({ project, collection, size = 'medium' }: ProjectCardProps)
 
   const baseUrl = `/${collection}/${id}`
 
-  // Determine card dimensions based on size
   const sizeClasses = {
     small: 'h-48',
     medium: 'h-64',
@@ -43,7 +42,7 @@ function ProjectCard({ project, collection, size = 'medium' }: ProjectCardProps)
         </div>
       )}
 
-      <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-t from-black/70 to-transparent group-hover:opacity-100">
+      <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-linear-to-t from-black/70 to-transparent group-hover:opacity-100">
         <div className="absolute bottom-0 left-0 p-4 text-white">
           <h3 className="mb-1 text-lg font-bold">{title}</h3>
           {date && <p className="text-sm text-gray-200">{formatDate(date)}</p>}
@@ -55,7 +54,7 @@ function ProjectCard({ project, collection, size = 'medium' }: ProjectCardProps)
 
 type ProjectsGalleryProps = {
   projects: Project[]
-  collection: 'product-designs' | 'other-projects'
+  collection: 'product-design' | 'other-projects'
   showHeading?: boolean
   headingLink?: string
 }
@@ -74,8 +73,7 @@ export function ProjectsGallery({
     )
   }
 
-  // Get collection title
-  const collectionTitle = collection === 'product-designs' ? 'Product Designs' : 'Other Projects'
+  const collectionTitle = collection === 'product-design' ? 'Product Designs' : 'Other Projects'
 
   return (
     <div className="mb-12">

@@ -8,7 +8,7 @@ export async function GET() {
     const payload = await getPayload({ config })
 
     const productDesigns = await payload.find({
-      collection: 'product-designs',
+      collection: 'product-design',
       limit: 100,
       sort: '-datePublished',
     })
