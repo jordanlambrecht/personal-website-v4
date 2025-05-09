@@ -1,162 +1,84 @@
 @import 'tailwindcss';
+@import './colors.css';
 
+/* COLORS: https://www.realtimecolors.com/?colors=282A36-f3f3f3-ff4400-E4FF1A-404E4D&fonts=Inter-Inter */
 /* @config '../../../tailwind.config.js'; */
-
-@theme {
-  --color-foreground-50: oklch(95.82%, 0.004, 271.37);
-  --color-foreground-100: oklch(91.68%, 0.008, 278.63);
-  --color-foreground-200: oklch(83.13%, 0.018, 275.59);
-  --color-foreground-300: oklch(74.2%, 0.029, 278.9);
-  --color-foreground-400: oklch(65.24%, 0.039, 278.37);
-  --color-foreground: oklch(55.95%, 0.052, 276.57);
-  --color-foreground-600: oklch(47.78%, 0.042, 277.85);
-  --color-foreground-700: oklch(39.21%, 0.034, 278.04);
-  --color-foreground-800: oklch(30.38%, 0.024, 274.74);
-  --color-foreground-900: oklch(20.63%, 0.012, 277.83);
-  --color-foreground-950: oklch(15.15%, 0.009, 285.34);
-
-  --color-background-50: oklch(96.12%, 0, 89.88);
-  --color-background-100: oklch(92.49%, 0, 89.88);
-  --color-background-200: oklch(84.52%, 0, 89.88);
-  --color-background-300: oklch(76.68%, 0, 89.88);
-  --color-background-400: oklch(68.3%, 0, 89.88);
-  --color-background: oklch(59.99%, 0, 89.88);
-  --color-background-600: oklch(51.03%, 0, 89.88);
-  --color-background-700: oklch(42.02%, 0, 89.88);
-  --color-background-800: oklch(32.11%, 0, 89.88);
-  --color-background-900: oklch(21.78%, 0, 89.88);
-  --color-background-950: oklch(15.91%, 0, 89.88);
-
-  --color-primary-50: oklch(95.63%, 0.023, 41.41);
-  --color-primary-100: oklch(91.57%, 0.046, 41.83);
-  --color-primary-200: oklch(83.43%, 0.096, 40.62);
-  --color-primary-300: oklch(76.26%, 0.147, 40.59);
-  --color-primary-400: oklch(70.18%, 0.195, 38.96);
-  --color-primary: oklch(65.93%, 0.23, 35.22);
-  --color-primary-600: oklch(55.87%, 0.193, 35.57);
-  --color-primary-700: oklch(45.44%, 0.154, 36.49);
-  --color-primary-800: oklch(34.28%, 0.112, 37.89);
-  --color-primary-900: oklch(22.34%, 0.066, 43.47);
-  --color-primary-950: oklch(15.85%, 0.041, 51.82);
-
-  --color-secondary-50: oklch(99.09%, 0.034, 112.36);
-  --color-secondary-100: oklch(98.29%, 0.066, 113.07);
-  --color-secondary-200: oklch(96.91%, 0.126, 114.27);
-  --color-secondary-300: oklch(95.84%, 0.175, 115.45);
-  --color-secondary-400: oklch(95.06%, 0.207, 116.67);
-  --color-secondary: oklch(94.51%, 0.22, 118.03);
-  --color-secondary-600: oklch(79.91%, 0.186, 117.93);
-  --color-secondary-700: oklch(64.6%, 0.15, 117.77);
-  --color-secondary-800: oklch(48.31%, 0.112, 117.47);
-  --color-secondary-900: oklch(30.47%, 0.07, 116.69);
-  --color-secondary-950: oklch(20.74%, 0.047, 115.45);
-
-  --color-accent-50: oklch(96.46%, 0.003, 174.48);
-  --color-accent-100: oklch(92.72%, 0.005, 197.06);
-  --color-accent-200: oklch(85.27%, 0.011, 189.78);
-  --color-accent-300: oklch(77.7%, 0.017, 191.98);
-  --color-accent-400: oklch(69.96%, 0.023, 192.97);
-  --color-accent: oklch(62.03%, 0.029, 193.44);
-  --color-accent-600: oklch(52.86%, 0.024, 192.72);
-  --color-accent-700: oklch(43.27%, 0.019, 191.51);
-  --color-accent-800: oklch(33.11%, 0.014, 189.13);
-  --color-accent-900: oklch(22.13%, 0.007, 196.62);
-  --color-accent-950: oklch(16.04%, 0.005, 196.68);
-
-  --color-foreground-dark-50: oklch(15.15%, 0.009, 285.34);
-  --color-foreground-dark-100: oklch(20.63%, 0.012, 277.83);
-  --color-foreground-dark-200: oklch(30.38%, 0.024, 274.74);
-  --color-foreground-dark-300: oklch(39.21%, 0.034, 278.04);
-  --color-foreground-dark-400: oklch(47.78%, 0.042, 277.85);
-  --color-foreground-dark: oklch(55.95%, 0.052, 276.57);
-  --color-foreground-dark-600: oklch(65.24%, 0.039, 278.37);
-  --color-foreground-dark-700: oklch(74.2%, 0.029, 278.9);
-  --color-foreground-dark-800: oklch(83.13%, 0.018, 275.59);
-  --color-foreground-dark-900: oklch(91.68%, 0.008, 278.63);
-  --color-foreground-dark-950: oklch(95.82%, 0.004, 271.37);
-
-  --color-background-dark-50: oklch(15.91%, 0, 89.88);
-  --color-background-dark-100: oklch(21.78%, 0, 89.88);
-  --color-background-dark-200: oklch(32.11%, 0, 89.88);
-  --color-background-dark-300: oklch(42.02%, 0, 89.88);
-  --color-background-dark-400: oklch(51.03%, 0, 89.88);
-  --color-background-dark: oklch(59.99%, 0, 89.88);
-  --color-background-dark-600: oklch(68.3%, 0, 89.88);
-  --color-background-dark-700: oklch(76.68%, 0, 89.88);
-  --color-background-dark-800: oklch(84.52%, 0, 89.88);
-  --color-background-dark-900: oklch(92.49%, 0, 89.88);
-  --color-background-dark-950: oklch(96.12%, 0, 89.88);
-
-  --color-primary-dark-50: oklch(15.85%, 0.041, 51.82);
-  --color-primary-dark-100: oklch(22.34%, 0.066, 43.47);
-  --color-primary-dark-200: oklch(34.28%, 0.112, 37.89);
-  --color-primary-dark-300: oklch(45.44%, 0.154, 36.49);
-  --color-primary-dark-400: oklch(55.87%, 0.193, 35.57);
-  --color-primary-dark: oklch(65.93%, 0.23, 35.22);
-  --color-primary-dark-600: oklch(70.18%, 0.195, 38.96);
-  --color-primary-dark-700: oklch(76.26%, 0.147, 40.59);
-  --color-primary-dark-800: oklch(83.43%, 0.096, 40.62);
-  --color-primary-dark-900: oklch(91.57%, 0.046, 41.83);
-  --color-primary-dark-950: oklch(95.63%, 0.023, 41.41);
-
-  --color-secondary-dark-50: oklch(20.74%, 0.047, 115.45);
-  --color-secondary-dark-100: oklch(30.47%, 0.07, 116.69);
-  --color-secondary-dark-200: oklch(48.31%, 0.112, 117.47);
-  --color-secondary-dark-300: oklch(64.6%, 0.15, 117.77);
-  --color-secondary-dark-400: oklch(79.91%, 0.186, 117.93);
-  --color-secondary-dark: oklch(94.51%, 0.22, 118.03);
-  --color-secondary-dark-600: oklch(95.06%, 0.207, 116.67);
-  --color-secondary-dark-700: oklch(95.84%, 0.175, 115.45);
-  --color-secondary-dark-800: oklch(96.91%, 0.126, 114.27);
-  --color-secondary-dark-900: oklch(98.29%, 0.066, 113.07);
-  --color-secondary-dark-950: oklch(99.09%, 0.034, 112.36);
-
-  --color-accent-dark-50: oklch(16.04%, 0.005, 196.68);
-  --color-accent-dark-100: oklch(22.13%, 0.007, 196.62);
-  --color-accent-dark-200: oklch(33.11%, 0.014, 189.13);
-  --color-accent-dark-300: oklch(43.27%, 0.019, 191.51);
-  --color-accent-dark-400: oklch(52.86%, 0.024, 192.72);
-  --color-accent-dark: oklch(62.03%, 0.029, 193.44);
-  --color-accent-dark-600: oklch(69.96%, 0.023, 192.97);
-  --color-accent-dark-700: oklch(77.7%, 0.017, 191.98);
-  --color-accent-dark-800: oklch(85.27%, 0.011, 189.78);
-  --color-accent-dark-900: oklch(92.72%, 0.005, 197.06);
-  --color-accent-dark-950: oklch(96.46%, 0.003, 174.48);
-}
-
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 @base {
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
+    /* Use themed border color */
+    border-color: var(--color-border-default, currentcolor);
   }
-  body {
+
+  /* body background and text color are now primarily handled by className in layout.tsx */
+  /* If you need to set them here, ensure they match or use the same CSS variables */
+  /* body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+  } */
+
+  /* Scrollbar Styles - apply to html for global effect and use themed variables */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) var(--color-bg-subtle); /* thumb and track color */
   }
+
+  html::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: var(--color-bg-subtle); /* Themed track color */
+    border-radius: 10px;
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background-color: var(--color-primary); /* Themed thumb color */
+    border-radius: 10px;
+    border: 2px solid var(--color-bg-subtle); /* Themed padding color */
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    /* Use a slightly darker shade of primary, ensure --color-orange-600 is suitable for both themes or create a specific hover var */
+    background-color: var(--color-orange-600);
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+
   p,
-  a,
   ul,
-  li {
+  li { /* 'a' is styled separately below */
     @apply text-sm;
+    color: var(--color-text-default); /* Use themed default text color */
   }
+
   a {
-    color: inherit;
+    @apply text-sm;
+    color: var(--color-primary); /* Links use primary color by default */
     text-decoration: none;
+    @apply transition-colors; /* Smooth transition for hover */
   }
   a:hover {
-    text-decoration: none;
-    /* color: var(--accent); */
+    /* Use a slightly darker/different shade of primary for hover */
+    color: var(--color-orange-600); /* Or var(--color-primary-hover) if you define it */
+    /* text-decoration: underline; /* Optional: add underline on hover */
   }
+
   h1,
   h2,
   h3,
   h4,
   h5,
   h6 {
-    font-weight: bold;
+    color: var(--color-text-default); /* Use themed default text color */
+    @apply font-bold;
   }
 }
 
@@ -187,6 +109,9 @@
     overflow: hidden;
     border-radius: 0.5rem;
     transition: transform 0.2s ease-in-out;
+    background-color: var(--color-bg-subtle); /* Use themed subtle background for cards */
+    /* Add a border that uses the themed border color */
+    border: 1px solid var(--color-border-default);
   }
 
   .project-card:hover {
@@ -205,11 +130,18 @@
     left: 0;
     right: 0;
     padding: 1rem;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-    color: white;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent); /* This gradient is dark */
+    color: var(--color-smoke-950); /* This is a very light color, good for contrast on the dark gradient */
     opacity: 0;
     transition: opacity 0.3s ease;
   }
+  /*
+    For .project-card-overlay in dark mode:
+    The current setup (dark gradient, very light text) should generally work well in both light and dark modes
+    because the overlay itself creates its own dark context for the text.
+    If --color-bg-subtle (card background) becomes very dark in dark mode, this overlay will still look consistent.
+    No specific .dark .project-card-overlay rule seems immediately necessary unless testing reveals issues.
+  */
 
   .project-card:hover .project-card-overlay {
     opacity: 1;
@@ -233,7 +165,7 @@
     }
     to {
       transform: scale(1);
-      opacity: 1;
+      opacity: 1);
     }
   }
 }

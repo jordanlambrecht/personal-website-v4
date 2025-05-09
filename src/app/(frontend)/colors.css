@@ -1,0 +1,122 @@
+@theme {
+  /* ----- BLACK COLORS (Darker shades for text, UI elements) ----- */
+  --color-black-100: oklch(0.2063 0.012 277.83deg);
+  --color-black-200: oklch(24.29% 0.03 283.91deg); /* Base for --color-black in light mode */
+  --color-black-300: oklch(0.3921 0.034 278.04deg);
+  --color-black-400: oklch(0.4778 0.042 277.85deg);
+  --color-black-500: oklch(0.5595 0.052 276.57deg);
+  --color-black-600: oklch(0.6524 0.039 278.37deg);
+  --color-black-700: oklch(0.742 0.029 278.9deg);
+  --color-black-800: oklch(0.8313 0.018 275.59deg);
+  --color-black-900: oklch(0.9168 0.008 278.63deg);
+  --color-black-950: oklch(0.9582 0.004 271.37deg);
+
+  /* ----- SMOKE COLORS (Lighter shades for backgrounds, UI elements) ----- */
+  --color-smoke-50: oklch(0.1591 0 89.88deg);
+  --color-smoke-100: oklch(0.2178 0 89.88deg);
+  --color-smoke-200: oklch(0.3211 0 89.88deg);
+  --color-smoke-300: oklch(0.4202 0 89.88deg);
+  --color-smoke-400: oklch(0.5103 0 89.88deg);
+  --color-smoke-500: oklch(0.5999 0 89.88deg);
+  --color-smoke-600: oklch(0.683 0 89.88deg);
+  --color-smoke-700: oklch(0.7668 0 89.88deg);
+  --color-smoke-800: oklch(0.8452 0 89.88deg);
+  --color-smoke-900: oklch(0.9249 0 89.88deg);
+  --color-smoke-950: oklch(0.9642 0 89.88deg); /* Base for --color-smoke in light mode */
+
+  /* ----- ORANGE COLORS (Primary) ----- */
+  --color-orange-50: oklch(0.1585 0.041 51.82deg);
+  --color-orange-100: oklch(0.2234 0.066 43.47deg);
+  --color-orange-200: oklch(0.3428 0.112 37.89deg);
+  --color-orange-300: oklch(0.4544 0.154 36.49deg);
+  --color-orange-400: oklch(0.5587 0.193 35.57deg);
+  --color-orange-500: oklch(0.6593 0.23 35.22deg); /* Base for --color-orange in light mode */
+  --color-orange-600: oklch(0.7018 0.195 38.96deg);
+  --color-orange-700: oklch(0.7626 0.147 40.59deg);
+  --color-orange-800: oklch(0.8343 0.096 40.62deg);
+  --color-orange-900: oklch(0.9157 0.046 41.83deg);
+  --color-orange-950: oklch(0.9563 0.023 41.41deg);
+
+  /* ----- LIME COLORS (Secondary) ----- */
+  --color-lime-50: oklch(0.2074 0.047 115.45deg);
+  --color-lime-100: oklch(0.3047 0.07 116.69deg);
+  --color-lime-200: oklch(0.4831 0.112 117.47deg);
+  --color-lime-300: oklch(0.646 0.15 117.77deg);
+  --color-lime-400: oklch(0.7991 0.186 117.93deg);
+  --color-lime-500: oklch(0.9476 0.216 117.33deg); /* Base for --color-lime in light mode */
+  --color-lime-600: oklch(0.9506 0.207 116.67deg);
+  --color-lime-700: oklch(0.9584 0.175 115.45deg);
+  --color-lime-800: oklch(0.9691 0.126 114.27deg);
+  --color-lime-900: oklch(0.9829 0.066 113.07deg);
+  --color-lime-950: oklch(0.9909 0.034 112.36deg);
+
+  /* ----- SPRUCE COLORS (Accent) ----- */
+  --color-spruce-50: oklch(0.1604 0.005 196.68deg);
+  --color-spruce-100: oklch(0.2213 0.007 196.62deg);
+  --color-spruce-200: oklch(0.3311 0.014 189.13deg);
+  --color-spruce-300: oklch(0.4114 0.018 191.17deg); /* Base for --color-spruce in light mode */
+  --color-spruce-400: oklch(0.5286 0.024 192.72deg);
+  --color-spruce-500: oklch(0.6203 0.029 193.44deg);
+  --color-spruce-600: oklch(0.6996 0.023 192.97deg);
+  --color-spruce-700: oklch(0.777 0.017 191.98deg);
+  --color-spruce-800: oklch(0.8527 0.011 189.78deg);
+  --color-spruce-900: oklch(0.9272 0.005 197.06deg);
+  --color-spruce-950: oklch(0.9646 0.003 174.48deg);
+
+  /*  --- NAMESPACE ALIASES --- */
+  --color-black: var(--color-black-200);
+  --color-smoke: var(--color-smoke-950);
+  --color-orange: var(--color-orange-500);
+  --color-lime: var(--color-lime-500);
+  --color-spruce: var(--color-spruce-300);
+
+  /* --- DEFAULT (LIGHT MODE) ALIASES --- */
+  /* These are the variables your Tailwind utilities will primarily use */
+  --color-foreground: var(--color-black-200);
+  --color-background: var(--color-smoke-950);
+  --color-primary: var(--color-orange-500);
+  --color-secondary: var(--color-lime-500);
+  --color-accent: var(--color-spruce-300);
+
+  /* MORE ALIASES */
+  --color-text-default: var(--color-foreground);
+  --color-text-muted: var(--color-black-400);
+  --color-bg-default: var(--color-background);
+  --color-bg-subtle: var(--color-smoke-900);
+  --color-border-default: var(--color-smoke-800);
+
+  /* Gradients - these use hex, consider if they need dark mode versions or CSS var versions */
+  --linearPrimarySecondary: linear-gradient(#ff4400, #e4ff1a);
+  --linearPrimaryAccent: linear-gradient(#ff4400, #404e4d);
+  --linearSecondaryAccent: linear-gradient(#e4ff1a, #404e4d);
+  --radialPrimarySecondary: radial-gradient(#ff4400, #e4ff1a);
+  --radialPrimaryAccent: radial-gradient(#ff4400, #404e4d);
+  --radialSecondaryAccent: radial-gradient(#e4ff1a, #404e4d);
+}
+
+/* --- DARK MODE OVERRIDES --- */
+/* Apply these when the .dark class is present on an ancestor (typically <html>) */
+@layer base {
+  /* Or another appropriate layer */
+  .dark {
+    --color-foreground: var(--color-smoke); /* Light text for dark mode */
+    --color-background: var(--color-black-200); /* Dark background for dark mode */
+
+    /* Adjust primary, secondary, accent for better contrast/appeal in dark mode if needed */
+    --color-primary: var(--color-orange-400);
+    --color-secondary: var(--color-lime-400);
+    --color-accent: var(--color-spruce-400);
+
+    /* Optional: Update semantic aliases for dark mode */
+    --color-text-default: var(--color-foreground);
+    --color-text-muted: var(--color-smoke-700);
+    --color-bg-default: var(--color-background);
+    --color-bg-subtle: var(--color-black-200);
+    --color-border-default: var(--color-black-300);
+
+    /* You might also need to redefine gradient variables here if they need to change for dark mode */
+    /* For example:
+    --linearPrimarySecondary: linear-gradient(var(--color-orange-400), var(--color-lime-400));
+    */
+  }
+}
