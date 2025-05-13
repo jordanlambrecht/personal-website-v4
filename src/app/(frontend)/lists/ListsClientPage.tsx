@@ -66,7 +66,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
         {/* All Button */}
         <button
           onClick={handleSelectAll}
-          className={`p-2 duration-300 transition-colors ${
+          className={`cursor-pointer p-2 duration-300 transition-colors ${
             // Active if neither favorites nor specific years are selected
             !showFavoritesOnly && selectedYears.length === 0
               ? 'text-black border-b border-black'
@@ -81,7 +81,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
           <button
             key={year}
             onClick={() => handleYearToggle(year)}
-            className={`p-2 duration-300 transition-colors ${
+            className={`cursor-pointerp-2 duration-300 transition-colors ${
               // Active if not showing favorites and this year is selected
               !showFavoritesOnly && selectedYears.includes(year)
                 ? ' text-black border-b border-black'
@@ -94,7 +94,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
         {/* --- Favorites Button --- */}
         <button
           onClick={handleSelectFavorites}
-          className={`p-2 duration-300 transition-colors flex items-center${
+          className={`cursor-pointer p-2 duration-300 transition-colors flex items-center${
             showFavoritesOnly ? ' text-black' : ''
           }`}
         >

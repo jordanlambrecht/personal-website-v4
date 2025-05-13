@@ -48,7 +48,7 @@
     background-color: var(--color-orange-600);
   }
 
-  button {
+  button, button * {
     @apply cursor-pointer;
   }
 

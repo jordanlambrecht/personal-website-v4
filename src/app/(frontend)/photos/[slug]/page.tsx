@@ -30,7 +30,7 @@ export default function PhotoPage({ params }: { params: Promise<PhotoPageParams>
     >
       <button
         onClick={handleClose}
-        className="absolute z-20 text-3xl text-white transition-opacity top-4 right-4 hover:opacity-75"
+        className="cursor-pointer absolute z-20 text-3xl text-white transition-opacity top-4 right-4 hover:opacity-75"
         aria-label="Close photo"
       >
         &times;
