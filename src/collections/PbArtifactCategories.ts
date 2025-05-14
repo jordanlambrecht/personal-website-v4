@@ -5,6 +5,7 @@ export const PbArtifactCategories: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     description: 'Manage categories for open source documents.',
+    group: 'Organization',
   },
   access: {
     read: () => true,
@@ -16,6 +17,16 @@ export const PbArtifactCategories: CollectionConfig = {
       required: true,
       label: 'Category Name',
       unique: true,
+    },
+    {
+      name: 'usedInOpenSourceDocuments',
+      type: 'join',
+      collection: 'open-source-documents',
+      on: 'pb-artifact-category',
+      label: 'Used In Open Source Documents',
+      admin: {
+        description: 'Shows which Open Source Documents use this category.',
+      },
     },
   ],
 }

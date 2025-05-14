@@ -8,6 +8,7 @@ export const Labels: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     description: 'Manage category labels.',
+    group: 'Organization',
     defaultColumns: ['name', 'bgColor', 'textColor'],
   },
   access: {

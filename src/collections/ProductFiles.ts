@@ -6,6 +6,7 @@ export const ProductFiles: CollectionConfig = {
   admin: {
     useAsTitle: 'name',
     description: 'Downloadable files for products',
+    group: 'Content',
   },
   access: {
     read: () => true,

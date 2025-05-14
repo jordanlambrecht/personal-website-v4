@@ -45,10 +45,10 @@ export const ProductDesigns: CollectionConfig = {
   versions: {
     drafts: {
       autosave: {
-        interval: 100,
+        interval: 20000,
       },
     },
-    maxPerDoc: 50,
+    maxPerDoc: 10,
   },
   access: {
     read: () => true,
