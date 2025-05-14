@@ -141,7 +141,7 @@ export default async function HomePage() {
   const initialData = await fetchProjectsPage(1, PAGE_SIZE) // Fetch page 1
 
   return (
-    <InnerWrapper>
+    <>
       {/* --- Intro Section --- */}
       <section className="grid grid-cols-1 gap-x-12 md:grid-cols-5">
         <div className="relative col-span-3 overflow-hidden md:h-auto">
@@ -176,6 +176,6 @@ export default async function HomePage() {
           pageSize={PAGE_SIZE}
         />
       </div>
-    </InnerWrapper>
+    </>
   )
 }

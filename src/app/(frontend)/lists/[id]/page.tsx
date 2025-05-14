@@ -46,7 +46,7 @@ export default async function ListDetailPage({ params }: { params: Promise<ListP
   // }
 
   return (
-    <div className="max-w-4xl mx-auto">
+    <>
       {/* Use the list title for the PageHeading */}
       <PageHeading title={list.title} description={list.subheader || 'A list of things.'} />
 
@@ -59,7 +59,7 @@ export default async function ListDetailPage({ params }: { params: Promise<ListP
       ) : (
         <p className="mt-6">This list is currently empty.</p>
       )}
-    </div>
+    </>
   )
 }
 

@@ -17,7 +17,7 @@ export default async function OtherProjectsPage() {
   })
 
   return (
-    <div>
+    <>
       <PageHeading
         title="Other Projects"
         description="A collection of various projects including GitHub repositories, woodworking, pottery, and more."
@@ -79,6 +79,6 @@ export default async function OtherProjectsPage() {
           </div>
         ))}
       </div>
-    </div>
+    </>
   )
 }

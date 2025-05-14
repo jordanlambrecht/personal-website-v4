@@ -6,6 +6,7 @@ import Image from 'next/image'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { PinIcon } from 'lucide-react'
 import Link from 'next/link'
+import { P } from '@typography'
 
 export default async function ProductDesignPage() {
   const productDesignsData = await getDocuments<ProductDesign>({
@@ -36,13 +37,13 @@ export default async function ProductDesignPage() {
   // --- End manual sort ---
 
   return (
-    <div className="w-full mx-auto max-w-7xl">
-      <div className="block">
-        <PageHeading
-          title="Product Design"
-          description="A collection of 3D models I've designed and published on MakerWorld."
-        />
-      </div>
+    <>
+      <PageHeading title="Product Design">
+        <P>
+          A collection of 3D models I've designed and published on{' '}
+          <Link href="https://makerworld.com/en/@jordyjordy">MakerWorld</Link>.
+        </P>
+      </PageHeading>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         {sortedDesigns.map((design, index) => (
@@ -75,10 +76,13 @@ export default async function ProductDesignPage() {
                   <Image
                     src={design.image.url}
                     alt={design.title}
-                    fill
+                    width={design.image.width || undefined}
+                    height={design.image.height || undefined}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ width: 'auto', height: 'auto' }}
+                    priority={index === 0} // Load the first image first
                     unoptimized={true} //leave this since images are animated
-                    className="relative z-10 object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                    className="z-10 object-cover transition-transform duration-300 group-hover:scale-105" // Removed 'relative'
                   />
                 )
               ) : (
@@ -114,6 +118,6 @@ export default async function ProductDesignPage() {
           </div>
         ))}
       </div>
-    </div>
+    </>
   )
 }

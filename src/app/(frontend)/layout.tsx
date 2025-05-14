@@ -2,15 +2,15 @@
 
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
-import { LogoProvider } from '@/components/layout/Logo'
+
 import './globals.css'
-import { Navbar } from '@/components/layout/Navbar'
-import { Footer } from '@/components/layout/Footer'
+
 import { fontFunnelSans, fontFunnelDisplay, fontQuasimoda, fontMono, fontFields } from '@/lib/fonts'
 import { PlausibleAnalytics } from '@/components/analytics/Plausible'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 import { SiteSetting } from '@/payload-types'
+import { InnerWrapper, Footer, Navbar, LogoProvider } from '@/components/layout'
 
 export const metadata: Metadata = {
   title: 'Jordan Lambrecht - Designer & Developer',
@@ -67,7 +67,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
             <Navbar navItems={navItems} />
           </LogoProvider>
           <main className="container flex flex-col justify-start w-full grow md:pt-12 ">
-            {children}
+            <InnerWrapper> {children}</InnerWrapper>
           </main>
         </div>
         <Footer />

@@ -6,9 +6,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/utils/helpers'
-import { Logo } from '@/components/layout/Logo'
+import { ThemeToggle, Logo } from '@/components/layout'
 
-import { ThemeToggle } from '@components/layout/ThemeToggle'
 interface NavItem {
   href: string
   label: string

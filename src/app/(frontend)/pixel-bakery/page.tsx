@@ -34,7 +34,7 @@ export default async function PixelBakeryPage() {
   const tags = tagsData.docs as PbArtifactTag[]
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <>
       <PageHeading title="Pixel Bakery" />
 
       <div className="mb-10">
@@ -70,6 +70,6 @@ export default async function PixelBakeryPage() {
           allTags={tags}
         />
       </div>
-    </div>
+    </>
   )
 }

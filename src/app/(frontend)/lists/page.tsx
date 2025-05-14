@@ -41,10 +41,10 @@ export default async function ListsPage() {
   ).sort((a, b) => b - a) // Sort years descending for the filter UI
 
   return (
-    <div className="w-full mx-auto max-w-7xl">
+    <>
       <PageHeading title="Lists" description="Various lists of things." />
       {/* Pass the manually sorted array to the Client Component */}
       <ListsClientPage initialLists={sortedLists} availableYears={years} />
-    </div>
+    </>
   )
 }
