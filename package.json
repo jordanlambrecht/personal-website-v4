@@ -6,7 +6,6 @@
     "email": "me@jordanlambrecht.com",
     "url": "https://jordanlambrecht.com"
   },
-  "packageManager": "^yarn@3.5.0",
   "description": "My personal website",
   "license": "MIT",
   "private": "true",
@@ -78,12 +77,5 @@
   },
   "resolutions": {
     "file-type": "^20.4.0"
-  },
-  "yarn": {
-    "onlyBuiltDependencies": [
-      "esbuild",
-      "unrs-resolver",
-      "sharp"
-    ]
   }
 }
