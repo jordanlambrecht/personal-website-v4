@@ -28,7 +28,7 @@ export function Navbar({ navItems }: NavbarProps) {
   const isActive = (path: string): boolean => pathname === path
 
   return (
-    <nav className="container px-4 py-6 mx-auto ">
+    <nav className="w-full py-6 mx-auto ">
       <div className="flex items-center justify-between mt-12 mb-12">
         {/* Logo */}
         <div className="shrink-0">
