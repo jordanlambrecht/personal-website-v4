@@ -198,7 +198,7 @@ export const OtherProjects: CollectionConfig = {
       relationTo: 'labels',
       required: true,
       hasMany: false,
-      validate: async (value, { operation, req }) => {
+      validate: async (value, { operation }) => {
         console.log(`--- Validating projectLabel during ${operation} ---`)
         console.log('Value received:', value)
         console.log('Type of value:', typeof value)

@@ -1,6 +1,5 @@
 // /src/app/(frontend)/pixel-bakery/page.tsx
 
-import Link from 'next/link'
 import { PageHeading } from '@/components/ui/PageHeading'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
@@ -55,14 +54,14 @@ export default async function PixelBakeryPage() {
           collect digital dust. I hope you find it useful.
         </P>
         <P>
-          I've packaged our most valuable resources: client onboarding workflows, project
-          managementframeworks, creative brief templates, production timelines, and quality
+          I&#39;ve packaged our most valuable resources: client onboarding workflows, project
+          management frameworks, creative brief templates, production timelines, and quality
           assurance checklists, etc etc.
         </P>
         <P>
           Some were born from spectacular failures, others from gradual refinement. Some are
           incomplete, some are crazy intricate. None are perfect, but all are battle-tested. Take
-          what works, improve what doesn't, and build something better.
+          what works, improve what doesn&#39;t, and build something better.
         </P>
         <OpenSourceArtifactsClient
           initialArtifacts={artifacts}

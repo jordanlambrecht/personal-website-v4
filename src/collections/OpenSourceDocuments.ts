@@ -1,4 +1,4 @@
-import type { CollectionConfig, CollectionBeforeChangeHook } from 'payload'
+import type { CollectionConfig } from 'payload'
 
 export const OpenSourceDocuments: CollectionConfig = {
   slug: 'open-source-documents',
