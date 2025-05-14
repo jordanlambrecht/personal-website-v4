@@ -296,9 +296,9 @@ export function OpenSourceArtifactsClient({
               : artifact.documentLink || '#'
           const isExternalLink =
             artifact.resourceType === 'link' ||
-            (targetUrl.startsWith('http') &&
+            (String(targetUrl).startsWith('http') &&
               typeof window !== 'undefined' &&
-              !targetUrl.startsWith(window.location.origin))
+              !String(targetUrl).startsWith(window.location.origin))
 
           return (
             <div
@@ -308,7 +308,7 @@ export function OpenSourceArtifactsClient({
               onMouseLeave={() => setHoveredItemId(null)}
             >
               <Link
-                href={targetUrl}
+                href={targetUrl.toString()}
                 target={isExternalLink ? '_blank' : undefined}
                 rel={isExternalLink ? 'noopener noreferrer' : undefined}
                 className="flex items-center justify-between py-3 px-1.5 hover:bg-bg-subtle transition-colors duration-150 group"
