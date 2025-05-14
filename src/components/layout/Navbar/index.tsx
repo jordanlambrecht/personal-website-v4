@@ -6,7 +6,8 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/utils/helpers'
-import { Logo } from './Logo'
+import { Logo } from '@/components/layout/Logo'
+
 import { ThemeToggle } from '@components/layout/ThemeToggle'
 interface NavItem {
   href: string
@@ -44,7 +45,7 @@ export function Navbar({ navItems }: NavbarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                'text-lg transition-colors hover:text-[var(--color-primary)]',
+                'font-sans text-lg transition-colors hover:text-[var(--color-primary)]',
                 isActive(item.href)
                   ? 'font-medium text-[var(--color-primary)]'
                   : 'text-[var(--color-foreground)]',
@@ -53,7 +54,7 @@ export function Navbar({ navItems }: NavbarProps) {
               {item.label}
             </Link>
           ))}
-          <ThemeToggle /> {/* Add the toggle here */}
+          <ThemeToggle />
         </div>
 
         {/* Mobile menu button */}

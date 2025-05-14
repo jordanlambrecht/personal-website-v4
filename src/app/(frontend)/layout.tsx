@@ -2,7 +2,7 @@
 
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
-
+import { LogoProvider } from '@/components/layout/Logo'
 import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
@@ -63,7 +63,9 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       {/* Apply themed background and text color to the body */}
       <body className="transition-colors duration-300 bg-[var(--color-background)] text-[var(--color-foreground)] px-4">
         <div className="flex flex-col min-h-screen md:max-w-7xl mx-auto">
-          <Navbar navItems={navItems} />
+          <LogoProvider>
+            <Navbar navItems={navItems} />
+          </LogoProvider>
           <main className="container flex flex-col justify-start w-full grow md:pt-12 ">
             {children}
           </main>
