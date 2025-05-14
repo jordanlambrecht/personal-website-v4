@@ -63,6 +63,7 @@ export default async function PixelBakeryPage() {
           incomplete, some are crazy intricate. None are perfect, but all are battle-tested. Take
           what works, improve what doesn&#39;t, and build something better.
         </P>
+        <P>🚧 This is a work-in-progress. It&#39;s a slow process. More soon.</P>
         <OpenSourceArtifactsClient
           initialArtifacts={artifacts}
           allCategories={categories}
