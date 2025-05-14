@@ -66,7 +66,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
           <LogoProvider>
             <Navbar navItems={navItems} />
           </LogoProvider>
-          <main className=" flex flex-col justify-start w-full grow md:pt-12 ">
+          <main className="px-2 flex flex-col justify-start w-full grow md:pt-12 ">
             <InnerWrapper> {children}</InnerWrapper>
           </main>
         </div>

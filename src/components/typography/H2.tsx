@@ -11,7 +11,7 @@ interface H2Props extends HTMLAttributes<HTMLHeadingElement> {
 const H2 = ({ children, className, ...props }: H2Props) => {
   return (
     <h2
-      className={cn('font-display text-2xl font-bold leading-tight mb-2 md:mb-5', className)}
+      className={cn('font-display text-2xl font-bold leading-tight mb-4 md:mb-5', className)}
       {...props}
     >
       {children}

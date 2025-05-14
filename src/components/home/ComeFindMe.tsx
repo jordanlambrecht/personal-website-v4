@@ -6,8 +6,8 @@ const ComeFindMe = ({ className }: BasicComponentProps) => {
   return (
     <div className={className}>
       <H2>Come Find Me:</H2>
-      <ul className="grid w-auto  gap-x-1 gap-y-2 sm:grid-cols-2">
-        <li className="w-fit">
+      <ul className="grid w-auto  gap-x-3 md:gap-x-1 gap-y-2 grid-cols-2">
+        <li>
           <InlineExternalLink href={'https://linkedin.com/in/jordan-lambrecht'} text={'LinkedIn'} />
         </li>
         <li>

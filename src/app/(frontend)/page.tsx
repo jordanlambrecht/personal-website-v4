@@ -155,13 +155,13 @@ export default async function HomePage() {
             />
           </div>
         </div>
-        <div className="col-span-2">
+        <div className="col-span-2 mt-12 md:mt-0">
           <IntroText />
         </div>
       </section>
 
       {/* --- Come Find Me & Distractions Grid --- */}
-      <section className="grid w-full grid-cols-1 pt-24 mt-24 space-x-24 border-t-2 border-black gap-y-12 md:grid-cols-6 md:gap-y-0">
+      <section className="grid w-full grid-cols-1 pt-6 mt-6 md:pt-24 md:mt-24 space-x-24 md:border-t-2 border-black gap-y-12 md:grid-cols-6 md:gap-y-0">
         <ComeFindMe className="col-span-2" />
         <Distractions className="col-span-4" />
       </section>
