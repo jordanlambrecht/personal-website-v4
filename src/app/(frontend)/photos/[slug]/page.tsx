@@ -54,7 +54,7 @@ export default function PhotoPage({ params }: { params: Promise<PhotoPageParams>
           />
         </div>
         {caption && (
-          <div className="w-full max-w-prose p-2 mt-1 text-center text-gray-200 rounded-sm bg-black/30">
+          <div className="font-sans w-auto  px-12 py-3 mt-1 text-center text-black bg-lime">
             <p className="text-sm">{decodeURIComponent(caption)}</p>
           </div>
         )}

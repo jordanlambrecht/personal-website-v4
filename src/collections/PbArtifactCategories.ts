@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 export const PbArtifactCategories: CollectionConfig = {
   slug: 'pb-artifact-categories',
+  labels: {
+    singular: 'PB Artifact Category',
+    plural: 'PB Artifact Categories',
+  },
   admin: {
     useAsTitle: 'name',
     description: 'Manage categories for open source documents.',

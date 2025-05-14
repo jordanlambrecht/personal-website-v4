@@ -23,7 +23,7 @@ import {
   Labels,
   PbArtifactTags,
 } from '@/collections'
-import { SiteSettings } from '@/globals/SiteSettings'
+import { SiteSettings, SiteDistractions, SiteSocialLinks } from '@/globals'
 import { getServerSideURL } from '@/utils/getURL'
 
 const filename = fileURLToPath(import.meta.url)
@@ -44,7 +44,7 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
-  globals: [SiteSettings],
+  globals: [SiteSettings, SiteDistractions, SiteSocialLinks],
   collections: [
     ProductDesigns,
     OtherProjects,
@@ -77,13 +77,9 @@ export default buildConfig({
     s3Storage({
       collections: {
         media: {
-          // Existing configuration for the Media collection
-          prefix: s3CollectionConfigPrefix, // This is used by the hook in Media.ts
+          prefix: s3CollectionConfigPrefix,
         },
         docs: {
-          // NEW: Configuration for OpenSourceDocuments
-          // All files uploaded directly to the 'open-source-documents' collection
-          // will use this static prefix in S3.
           prefix: 'docs/',
         },
       },

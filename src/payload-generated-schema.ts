@@ -1472,6 +1472,86 @@ export const site_settings = pgTable('site_settings', {
   createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
 })
 
+export const site_distractions_distraction_items_photo_links = pgTable(
+  'site_distractions_distraction_items_photo_links',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: varchar('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    linkText: varchar('link_text').notNull(),
+    imageFilename: varchar('image_filename').notNull(),
+    caption: varchar('caption').notNull(),
+  },
+  (columns) => ({
+    _orderIdx: index('site_distractions_distraction_items_photo_links_order_idx').on(
+      columns._order,
+    ),
+    _parentIDIdx: index('site_distractions_distraction_items_photo_links_parent_id_idx').on(
+      columns._parentID,
+    ),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [site_distractions_distraction_items.id],
+      name: 'site_distractions_distraction_items_photo_links_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const site_distractions_distraction_items = pgTable(
+  'site_distractions_distraction_items',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    active: boolean('active').notNull().default(true),
+    icon: varchar('icon'),
+    text: varchar('text').notNull(),
+  },
+  (columns) => ({
+    _orderIdx: index('site_distractions_distraction_items_order_idx').on(columns._order),
+    _parentIDIdx: index('site_distractions_distraction_items_parent_id_idx').on(columns._parentID),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [site_distractions.id],
+      name: 'site_distractions_distraction_items_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const site_distractions = pgTable('site_distractions', {
+  id: serial('id').primaryKey(),
+  updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 }),
+  createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
+})
+
+export const site_social_links_social_links = pgTable(
+  'site_social_links_social_links',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    title: varchar('title').notNull(),
+    url: varchar('url').notNull(),
+    active: boolean('active').notNull().default(true),
+    targetBlank: boolean('target_blank').notNull().default(true),
+  },
+  (columns) => ({
+    _orderIdx: index('site_social_links_social_links_order_idx').on(columns._order),
+    _parentIDIdx: index('site_social_links_social_links_parent_id_idx').on(columns._parentID),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [site_social_links.id],
+      name: 'site_social_links_social_links_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const site_social_links = pgTable('site_social_links', {
+  id: serial('id').primaryKey(),
+  updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 }),
+  createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
+})
+
 export const relations_product_design_tags = relations(product_design_tags, ({ one }) => ({
   _parentID: one(product_design, {
     fields: [product_design_tags._parentID],
@@ -1926,6 +2006,49 @@ export const relations_payload_preferences = relations(payload_preferences, ({ m
 }))
 export const relations_payload_migrations = relations(payload_migrations, () => ({}))
 export const relations_site_settings = relations(site_settings, () => ({}))
+export const relations_site_distractions_distraction_items_photo_links = relations(
+  site_distractions_distraction_items_photo_links,
+  ({ one }) => ({
+    _parentID: one(site_distractions_distraction_items, {
+      fields: [site_distractions_distraction_items_photo_links._parentID],
+      references: [site_distractions_distraction_items.id],
+      relationName: 'photoLinks',
+    }),
+  }),
+)
+export const relations_site_distractions_distraction_items = relations(
+  site_distractions_distraction_items,
+  ({ one, many }) => ({
+    _parentID: one(site_distractions, {
+      fields: [site_distractions_distraction_items._parentID],
+      references: [site_distractions.id],
+      relationName: 'distractionItems',
+    }),
+    photoLinks: many(site_distractions_distraction_items_photo_links, {
+      relationName: 'photoLinks',
+    }),
+  }),
+)
+export const relations_site_distractions = relations(site_distractions, ({ many }) => ({
+  distractionItems: many(site_distractions_distraction_items, {
+    relationName: 'distractionItems',
+  }),
+}))
+export const relations_site_social_links_social_links = relations(
+  site_social_links_social_links,
+  ({ one }) => ({
+    _parentID: one(site_social_links, {
+      fields: [site_social_links_social_links._parentID],
+      references: [site_social_links.id],
+      relationName: 'socialLinks',
+    }),
+  }),
+)
+export const relations_site_social_links = relations(site_social_links, ({ many }) => ({
+  socialLinks: many(site_social_links_social_links, {
+    relationName: 'socialLinks',
+  }),
+}))
 
 type DatabaseSchema = {
   enum_product_design_status: typeof enum_product_design_status
@@ -1976,6 +2099,11 @@ type DatabaseSchema = {
   payload_preferences_rels: typeof payload_preferences_rels
   payload_migrations: typeof payload_migrations
   site_settings: typeof site_settings
+  site_distractions_distraction_items_photo_links: typeof site_distractions_distraction_items_photo_links
+  site_distractions_distraction_items: typeof site_distractions_distraction_items
+  site_distractions: typeof site_distractions
+  site_social_links_social_links: typeof site_social_links_social_links
+  site_social_links: typeof site_social_links
   relations_product_design_tags: typeof relations_product_design_tags
   relations_product_design_rels: typeof relations_product_design_rels
   relations_product_design: typeof relations_product_design
@@ -2010,6 +2138,11 @@ type DatabaseSchema = {
   relations_payload_preferences: typeof relations_payload_preferences
   relations_payload_migrations: typeof relations_payload_migrations
   relations_site_settings: typeof relations_site_settings
+  relations_site_distractions_distraction_items_photo_links: typeof relations_site_distractions_distraction_items_photo_links
+  relations_site_distractions_distraction_items: typeof relations_site_distractions_distraction_items
+  relations_site_distractions: typeof relations_site_distractions
+  relations_site_social_links_social_links: typeof relations_site_social_links_social_links
+  relations_site_social_links: typeof relations_site_social_links
 }
 
 declare module '@payloadcms/db-postgres' {

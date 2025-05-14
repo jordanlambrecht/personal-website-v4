@@ -1,3 +1,5 @@
+// src/components/home/ProjectGalleryClient.tsx
+
 'use client'
 
 import { useState, useMemo, useRef, useEffect, useTransition } from 'react'
@@ -109,7 +111,7 @@ export function ProjectGalleryClient({
   }, [displayedProjects, selectedLabelId])
 
   return (
-    <div className="w-full">
+    <>
       {/* Filter Buttons */}
       <div className="flex flex-wrap items-center max-w-3xl gap-x-3 gap-y-4 mb-6 min-h-[50px]">
         {/* "All" Button */}
@@ -122,8 +124,8 @@ export function ProjectGalleryClient({
           className={cn(
             ' cursor-pointer border-black relative rounded-lg transition-all duration-300 border-2 shrink-0 w-20 overflow-hidden',
             'focus:outline-hidden focus:ring-2 focus:ring-offset-4',
-            isHoveringAll ? 'h-6' : 'h-4',
-            isHoveringAll ? '-mt-3 z-10' : 'z-0',
+            isHoveringAll ? 'h-6' : 'h-6 md:h-4',
+            isHoveringAll ? 'sm:-mt-3 z-10' : 'z-0',
             selectedLabelId === null ? 'ring-2 ring-offset-4  ring-black' : '',
             'bg-transparent',
           )}
@@ -131,7 +133,7 @@ export function ProjectGalleryClient({
           <span
             className={cn(
               'absolute inset-0 flex items-center justify-center text-xs font-medium transition-opacity duration-300 pointer-events-none',
-              isHoveringAll ? 'opacity-100' : 'opacity-0',
+              isHoveringAll ? 'opacity-100' : 'sm:opacity-0',
               'text-black',
             )}
           >
@@ -159,8 +161,8 @@ export function ProjectGalleryClient({
               className={cn(
                 'cursor-pointer relative rounded-lg transition-all duration-300 shrink-0 w-40 overflow-hidden',
                 'focus:outline-hidden focus:ring-2 focus:ring-offset-4',
-                isHovered ? 'h-6' : 'h-3',
-                isHovered ? '-mt-3 z-10' : 'z-0',
+                isHovered ? 'h-6 sm:h-6' : 'h-6 sm:h-3',
+                isHovered ? 'sm:-mt-3 z-10' : 'z-0',
                 isSelected
                   ? 'ring-2 ring-offset-4 border-transparent ring-black'
                   : 'border-gray-300',
@@ -172,8 +174,8 @@ export function ProjectGalleryClient({
             >
               <span
                 className={cn(
-                  'absolute inset-0 flex items-center justify-center text-xs font-medium transition-opacity duration-300 pointer-events-none',
-                  isHovered ? 'opacity-100' : 'opacity-0',
+                  'absolute inset-0 flex items-center justify-center text-xs font-medium transition-opacity duration-300 pointer-events-none ',
+                  isHovered ? 'opacity-100' : 'sm:opacity-0',
                 )}
                 style={{
                   color: getContrastTextColor(buttonBgColor),
@@ -190,7 +192,7 @@ export function ProjectGalleryClient({
       {/* Project Grid Area */}
       <div
         ref={parentRef}
-        className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-5 min-h-[300px]"
+        className="grid grid-cols-2 gap-3 md:grid-cols-2 lg:grid-cols-5 min-h-[300px]"
       >
         {isPending && filteredProjects.length === 0 ? (
           <p className="mt-8 text-center text-gray-500 col-span-full">Loading projects...</p>
@@ -293,6 +295,6 @@ export function ProjectGalleryClient({
           </button>
         </div>
       )}
-    </div>
+    </>
   )
 }

@@ -2,6 +2,10 @@ import type { CollectionConfig } from 'payload'
 
 export const PbArtifactTags: CollectionConfig = {
   slug: 'pb-artifact-tags',
+  labels: {
+    singular: 'PB Artifact Tag',
+    plural: 'PB Artifact Tags',
+  },
   admin: {
     useAsTitle: 'name',
     description: 'Manage tags for open source documents.',

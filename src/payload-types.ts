@@ -121,9 +121,13 @@ export interface Config {
   };
   globals: {
     siteSettings: SiteSetting;
+    siteDistractions: SiteDistraction;
+    siteSocialLinks: SiteSocialLink;
   };
   globalsSelect: {
     siteSettings: SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    siteDistractions: SiteDistractionsSelect<false> | SiteDistractionsSelect<true>;
+    siteSocialLinks: SiteSocialLinksSelect<false> | SiteSocialLinksSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1083,6 +1087,61 @@ export interface SiteSetting {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteDistractions".
+ */
+export interface SiteDistraction {
+  id: number;
+  /**
+   * Manage the list of current distractions. Items can be reordered by dragging.
+   */
+  distractionItems?:
+    | {
+        active: boolean;
+        /**
+         * Example: 🐳, ⚛️, 🐈
+         */
+        icon?: string | null;
+        text: string;
+        photoLinks?:
+          | {
+              linkText: string;
+              /**
+               * The filename of the image (e.g., my-cat.jpg). Images should be placed in the public/images/ folder.
+               */
+              imageFilename: string;
+              caption: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSocialLinks".
+ */
+export interface SiteSocialLink {
+  id: number;
+  /**
+   * Manage the list of current social links. Items can be reordered by dragging.
+   */
+  socialLinks?:
+    | {
+        title: string;
+        url: string;
+        active: boolean;
+        targetBlank: boolean;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "siteSettings_select".
  */
 export interface SiteSettingsSelect<T extends boolean = true> {
@@ -1091,6 +1150,49 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   showProductDesigns?: T;
   showOtherProjects?: T;
   showLists?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteDistractions_select".
+ */
+export interface SiteDistractionsSelect<T extends boolean = true> {
+  distractionItems?:
+    | T
+    | {
+        active?: T;
+        icon?: T;
+        text?: T;
+        photoLinks?:
+          | T
+          | {
+              linkText?: T;
+              imageFilename?: T;
+              caption?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSocialLinks_select".
+ */
+export interface SiteSocialLinksSelect<T extends boolean = true> {
+  socialLinks?:
+    | T
+    | {
+        title?: T;
+        url?: T;
+        active?: T;
+        targetBlank?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

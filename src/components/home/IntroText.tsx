@@ -1,3 +1,5 @@
+// src/components/home/IntroText.tsx
+
 import { H1, P } from '@typography'
 import Link from 'next/link'
 

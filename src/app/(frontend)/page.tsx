@@ -167,7 +167,7 @@ export default async function HomePage() {
       </section>
 
       {/* --- Recent Projects --- */}
-      <div className="mt-16">
+      <section className="pt-6 mt-6 md:pt-24 md:mt-24">
         <H2>Recent Projects</H2>
         <ProjectGalleryClient
           initialProjects={initialData.projects}
@@ -175,7 +175,7 @@ export default async function HomePage() {
           initialHasMore={initialData.hasNextPage}
           pageSize={PAGE_SIZE}
         />
-      </div>
+      </section>
     </>
   )
 }
