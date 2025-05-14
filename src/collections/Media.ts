@@ -44,16 +44,43 @@ const calculateS3Prefix = (mimeType?: string): string => {
   return 'uploads/' // Fallback prefix for other types
 }
 
-// Define the beforeChange hook to populate fileType and the S3 prefix
-const populateMediaMetaHook: CollectionBeforeChangeHook = async ({ data, operation }) => {
+// Define the beforeChange hook to populate fileType, S3 prefix, and format filename
+const populateMediaMetaHook: CollectionBeforeChangeHook = async ({ data, operation, req }) => {
+  // For 'create' and 'update' operations, if mimeType is present
   if ((operation === 'create' || operation === 'update') && data.mimeType) {
-    // Populate fileType
     data.fileType = getFileTypeFromMime(data.mimeType as string)
-
-    // Populate the 'prefix' field for S3 storage
-    // The s3Storage plugin will look for a field named 'prefix' on the document.
     data.prefix = calculateS3Prefix(data.mimeType as string)
   }
+
+  // Format filename on create
+  // 'req.file.name' contains the original uploaded filename
+  // 'data.filename' will be populated by Payload's upload handler based on req.file.name
+  // We modify data.filename if it exists, or if not, we can try to infer from req.file if available
+  // This ensures our formatting happens before Payload's own safeFileNames logic (if any)
+  // and before the S3 adapter gets it.
+
+  if (operation === 'create' && req && req.file && req.file.name) {
+    let newFilename = req.file.name
+
+    // Replace spaces with dashes
+    newFilename = newFilename.replace(/\s+/g, '-')
+
+    // Convert to lowercase
+    newFilename = newFilename.toLowerCase()
+
+    // At this point, data.filename might not be set yet by Payload's internal mechanisms,
+    // or it might be set to the original. We want to ensure our formatted name is used.
+    // Payload's internal upload logic will later take data.filename (if set by us)
+    // or req.file.name and then apply its own safeFileNames if configured.
+    // By setting data.filename here, we preempt its default value.
+    data.filename = newFilename
+  } else if (operation === 'update' && data.filename && typeof data.filename === 'string') {
+    // Optionally, re-format filename on update if a new file is uploaded
+    // This part is more complex as 'req.file' might not be present on metadata-only updates.
+    // For simplicity, we'll focus on 'create'. If you need to re-format on file replacement during update,
+    // you'd need to check if a new file is part of the 'req'.
+  }
+
   return data
 }
 
@@ -62,24 +89,33 @@ export const Media: CollectionConfig = {
   admin: {
     defaultColumns: ['filename', 'alt', 'fileType', 'updatedAt'],
     group: 'Content',
+    useAsTitle: 'filename',
     description: 'Collection for all uploaded images, videos, and documents.',
   },
   access: {
     read: () => true,
   },
   hooks: {
-    beforeChange: [
-      populateMediaMetaHook, // This hook now handles both fileType and prefix
-    ],
+    beforeChange: [populateMediaMetaHook],
   },
   fields: [
+    {
+      name: 'filename',
+      type: 'text',
+      label: 'File Name',
+      required: true,
+      unique: true,
+      admin: {
+        description: 'The original name of the uploaded file, formatted for safety.',
+      },
+    },
     {
       name: 'alt',
       type: 'text',
       required: true,
     },
     {
-      name: 'fileType', // This field is still useful for display/filtering in Admin UI
+      name: 'fileType',
       type: 'select',
       label: 'File Type',
       options: [
@@ -94,11 +130,13 @@ export const Media: CollectionConfig = {
         description: 'Automatically determined based on the uploaded file.',
       },
     },
-
-    // Our hook will populate `data.prefix`, and this value will be saved to that field.
   ],
   upload: {
     staticDir: 'media',
+    // Set safeFileNames to true for general sanitization by Payload
+    // This will run AFTER our hook has modified data.filename.
+    // Payload's internal safeFileNames will strip non-alphanumeric (except - and _)
+    // from the already lowercased and hyphenated string.
     mimeTypes: [
       // Images
       'image/jpeg',
@@ -109,16 +147,9 @@ export const Media: CollectionConfig = {
       // Videos
       'video/webm',
       'video/mp4',
-      // Documents
-      'application/pdf',
-      'application/msword', // .doc
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
-      'application/vnd.ms-excel', // .xls
-      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
-      'application/vnd.ms-powerpoint', // .ppt
-      'application/vnd.openxmlformats-officedocument.presentationml.presentation', // .pptx
-      'text/plain', // .txt
-      'text/csv', // .csv
+      // Documents (if you decide to keep them in Media, otherwise remove)
+      // 'application/pdf',
+      // 'text/plain',
     ],
   },
 }

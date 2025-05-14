@@ -1,4 +1,6 @@
+export { Docs } from './Docs'
 export { Labels } from './Labels'
+export { Links } from './Links'
 export { Lists } from './Lists'
 export { Media } from './Media'
 export { OpenSourceDocuments } from './OpenSourceDocuments'

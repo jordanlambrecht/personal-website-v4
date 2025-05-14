@@ -631,6 +631,25 @@ export const product_files = pgTable(
   }),
 )
 
+export const links = pgTable(
+  'links',
+  {
+    id: serial('id').primaryKey(),
+    title: varchar('title').notNull(),
+    url: varchar('url').notNull(),
+    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+  },
+  (columns) => ({
+    links_updated_at_idx: index('links_updated_at_idx').on(columns.updatedAt),
+    links_created_at_idx: index('links_created_at_idx').on(columns.createdAt),
+  }),
+)
+
 export const users = pgTable(
   'users',
   {
@@ -677,7 +696,7 @@ export const media = pgTable(
       .notNull(),
     url: varchar('url'),
     thumbnailURL: varchar('thumbnail_u_r_l'),
-    filename: varchar('filename'),
+    filename: varchar('filename').notNull(),
     mimeType: varchar('mime_type'),
     filesize: numeric('filesize'),
     width: numeric('width'),
@@ -689,6 +708,35 @@ export const media = pgTable(
     media_updated_at_idx: index('media_updated_at_idx').on(columns.updatedAt),
     media_created_at_idx: index('media_created_at_idx').on(columns.createdAt),
     media_filename_idx: uniqueIndex('media_filename_idx').on(columns.filename),
+  }),
+)
+
+export const docs = pgTable(
+  'docs',
+  {
+    id: serial('id').primaryKey(),
+    title: varchar('title'),
+    prefix: varchar('prefix').default('docs/'),
+    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    url: varchar('url'),
+    thumbnailURL: varchar('thumbnail_u_r_l'),
+    filename: varchar('filename').notNull(),
+    mimeType: varchar('mime_type'),
+    filesize: numeric('filesize'),
+    width: numeric('width'),
+    height: numeric('height'),
+    focalX: numeric('focal_x'),
+    focalY: numeric('focal_y'),
+  },
+  (columns) => ({
+    docs_updated_at_idx: index('docs_updated_at_idx').on(columns.updatedAt),
+    docs_created_at_idx: index('docs_created_at_idx').on(columns.createdAt),
+    docs_filename_idx: uniqueIndex('docs_filename_idx').on(columns.filename),
   }),
 )
 
@@ -900,6 +948,9 @@ export const open_source_documents = pgTable(
   'open_source_documents',
   {
     id: serial('id').primaryKey(),
+    '_open-source-documents_usedInOpenSourceDocuments_order': varchar(
+      '_open_source_documents_usedinopensourcedocuments_order',
+    ),
     title: varchar('title'),
     publishedDate: timestamp('published_date', {
       mode: 'string',
@@ -914,10 +965,12 @@ export const open_source_documents = pgTable(
     ),
     shortDescription: varchar('short_description'),
     resourceType: enum_open_source_documents_resource_type('resource_type').default('file'),
-    documentFile: integer('document_file_id').references(() => media.id, {
+    documentFile: integer('document_file_id').references(() => docs.id, {
       onDelete: 'set null',
     }),
-    documentLink: varchar('document_link'),
+    documentLink: integer('document_link_id').references(() => links.id, {
+      onDelete: 'set null',
+    }),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
@@ -927,11 +980,17 @@ export const open_source_documents = pgTable(
     _status: enum_open_source_documents_status('_status').default('draft'),
   },
   (columns) => ({
+    open_source_documents__open_source_documents_usedinopensourcedocuments_order_idx: uniqueIndex(
+      'open_source_documents__open_source_documents_usedinopensourcedocuments_order_idx',
+    ).on(columns['_open-source-documents_usedInOpenSourceDocuments_order']),
     open_source_documents_pb_artifact_category_idx: index(
       'open_source_documents_pb_artifact_category_idx',
     ).on(columns['pb-artifact-category']),
     open_source_documents_document_file_idx: index('open_source_documents_document_file_idx').on(
       columns.documentFile,
+    ),
+    open_source_documents_document_link_idx: index('open_source_documents_document_link_idx').on(
+      columns.documentLink,
     ),
     open_source_documents_updated_at_idx: index('open_source_documents_updated_at_idx').on(
       columns.updatedAt,
@@ -981,6 +1040,9 @@ export const _open_source_documents_v = pgTable(
     parent: integer('parent_id').references(() => open_source_documents.id, {
       onDelete: 'set null',
     }),
+    'version__open-source-documents_usedInOpenSourceDocuments_order': varchar(
+      'version__open_source_documents_usedinopensourcedocuments_order',
+    ),
     version_title: varchar('version_title'),
     version_publishedDate: timestamp('version_published_date', {
       mode: 'string',
@@ -996,10 +1058,12 @@ export const _open_source_documents_v = pgTable(
     version_shortDescription: varchar('version_short_description'),
     version_resourceType:
       enum__open_source_documents_v_version_resource_type('version_resource_type').default('file'),
-    version_documentFile: integer('version_document_file_id').references(() => media.id, {
+    version_documentFile: integer('version_document_file_id').references(() => docs.id, {
       onDelete: 'set null',
     }),
-    version_documentLink: varchar('version_document_link'),
+    version_documentLink: integer('version_document_link_id').references(() => links.id, {
+      onDelete: 'set null',
+    }),
     version_updatedAt: timestamp('version_updated_at', {
       mode: 'string',
       withTimezone: true,
@@ -1025,12 +1089,19 @@ export const _open_source_documents_v = pgTable(
     _open_source_documents_v_parent_idx: index('_open_source_documents_v_parent_idx').on(
       columns.parent,
     ),
+    _open_source_documents_v_version_version__open_source_documents_usedinopensourcedocuments_order_idx:
+      index(
+        '_open_source_documents_v_version_version__open_source_documents_usedinopensourcedocuments_order_idx',
+      ).on(columns['version__open-source-documents_usedInOpenSourceDocuments_order']),
     _open_source_documents_v_version_version_pb_artifact_category_idx: index(
       '_open_source_documents_v_version_version_pb_artifact_category_idx',
     ).on(columns['version_pb-artifact-category']),
     _open_source_documents_v_version_version_document_file_idx: index(
       '_open_source_documents_v_version_version_document_file_idx',
     ).on(columns.version_documentFile),
+    _open_source_documents_v_version_version_document_link_idx: index(
+      '_open_source_documents_v_version_version_document_link_idx',
+    ).on(columns.version_documentLink),
     _open_source_documents_v_version_version_updated_at_idx: index(
       '_open_source_documents_v_version_version_updated_at_idx',
     ).on(columns.version_updatedAt),
@@ -1187,8 +1258,10 @@ export const payload_locked_documents_rels = pgTable(
     'product-designID': integer('product_design_id'),
     'other-projectsID': integer('other_projects_id'),
     'product-filesID': integer('product_files_id'),
+    linksID: integer('links_id'),
     usersID: integer('users_id'),
     mediaID: integer('media_id'),
+    docsID: integer('docs_id'),
     listsID: integer('lists_id'),
     labelsID: integer('labels_id'),
     'pb-artifact-categoriesID': integer('pb_artifact_categories_id'),
@@ -1209,12 +1282,18 @@ export const payload_locked_documents_rels = pgTable(
     payload_locked_documents_rels_product_files_id_idx: index(
       'payload_locked_documents_rels_product_files_id_idx',
     ).on(columns['product-filesID']),
+    payload_locked_documents_rels_links_id_idx: index(
+      'payload_locked_documents_rels_links_id_idx',
+    ).on(columns.linksID),
     payload_locked_documents_rels_users_id_idx: index(
       'payload_locked_documents_rels_users_id_idx',
     ).on(columns.usersID),
     payload_locked_documents_rels_media_id_idx: index(
       'payload_locked_documents_rels_media_id_idx',
     ).on(columns.mediaID),
+    payload_locked_documents_rels_docs_id_idx: index(
+      'payload_locked_documents_rels_docs_id_idx',
+    ).on(columns.docsID),
     payload_locked_documents_rels_lists_id_idx: index(
       'payload_locked_documents_rels_lists_id_idx',
     ).on(columns.listsID),
@@ -1253,6 +1332,11 @@ export const payload_locked_documents_rels = pgTable(
       foreignColumns: [product_files.id],
       name: 'payload_locked_documents_rels_product_files_fk',
     }).onDelete('cascade'),
+    linksIdFk: foreignKey({
+      columns: [columns['linksID']],
+      foreignColumns: [links.id],
+      name: 'payload_locked_documents_rels_links_fk',
+    }).onDelete('cascade'),
     usersIdFk: foreignKey({
       columns: [columns['usersID']],
       foreignColumns: [users.id],
@@ -1262,6 +1346,11 @@ export const payload_locked_documents_rels = pgTable(
       columns: [columns['mediaID']],
       foreignColumns: [media.id],
       name: 'payload_locked_documents_rels_media_fk',
+    }).onDelete('cascade'),
+    docsIdFk: foreignKey({
+      columns: [columns['docsID']],
+      foreignColumns: [docs.id],
+      name: 'payload_locked_documents_rels_docs_fk',
     }).onDelete('cascade'),
     listsIdFk: foreignKey({
       columns: [columns['listsID']],
@@ -1578,8 +1667,10 @@ export const relations__other_projects_v = relations(_other_projects_v, ({ one, 
   }),
 }))
 export const relations_product_files = relations(product_files, () => ({}))
+export const relations_links = relations(links, () => ({}))
 export const relations_users = relations(users, () => ({}))
 export const relations_media = relations(media, () => ({}))
+export const relations_docs = relations(docs, () => ({}))
 export const relations_lists = relations(lists, ({ one }) => ({
   images: one(media, {
     fields: [lists.images],
@@ -1645,10 +1736,15 @@ export const relations_open_source_documents = relations(
       references: [pb_artifact_categories.id],
       relationName: 'pb-artifact-category',
     }),
-    documentFile: one(media, {
+    documentFile: one(docs, {
       fields: [open_source_documents.documentFile],
-      references: [media.id],
+      references: [docs.id],
       relationName: 'documentFile',
+    }),
+    documentLink: one(links, {
+      fields: [open_source_documents.documentLink],
+      references: [links.id],
+      relationName: 'documentLink',
     }),
     _rels: many(open_source_documents_rels, {
       relationName: '_rels',
@@ -1683,10 +1779,15 @@ export const relations__open_source_documents_v = relations(
       references: [pb_artifact_categories.id],
       relationName: 'version_pb-artifact-category',
     }),
-    version_documentFile: one(media, {
+    version_documentFile: one(docs, {
       fields: [_open_source_documents_v.version_documentFile],
-      references: [media.id],
+      references: [docs.id],
       relationName: 'version_documentFile',
+    }),
+    version_documentLink: one(links, {
+      fields: [_open_source_documents_v.version_documentLink],
+      references: [links.id],
+      relationName: 'version_documentLink',
     }),
     _rels: many(_open_source_documents_v_rels, {
       relationName: '_rels',
@@ -1743,6 +1844,11 @@ export const relations_payload_locked_documents_rels = relations(
       references: [product_files.id],
       relationName: 'product-files',
     }),
+    linksID: one(links, {
+      fields: [payload_locked_documents_rels.linksID],
+      references: [links.id],
+      relationName: 'links',
+    }),
     usersID: one(users, {
       fields: [payload_locked_documents_rels.usersID],
       references: [users.id],
@@ -1752,6 +1858,11 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels.mediaID],
       references: [media.id],
       relationName: 'media',
+    }),
+    docsID: one(docs, {
+      fields: [payload_locked_documents_rels.docsID],
+      references: [docs.id],
+      relationName: 'docs',
     }),
     listsID: one(lists, {
       fields: [payload_locked_documents_rels.listsID],
@@ -1844,8 +1955,10 @@ type DatabaseSchema = {
   _other_projects_v: typeof _other_projects_v
   _other_projects_v_rels: typeof _other_projects_v_rels
   product_files: typeof product_files
+  links: typeof links
   users: typeof users
   media: typeof media
+  docs: typeof docs
   lists: typeof lists
   _lists_v: typeof _lists_v
   labels: typeof labels
@@ -1876,8 +1989,10 @@ type DatabaseSchema = {
   relations__other_projects_v_rels: typeof relations__other_projects_v_rels
   relations__other_projects_v: typeof relations__other_projects_v
   relations_product_files: typeof relations_product_files
+  relations_links: typeof relations_links
   relations_users: typeof relations_users
   relations_media: typeof relations_media
+  relations_docs: typeof relations_docs
   relations_lists: typeof relations_lists
   relations__lists_v: typeof relations__lists_v
   relations_labels: typeof relations_labels

@@ -84,7 +84,7 @@ export const OpenSourceDocuments: CollectionConfig = {
       name: 'documentFile',
       label: 'Document File',
       type: 'upload',
-      relationTo: 'media',
+      relationTo: 'docs',
       admin: {
         condition: (_, siblingData) => siblingData.resourceType === 'file',
         description: 'Upload the document file (e.g., PDF, DOCX, template).',
@@ -93,17 +93,20 @@ export const OpenSourceDocuments: CollectionConfig = {
     {
       name: 'documentLink',
       label: 'External Link',
-      type: 'text', // URL field type could also be used if available and preferred
+      type: 'relationship', // Changed from 'join' to 'relationship'
+      relationTo: 'links', // Changed from 'collection' to 'relationTo'
+      hasMany: false, // Assuming one link per document, adjust if needed
       admin: {
         condition: (_, siblingData) => siblingData.resourceType === 'link',
-        description: 'Link to the document (e.g., Google Doc, Notion page, GitHub repo).',
-      },
-      validate: (val) => {
-        if (val && typeof val === 'string' && !val.startsWith('http')) {
-          return 'Please enter a valid URL (e.g., https://example.com)'
-        }
-        return true
+        description: 'Provide a link to the document (e.g., Google Drive, Dropbox).',
+        // validate: (val) => {
+        //   if (val && typeof val === 'string' && !val.startsWith('http')) {
+        //     return 'Please enter a valid URL (e.g., https://example.com)'
+        //   }
+        //   return true
+        // },
       },
     },
   ],
+  timestamps: true,
 }

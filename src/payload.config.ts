@@ -12,11 +12,13 @@ import sharp from 'sharp'
 import {
   Lists,
   Users,
+  Docs,
   Media,
   ProductDesigns,
   OtherProjects,
   PbArtifactCategories,
   ProductFiles,
+  Links,
   OpenSourceDocuments,
   Labels,
   PbArtifactTags,
@@ -47,8 +49,10 @@ export default buildConfig({
     ProductDesigns,
     OtherProjects,
     ProductFiles,
+    Links,
     Users,
     Media,
+    Docs,
     Lists,
     Labels,
     PbArtifactCategories,
@@ -73,7 +77,14 @@ export default buildConfig({
     s3Storage({
       collections: {
         media: {
-          prefix: s3CollectionConfigPrefix,
+          // Existing configuration for the Media collection
+          prefix: s3CollectionConfigPrefix, // This is used by the hook in Media.ts
+        },
+        docs: {
+          // NEW: Configuration for OpenSourceDocuments
+          // All files uploaded directly to the 'open-source-documents' collection
+          // will use this static prefix in S3.
+          prefix: 'docs/',
         },
       },
       bucket: process.env.S3_BUCKET!,

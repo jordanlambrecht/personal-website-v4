@@ -70,8 +70,10 @@ export interface Config {
     'product-design': ProductDesign;
     'other-projects': OtherProject;
     'product-files': ProductFile;
+    links: Link;
     users: User;
     media: Media;
+    docs: Doc;
     lists: List;
     labels: Label;
     'pb-artifact-categories': PbArtifactCategory;
@@ -82,13 +84,28 @@ export interface Config {
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  collectionsJoins: {};
+  collectionsJoins: {
+    links: {
+      usedInOpenSourceDocuments: 'open-source-documents';
+    };
+    docs: {
+      usedInOpenSourceDocuments: 'open-source-documents';
+    };
+    'pb-artifact-categories': {
+      usedInOpenSourceDocuments: 'open-source-documents';
+    };
+    'pb-artifact-tags': {
+      usedInOpenSourceDocuments: 'open-source-documents';
+    };
+  };
   collectionsSelect: {
     'product-design': ProductDesignSelect<false> | ProductDesignSelect<true>;
     'other-projects': OtherProjectsSelect<false> | OtherProjectsSelect<true>;
     'product-files': ProductFilesSelect<false> | ProductFilesSelect<true>;
+    links: LinksSelect<false> | LinksSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    docs: DocsSelect<false> | DocsSelect<true>;
     lists: ListsSelect<false> | ListsSelect<true>;
     labels: LabelsSelect<false> | LabelsSelect<true>;
     'pb-artifact-categories': PbArtifactCategoriesSelect<false> | PbArtifactCategoriesSelect<true>;
@@ -255,7 +272,10 @@ export interface Media {
   createdAt: string;
   url?: string | null;
   thumbnailURL?: string | null;
-  filename?: string | null;
+  /**
+   * The original name of the uploaded file, formatted for safety.
+   */
+  filename: string;
   mimeType?: string | null;
   filesize?: number | null;
   width?: number | null;
@@ -397,6 +417,142 @@ export interface OtherProject {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Manage links.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "links".
+ */
+export interface Link {
+  id: number;
+  title: string;
+  /**
+   * The URL of the link.
+   */
+  url: string;
+  /**
+   * Shows which Open Source Documents use this link.
+   */
+  usedInOpenSourceDocuments?: {
+    docs?: (number | OpenSourceDocument)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * A collection of open-source documents, templates, and artifacts left over from Pixel Bakery.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "open-source-documents".
+ */
+export interface OpenSourceDocument {
+  id: number;
+  '_open-source-documents_usedInOpenSourceDocuments_order'?: string;
+  title: string;
+  publishedDate: string;
+  /**
+   * Categorize the document for easier filtering.
+   */
+  'pb-artifact-category'?: (number | null) | PbArtifactCategory;
+  /**
+   * Tag the document for easier filtering.
+   */
+  'pb-artifact-tag'?: (number | PbArtifactTag)[] | null;
+  /**
+   * A brief summary of what this document/resource is about.
+   */
+  shortDescription?: string | null;
+  resourceType?: ('file' | 'link') | null;
+  /**
+   * Upload the document file (e.g., PDF, DOCX, template).
+   */
+  documentFile?: (number | null) | Doc;
+  /**
+   * Provide a link to the document (e.g., Google Drive, Dropbox).
+   */
+  documentLink?: (number | null) | Link;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Manage categories for open source documents.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pb-artifact-categories".
+ */
+export interface PbArtifactCategory {
+  id: number;
+  name: string;
+  /**
+   * Shows which Open Source Documents use this category.
+   */
+  usedInOpenSourceDocuments?: {
+    docs?: (number | OpenSourceDocument)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Manage tags for open source documents.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pb-artifact-tags".
+ */
+export interface PbArtifactTag {
+  id: number;
+  name: string;
+  /**
+   * Shows which Open Source Documents use this tag.
+   */
+  usedInOpenSourceDocuments?: {
+    docs?: (number | OpenSourceDocument)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Collection for all uploaded documents.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "docs".
+ */
+export interface Doc {
+  id: number;
+  /**
+   * A human-readable title for the document. Defaults to a formatted filename.
+   */
+  title?: string | null;
+  /**
+   * Shows which Open Source Documents use this document.
+   */
+  usedInOpenSourceDocuments?: {
+    docs?: (number | OpenSourceDocument)[];
+    hasNextPage?: boolean;
+    totalDocs?: number;
+  };
+  prefix?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  /**
+   * The original name of the uploaded file.
+   */
+  filename: string;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -473,65 +629,6 @@ export interface List {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Manage categories for open source documents.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pb-artifact-categories".
- */
-export interface PbArtifactCategory {
-  id: number;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * Manage tags for open source documents.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pb-artifact-tags".
- */
-export interface PbArtifactTag {
-  id: number;
-  name: string;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * A collection of open-source documents, templates, and artifacts left over from Pixel Bakery.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "open-source-documents".
- */
-export interface OpenSourceDocument {
-  id: number;
-  title: string;
-  publishedDate: string;
-  /**
-   * Categorize the document for easier filtering.
-   */
-  'pb-artifact-category'?: (number | null) | PbArtifactCategory;
-  /**
-   * Tag the document for easier filtering.
-   */
-  'pb-artifact-tag'?: (number | PbArtifactTag)[] | null;
-  /**
-   * A brief summary of what this document/resource is about.
-   */
-  shortDescription?: string | null;
-  resourceType?: ('file' | 'link') | null;
-  /**
-   * Upload the document file (e.g., PDF, DOCX, template).
-   */
-  documentFile?: (number | null) | Media;
-  /**
-   * Link to the document (e.g., Google Doc, Notion page, GitHub repo).
-   */
-  documentLink?: string | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "redirects".
  */
@@ -580,12 +677,20 @@ export interface PayloadLockedDocument {
         value: number | ProductFile;
       } | null)
     | ({
+        relationTo: 'links';
+        value: number | Link;
+      } | null)
+    | ({
         relationTo: 'users';
         value: number | User;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'docs';
+        value: number | Doc;
       } | null)
     | ({
         relationTo: 'lists';
@@ -765,6 +870,17 @@ export interface ProductFilesSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "links_select".
+ */
+export interface LinksSelect<T extends boolean = true> {
+  title?: T;
+  url?: T;
+  usedInOpenSourceDocuments?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -786,6 +902,26 @@ export interface UsersSelect<T extends boolean = true> {
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   fileType?: T;
+  prefix?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "docs_select".
+ */
+export interface DocsSelect<T extends boolean = true> {
+  title?: T;
+  usedInOpenSourceDocuments?: T;
   prefix?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -849,6 +985,7 @@ export interface LabelsSelect<T extends boolean = true> {
  */
 export interface PbArtifactCategoriesSelect<T extends boolean = true> {
   name?: T;
+  usedInOpenSourceDocuments?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -858,6 +995,7 @@ export interface PbArtifactCategoriesSelect<T extends boolean = true> {
  */
 export interface PbArtifactTagsSelect<T extends boolean = true> {
   name?: T;
+  usedInOpenSourceDocuments?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -866,6 +1004,7 @@ export interface PbArtifactTagsSelect<T extends boolean = true> {
  * via the `definition` "open-source-documents_select".
  */
 export interface OpenSourceDocumentsSelect<T extends boolean = true> {
+  '_open-source-documents_usedInOpenSourceDocuments_order'?: T;
   title?: T;
   publishedDate?: T;
   'pb-artifact-category'?: T;
