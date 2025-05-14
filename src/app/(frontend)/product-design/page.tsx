@@ -76,13 +76,13 @@ export default async function ProductDesignPage() {
                   <Image
                     src={design.image.url}
                     alt={design.title}
-                    width={design.image.width || undefined}
-                    height={design.image.height || undefined}
+                    // width={design.image.width || undefined}
+                    // height={design.image.height || undefined}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    style={{ width: 'auto', height: 'auto' }}
-                    priority={index === 0} // Load the first image first
-                    unoptimized={true} //leave this since images are animated
-                    className="z-10 object-cover transition-transform duration-300 group-hover:scale-105" // Removed 'relative'
+                    style={{ width: '100%', height: '100%' }}
+                    priority={index <= 5}
+                    fill
+                    className="z-10 object-cover transition-transform duration-300 group-hover:scale-105"
                   />
                 )
               ) : (
