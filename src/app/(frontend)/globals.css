@@ -4,7 +4,14 @@
 /* COLORS: https://www.realtimecolors.com/?colors=282A36-f3f3f3-ff4400-E4FF1A-404E4D&fonts=Inter-Inter */
 /* @config '../../../tailwind.config.js'; */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-@base {
+
+@theme inline {
+  --font-sans: var(--font-funnel-sans);
+  --font-display:  var(--font-fields);
+  --font-mono:  var(--font-space-mono);
+  /* --font-quasi:  var(--font-quasimoda); */
+}
+@layer base {
   *,
   ::after,
   ::before,
@@ -25,6 +32,7 @@
   html {
     scrollbar-width: thin;
     scrollbar-color: var(--color-primary) var(--color-bg-subtle); /* thumb and track color */
+    @apply font-sans transition-colors duration-300 ease-in;
   }
 
   html::-webkit-scrollbar {
@@ -59,17 +67,11 @@
     color: var(--color-text-default); /* Use themed default text color */
   }
 
-  a {
-    @apply text-sm;
-    color: var(--color-primary); /* Links use primary color by default */
-    text-decoration: none;
-    @apply transition-colors; /* Smooth transition for hover */
+  p a {
+    @apply  text-orange hover:text-orange/50 underline underline-offset-4;
+
   }
-  a:hover {
-    /* Use a slightly darker/different shade of primary for hover */
-    color: var(--color-orange-600); /* Or var(--color-primary-hover) if you define it */
-    /* text-decoration: underline; /* Optional: add underline on hover */
-  }
+
 
   h1,
   h2,

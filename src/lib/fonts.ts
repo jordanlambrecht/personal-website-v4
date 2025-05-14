@@ -6,28 +6,26 @@ export const fontFunnelSans = Funnel_Sans({
   // weight: '400',
   variable: '--font-funnel-sans',
   display: 'swap',
+  preload: false,
 })
 export const fontFunnelDisplay = Funnel_Display({
   subsets: ['latin'],
   // weight: '400',
   variable: '--font-funnel-display',
   display: 'swap',
+  preload: false,
 })
-// export const fontDisplay = Funnel_Display({
-//   subsets: ['latin'],
-//   variable: '--font-display',
-//   display: 'swap',
-// })
 
 export const fontMono = Space_Mono({
   subsets: ['latin'],
-  variable: '--font-mono',
+  variable: '--font-space-mono',
   weight: '400',
+  preload: false,
 })
 
 export const fontFields = localFont({
   display: 'swap',
-  preload: true,
+  preload: false,
   src: [
     {
       path: './fonts/fields/Fields-Regular.woff2',
@@ -60,7 +58,7 @@ export const fontFields = localFont({
 
 export const fontQuasimoda = localFont({
   display: 'swap',
-  preload: true,
+  preload: false,
   src: [
     {
       path: './fonts/quasimoda/Quasimoda-Regular.woff2',
