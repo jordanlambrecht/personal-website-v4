@@ -11,6 +11,7 @@ import {
 import { ArrowEast, DownloadIcon, SearchIcon } from '@/components/ui/icons' // Assuming SearchIcon exists
 import autoAnimate from '@formkit/auto-animate'
 import { cn } from '@/utils/helpers'
+import { P } from '@/components/typography'
 
 const getFileExtension = (media?: MediaType | string | null): string => {
   if (typeof media === 'object' && media?.filename) {
@@ -353,9 +354,9 @@ export function OpenSourceArtifactsClient({
           )
         })}
         {filteredAndSortedArtifacts.length === 0 && (
-          <p className="py-8 text-center text-text-muted">
+          <P className="py-8 text-center text-text-muted">
             No artifacts match your current filters.
-          </p>
+          </P>
         )}
       </div>
     </div>

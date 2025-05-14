@@ -6,15 +6,13 @@ export const siteConfig = {
   ogImage: 'https://jordanlambrecht.com/og.jpg',
   navItems: [
     { label: 'Home', path: '/' },
-    { label: 'About', path: '/about' },
     { label: 'Pixel Bakery', path: '/pixel-bakery' },
     { label: 'Lists', path: '/lists' },
     { label: 'Product Design', path: '/product-design' },
     { label: 'Other Projects', path: '/other-projects' },
   ],
   links: {
-    twitter: 'https://twitter.com/jordanlambrecht',
     github: 'https://github.com/jordanlambrecht',
-    linkedin: 'https://linkedin.com/in/jordanlambrecht',
+    linkedin: 'https://linkedin.com/in/jordan-lambrecht',
   },
 }
