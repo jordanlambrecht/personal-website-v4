@@ -31,7 +31,7 @@
   /* Scrollbar Styles - apply to html for global effect and use themed variables */
   html {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-primary) var(--color-bg-subtle); /* thumb and track color */
+    scrollbar-color: var(--color-scrollbar) var(--color-bg-subtle); /* thumb and track color */
     @apply font-sans transition-colors duration-300 ease-in;
   }
 
@@ -46,7 +46,8 @@
   }
 
   html::-webkit-scrollbar-thumb {
-    background-color: var(--color-primary); /* Themed thumb color */
+    @apply bg-orange dark:bg-lime;
+    /* background-color: var(--color-primary); Themed thumb color */
     border-radius: 10px;
     border: 2px solid var(--color-bg-subtle); /* Themed padding color */
   }

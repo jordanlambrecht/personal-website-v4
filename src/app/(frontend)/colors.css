@@ -84,39 +84,22 @@
   --color-bg-default: var(--color-background);
   --color-bg-subtle: var(--color-smoke-900);
   --color-border-default: var(--color-smoke-800);
-
-  /* Gradients - these use hex, consider if they need dark mode versions or CSS var versions */
-  --linearPrimarySecondary: linear-gradient(#ff4400, #e4ff1a);
-  --linearPrimaryAccent: linear-gradient(#ff4400, #404e4d);
-  --linearSecondaryAccent: linear-gradient(#e4ff1a, #404e4d);
-  --radialPrimarySecondary: radial-gradient(#ff4400, #e4ff1a);
-  --radialPrimaryAccent: radial-gradient(#ff4400, #404e4d);
-  --radialSecondaryAccent: radial-gradient(#e4ff1a, #404e4d);
+  --color-scrollbar: var(--color-orange);
 }
+@variant dark {
+  --color-foreground: var(--color-smoke); /* Light text for dark mode */
+  --color-background: var(--color-black-200); /* Dark background for dark mode */
 
-/* --- DARK MODE OVERRIDES --- */
-/* Apply these when the .dark class is present on an ancestor (typically <html>) */
-@layer base {
-  /* Or another appropriate layer */
-  .dark {
-    --color-foreground: var(--color-smoke); /* Light text for dark mode */
-    --color-background: var(--color-black-200); /* Dark background for dark mode */
+  /* Adjust primary, secondary, accent for better contrast/appeal in dark mode if needed */
+  --color-primary: var(--color-orange-400);
+  --color-secondary: var(--color-lime-400);
+  --color-accent: var(--color-spruce-400);
 
-    /* Adjust primary, secondary, accent for better contrast/appeal in dark mode if needed */
-    --color-primary: var(--color-orange-400);
-    --color-secondary: var(--color-lime-400);
-    --color-accent: var(--color-spruce-400);
-
-    /* Optional: Update semantic aliases for dark mode */
-    --color-text-default: var(--color-foreground);
-    --color-text-muted: var(--color-smoke-700);
-    --color-bg-default: var(--color-background);
-    --color-bg-subtle: var(--color-black-200);
-    --color-border-default: var(--color-black-300);
-
-    /* You might also need to redefine gradient variables here if they need to change for dark mode */
-    /* For example:
-    --linearPrimarySecondary: linear-gradient(var(--color-orange-400), var(--color-lime-400));
-    */
-  }
+  /* Optional: Update semantic aliases for dark mode */
+  --color-text-default: var(--color-foreground);
+  --color-text-muted: var(--color-smoke-700);
+  --color-bg-default: var(--color-background);
+  --color-bg-subtle: var(--color-black-200);
+  --color-border-default: var(--color-black-300);
+  --color-scrollbar: var(--color-lime);
 }
