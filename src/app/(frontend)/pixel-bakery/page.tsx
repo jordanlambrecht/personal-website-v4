@@ -67,8 +67,8 @@ export default async function PixelBakeryPage() {
               <Link href={'https://pixelbakery.com/work'} target="_blank">
                 hundreds of clients
               </Link>{' '}
-              trust us with their brand, worked with some pretty big fish clients like L'Oréal, won
-              40+{' '}
+              trust us with their brand, worked with some pretty big fish clients like L&apos;Oréal,
+              won 40+{' '}
               <Link href={'https://pixelbakery.com/about#awards'} target="_blank">
                 industry awards
               </Link>
@@ -82,8 +82,8 @@ export default async function PixelBakeryPage() {
             <P>And our values/beliefs:</P>
             <ul className="flex flex-col gap-2 list-disc list-inside mb-4">
               <li>
-                Life is fleeting, and you only have so many days to craft the world you'd like to
-                live in.
+                Life is fleeting, and you only have so many days to craft the world you&apos;d like
+                to live in.
               </li>
               <li>
                 Our success is a direct result of the people in our lives. Our employees, our
@@ -94,8 +94,8 @@ export default async function PixelBakeryPage() {
                 vulnerability, constructive criticism, and honesty.
               </li>
               <li>
-                If you're going to do something, do it right or don't do it at all. We don't take
-                shortcuts.
+                If you&apos;re going to do something, do it right or don&apos;t do it at all. We
+                don&apos;t take shortcuts.
               </li>
             </ul>
             <P>

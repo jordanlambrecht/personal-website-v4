@@ -18,15 +18,12 @@ const SuggestedTextColorInfo: React.FC = () => {
   // console.log('All fields state received:', fields)
 
   useEffect(() => {
-    // console.log('useEffect - bgColorValue:', bgColorValue)
-
     if (bgColorValue && typeof bgColorValue === 'string' && bgColorValue.length >= 6) {
       try {
         const contrastColor = getContrastTextColor(bgColorValue)
-        // console.log('useEffect - Calculated contrastColor:', contrastColor)
+
         setSuggestedColor(contrastColor)
-      } catch (error) {
-        // console.error('useEffect - Error calculating contrast:', error)
+      } catch {
         setSuggestedColor('#000000')
       }
     } else {

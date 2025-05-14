@@ -40,7 +40,7 @@ export default async function ProductDesignPage() {
     <>
       <PageHeading title="Product Design">
         <P>
-          A collection of 3D models I've designed and published on{' '}
+          A collection of 3D models I&apos;ve designed and published on{' '}
           <Link href="https://makerworld.com/en/@jordyjordy">MakerWorld</Link>.
         </P>
       </PageHeading>

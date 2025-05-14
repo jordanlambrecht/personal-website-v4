@@ -55,7 +55,7 @@ export default async function HomePage() {
     allLabelsRaw.map(async (label): Promise<LabelWithCount> => {
       let count = 0
       const labelId = label.id
-      const labelName = label.name
+      // const labelName = label.name
 
       // Determine which collections *could* have this label based on its definition
       const isListLabel = listLabelDefinition && label.id === listLabelDefinition.id
