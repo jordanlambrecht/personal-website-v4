@@ -8,9 +8,16 @@ const nextConfig = {
     // ...
   },
 
-  // // For sharp. Maybe. I really don't remember why I have this.
+  // For sharp. Maybe. I really don't remember why I have this.
   output: 'standalone',
 
+  // webpack(config) {
+  //   config.module.rules.push({
+  //     test: /\.svg$/,
+  //     use: ['@svgr/webpack'],
+  //   })
+  //   return config
+  // },
   images: {
     remotePatterns: [
       {

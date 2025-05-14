@@ -1,4 +1,4 @@
-// src/components/layout/Logo/logo_images/index.ts
+// src/components/layout/Logo/logo_images/png/index.ts
 
 export { default as logo_01 } from './jordanLambrecht_logo_full_01.png'
 export { default as logo_02 } from './jordanLambrecht_logo_full_02.png'
