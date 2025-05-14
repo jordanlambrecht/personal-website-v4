@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 
 import './globals.css'
 
-import { fontFunnelSans, fontFunnelDisplay, fontQuasimoda, fontMono, fontFields } from '@/lib/fonts'
+import { fontFunnelSans, fontFunnelDisplay, fontMono, fontFields } from '@/lib/fonts'
 import { PlausibleAnalytics } from '@/components/analytics/Plausible'
 import { getPayload } from 'payload'
 import config from '@payload-config'
@@ -51,22 +51,36 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       return true
     })
     .map(({ href, label }) => ({ href, label }))
+
+  const themeScript = `
+    (function() {
+      const theme = localStorage.getItem('theme');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (theme === 'dark' || (!theme && prefersDark)) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        document.documentElement.removeAttribute('data-theme');
+      }
+    })();
+    `
+
   return (
     <html
       lang="en"
-      className={`${fontFunnelSans.variable} ${fontQuasimoda.variable} ${fontFunnelDisplay.variable} ${fontFields.variable} ${fontMono.variable} antialiased`}
+      className={`${fontFunnelSans.variable} ${fontFunnelDisplay.variable} ${fontFields.variable} ${fontMono.variable} antialiased`}
       suppressHydrationWarning // Good for theme toggling
     >
       <head>
         <PlausibleAnalytics />
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       {/* Apply themed background and text color to the body */}
-      <body className="transition-colors duration-300 bg-[var(--color-background)] text-[var(--color-foreground)] px-4">
+      <body className="transition-colors duration-300 bg-[var(--color-background)] text-[var(--color-foreground)] px-6 sm:px-10 md:px-12 lg:px-12">
         <div className="flex flex-col min-h-screen md:max-w-7xl mx-auto">
           <LogoProvider>
             <Navbar navItems={navItems} />
           </LogoProvider>
-          <main className="px-2 flex flex-col justify-start w-full grow md:pt-12 ">
+          <main className=" flex flex-col justify-start w-full grow md:pt-12 ">
             <InnerWrapper> {children}</InnerWrapper>
           </main>
         </div>
