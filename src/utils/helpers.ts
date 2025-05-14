@@ -51,3 +51,14 @@ export function slugify(text: string): string {
     .replace(/^-+/, '')
     .replace(/-+$/, '')
 }
+
+/**
+ * Converts a string to kebab-case
+ * @param string - String to convert
+ * @returns Kebab-cased string
+ */
+export const toKebabCase = (string: string): string =>
+  string
+    ?.replace(/([a-z])([A-Z])/g, '$1-$2')
+    .replace(/\s+/g, '-')
+    .toLowerCase()
