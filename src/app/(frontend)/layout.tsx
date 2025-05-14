@@ -2,9 +2,10 @@
 
 import type { Metadata } from 'next'
 import { ReactNode } from 'react'
+
+import './globals.css'
 import { Navbar } from '@/components/layout/Navbar'
 import { Footer } from '@/components/layout/Footer'
-import './globals.css'
 import { fontFunnelSans, fontFunnelDisplay, fontQuasimoda, fontMono, fontFields } from '@/lib/fonts'
 import { PlausibleAnalytics } from '@/components/analytics/Plausible'
 import { getPayload } from 'payload'
@@ -54,15 +55,16 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html
       lang="en"
       className={`${fontFunnelSans.variable} ${fontQuasimoda.variable} ${fontFunnelDisplay.variable} ${fontFields.variable} ${fontMono.variable} antialiased`}
-      suppressHydrationWarning
+      suppressHydrationWarning // Good for theme toggling
     >
       <head>
         <PlausibleAnalytics />
       </head>
-      <body className="bg-primary">
-        <div className="flex flex-col min-h-screen ">
+      {/* Apply themed background and text color to the body */}
+      <body className="transition-colors duration-300 bg-[var(--color-background)] text-[var(--color-foreground)] px-4">
+        <div className="flex flex-col min-h-screen md:max-w-7xl mx-auto">
           <Navbar navItems={navItems} />
-          <main className="container flex flex-col justify-start w-full grow md:pt-16 max-w-7xl">
+          <main className="container flex flex-col justify-start w-full grow md:pt-12 ">
             {children}
           </main>
         </div>

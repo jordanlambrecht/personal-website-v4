@@ -4,11 +4,10 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-// Define logo array with hardcoded paths instead of reading from filesystem
 const logoCount = 16
 const logos = Array.from({ length: logoCount }, (_, i) => ({
   src: `/logo/jordanLambrecht_logo_full_${String(i + 1).padStart(2, '0')}.png`,
-  alt: `Jordan Lambrecht Logo ${i + 1}`
+  alt: `Jordan Lambrecht Logo ${i + 1}`,
 }))
 
 export function Logo() {
@@ -24,14 +23,14 @@ export function Logo() {
   }, [])
 
   return (
-    <div className="relative w-48 h-16 md:w-64 md:h-20">
+    <div className="relative w-48 h-16 md:w-64 md:h-20 invert-0 dark:invert">
       <Image
         src={logos[currentLogoIndex].src}
         alt={logos[currentLogoIndex].alt}
         fill
         priority
         sizes="(max-width: 768px) 12rem, 16rem"
-        style={{ objectFit: 'contain' }}
+        className="object-contain invert-0 dark:invert"
       />
     </div>
   )

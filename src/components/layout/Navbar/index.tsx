@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { Menu, X } from 'lucide-react'
 import { cn } from '@/utils/helpers'
 import { Logo } from './Logo'
-
+import { ThemeToggle } from '@components/layout/ThemeToggle'
 interface NavItem {
   href: string
   label: string
@@ -21,7 +21,6 @@ export function Navbar({ navItems }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
 
-  // Close menu when route changes
   useEffect(() => {
     setIsMenuOpen(false)
   }, [pathname])
@@ -38,34 +37,39 @@ export function Navbar({ navItems }: NavbarProps) {
           </Link>
         </div>
 
-        {/* Mobile menu button */}
-        <div className="flex md:hidden">
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="inline-flex items-center justify-center p-2 text-gray-700 rounded-md hover:text-amber-600 hover:bg-amber-50 focus:outline-hidden"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
-          >
-            <span className="sr-only">{isMenuOpen ? 'Close menu' : 'Open menu'}</span>
-            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
-
-        {/* Desktop navigation */}
+        {/* Desktop navigation & Theme Toggle */}
         <div className="hidden md:flex md:items-center md:gap-x-8">
           {navItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                'text-lg transition-colors hover:text-amber-600',
-                isActive(item.href) ? 'font-medium text-amber-600' : 'text-gray-700',
+                'text-lg transition-colors hover:text-[var(--color-primary)]',
+                isActive(item.href)
+                  ? 'font-medium text-[var(--color-primary)]'
+                  : 'text-[var(--color-foreground)]',
               )}
             >
               {item.label}
             </Link>
           ))}
+          <ThemeToggle /> {/* Add the toggle here */}
+        </div>
+
+        {/* Mobile menu button */}
+        <div className="flex md:hidden">
+          {/* Theme toggle on mobile menu */}
+          <ThemeToggle />
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="inline-flex items-center justify-center p-2 rounded-md cursor-pointer text-foreground hover:text-primary hover:bg-accent focus:outline-hidden"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+          >
+            <span className="sr-only">{isMenuOpen ? 'Close menu' : 'Open menu'}</span>
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
         </div>
       </div>
 
@@ -78,10 +82,10 @@ export function Navbar({ navItems }: NavbarProps) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  'block px-3 py-2 rounded-md text-base font-medium transition-colors',
+                  'block px-3 py-2 rounded-md text-base font-medium transition-colors text-[var(--color-foreground)] hover:bg-[var(--color-bg-subtle)] hover:text-[var(--color-primary)]',
                   isActive(item.href)
-                    ? 'bg-amber-50 text-amber-600'
-                    : 'text-gray-700 hover:bg-gray-100 hover:text-amber-600',
+                    ? 'bg-[var(--color-bg-subtle)] text-[var(--color-primary)]'
+                    : '',
                 )}
               >
                 {item.label}
