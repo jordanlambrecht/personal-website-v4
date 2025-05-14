@@ -8,7 +8,7 @@ import {
   HorizontalRuleFeature,
   InlineToolbarFeature,
   lexicalEditor,
-  BlocksFeature,
+  // BlocksFeature,
 } from '@payloadcms/richtext-lexical'
 
 export const languages = {
@@ -75,34 +75,6 @@ export const OtherProjects: CollectionConfig = {
                     InlineToolbarFeature(),
                     HorizontalRuleFeature(),
                     LinkFeature(),
-                    BlocksFeature({
-                      blocks: [
-                        {
-                          slug: 'Code',
-                          fields: [
-                            {
-                              type: 'select',
-                              name: 'language',
-                              options: Object.entries(languages).map(([key, value]) => ({
-                                label: value,
-                                value: key,
-                              })),
-                              defaultValue: 'ts',
-                            },
-                            {
-                              admin: {
-                                components: {
-                                  Field: './components/payload/CodeComponent.tsx',
-                                },
-                              },
-                              name: 'code',
-                              type: 'code',
-                            },
-                          ],
-                        },
-                      ],
-                      inlineBlocks: [],
-                    }),
                   ]
                 },
               }),

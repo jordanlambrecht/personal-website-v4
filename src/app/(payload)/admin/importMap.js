@@ -27,8 +27,6 @@ import { MetaTitleComponent as MetaTitleComponent_a8a977ebc872c5d5ea7ee689724c08
 import { MetaDescriptionComponent as MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { MetaImageComponent as MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
 import { PreviewComponent as PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860 } from '@payloadcms/plugin-seo/client'
-import { BlocksFeatureClient as BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864 } from '@payloadcms/richtext-lexical/client'
-import { default as default_efa14f41c71a5081cdaf5531c81e3dc5 } from '../../../components/payload/CodeComponent.tsx'
 import { default as default_063b091a21546a9c1ce3231c1f5e1a23 } from '../../../components/payload/ProjectTypeCell.tsx'
 import { default as default_fdee63428da12144ee77146dc01bb4c7 } from '../../../components/payload/LabelSelector.tsx'
 import { default as default_ffe2efba737dd7baf572ccbf9add17f6 } from '../../../components/payload/ColorCell.tsx'
@@ -65,8 +63,6 @@ export const importMap = {
   "@payloadcms/plugin-seo/client#MetaDescriptionComponent": MetaDescriptionComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#MetaImageComponent": MetaImageComponent_a8a977ebc872c5d5ea7ee689724c0860,
   "@payloadcms/plugin-seo/client#PreviewComponent": PreviewComponent_a8a977ebc872c5d5ea7ee689724c0860,
-  "@payloadcms/richtext-lexical/client#BlocksFeatureClient": BlocksFeatureClient_e70f5e05f09f93e00b997edb1ef0c864,
-  "./components/payload/CodeComponent.tsx#default": default_efa14f41c71a5081cdaf5531c81e3dc5,
   "./components/payload/ProjectTypeCell.tsx#default": default_063b091a21546a9c1ce3231c1f5e1a23,
   "./components/payload/LabelSelector.tsx#default": default_fdee63428da12144ee77146dc01bb4c7,
   "./components/payload/ColorCell.tsx#default": default_ffe2efba737dd7baf572ccbf9add17f6,
