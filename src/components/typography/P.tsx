@@ -6,7 +6,9 @@ interface PProps {
   className?: string
 }
 const P = ({ children, className }: PProps) => {
-  return <p className={cn('mb-4 text-sm leading-relaxed font-sans', className)}>{children}</p>
+  return (
+    <p className={cn('mb-4 text-sm leading-relaxed font-sans max-w-lg', className)}>{children}</p>
+  )
 }
 
 export default P

@@ -14,7 +14,7 @@ const H1 = ({ children, className, id, ...props }: H1Props) => {
     <h1
       id={id}
       className={cn(
-        'text-secondary-dark-400 font-display text-4xl font-bold leading-tight mb-2 md:mb-4',
+        'text-orange font-display text-4xl font-bold leading-tight mb-2 md:mb-4',
         className,
       )}
       {...props}
