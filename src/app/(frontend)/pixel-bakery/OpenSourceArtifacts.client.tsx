@@ -169,24 +169,88 @@ export function OpenSourceArtifactsClient({
   }
 
   return (
-    <div>
+    <div className="mt-12">
       {/* Search and Sort Controls */}
       <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="relative flex-grow sm:max-w-xs">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <SearchIcon className="w-4 h-4 text-text-muted" />{' '}
-            {/* Uses text-text-muted from theme */}
+            <SearchIcon className="w-4 h-4 text-text" />{' '}
           </div>
           <input
             type="text"
             placeholder="Search artifacts..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full py-2 pl-10 pr-3 text-sm border rounded-md bg-bg-default text-text-default border-border-default focus:ring-primary focus:border-primary"
+            className="w-full py-2 pl-10 pr-3 text-sm border rounded-md bg-bg-default text-text-default border-black dark:border-smoke ring-0 focus:ring-primary focus:border-primary"
           />
         </div>
+      </div>
+
+      {/* Filter  and  sort Controls */}
+      <div className="flex flex-col items-start justify-start gap-x-24 gap-y-4 my-12">
+        {/* FILTER */}
+        <div className="">
+          <div>
+            <span className="text-sm font-medium text-foreground mr-2">Categories:</span>
+            {allCategories.map((cat) => (
+              <button
+                key={cat.id} // key can remain a number or string, React handles it
+                onClick={() => toggleFilter(String(cat.id), 'category')} // Convert cat.id to string
+                className={cn(
+                  'px-2.5 py-2 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors',
+                  selectedCategoryIds.includes(String(cat.id)) // Convert cat.id to string for includes check
+                    ? 'bg-lime text-black-200 border-black dark:border-ghost'
+                    : 'bg-transparent text-text-default border-foreground hover:bg-bg-subtle',
+                )}
+              >
+                {cat.name}
+              </button>
+            ))}
+            {selectedCategoryIds.length > 0 && (
+              <button
+                onClick={() => setSelectedCategoryIds([])}
+                className="px-2.5 py-2 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors bg-foreground/20 dark:bg-black text-accent dark:text-foreground border-foreground hover:bg-accent/30"
+              >
+                Clear Categories
+              </button>
+            )}
+          </div>
+          {displayableTags.length > 0 && (
+            <div>
+              <span className="text-sm font-medium text-text-muted mr-2">Tags:</span>
+              {displayableTags.map(
+                (
+                  tag, // Assuming displayableTags elements also have 'id' that might be a number
+                ) => (
+                  <button
+                    key={tag.id}
+                    onClick={() => toggleFilter(String(tag.id), 'tag')} // Convert tag.id to string
+                    className={cn(
+                      'px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors ',
+                      selectedTagIds.includes(String(tag.id)) // Convert tag.id to string for includes check
+                        ? 'bg-secondary text-black-200 border-secondary'
+                        : 'bg-transparent text-text-default border-foreground hover:bg-lime',
+                    )}
+                  >
+                    {tag.name}
+                  </button>
+                ),
+              )}
+              {selectedTagIds.length > 0 && (
+                <button
+                  onClick={() => setSelectedTagIds([])}
+                  className="px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors bg-accent/20 text-accent border-accent/50 hover:bg-accent/30"
+                >
+                  Clear Tags
+                </button>
+              )}
+            </div>
+          )}
+        </div>
+        {/* END OF CAT FILTER */}
+        {/* SORT */}
         <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-sm font-medium text-text-muted">Sort by:</span>
+          <span className="text-sm font-medium text-foreground">Sort by:</span>
           <button
             onClick={() => handleSort('title')}
             className={cn(
@@ -204,76 +268,16 @@ export function OpenSourceArtifactsClient({
               'px-3 py-1.5 text-xs border rounded-md transition-colors',
               sortConfig.key === 'category'
                 ? 'bg-primary text-black-200 border-primary' // text-black-200 for contrast on primary
-                : 'bg-transparent text-text-default border-border-default hover:bg-bg-subtle',
+                : 'bg-transparent text-text-default border-primary hover:bg-bg-subtle',
             )}
           >
             Category {sortConfig.key === 'category' && (sortConfig.direction === 'asc' ? '▲' : '▼')}
           </button>
         </div>
+        {/* END OF SORT */}
       </div>
-
-      {/* Filter Controls */}
-      <div className="mb-6 space-y-3">
-        <div>
-          <span className="text-sm font-medium text-text-muted mr-2">Categories:</span>
-          {allCategories.map((cat) => (
-            <button
-              key={cat.id} // key can remain a number or string, React handles it
-              onClick={() => toggleFilter(String(cat.id), 'category')} // Convert cat.id to string
-              className={cn(
-                'px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors',
-                selectedCategoryIds.includes(String(cat.id)) // Convert cat.id to string for includes check
-                  ? 'bg-primary text-black-200 border-primary'
-                  : 'bg-transparent text-text-default border-border-default hover:bg-bg-subtle',
-              )}
-            >
-              {cat.name}
-            </button>
-          ))}
-          {selectedCategoryIds.length > 0 && (
-            <button
-              onClick={() => setSelectedCategoryIds([])}
-              className="px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors bg-accent/20 text-accent border-accent/50 hover:bg-accent/30"
-            >
-              Clear Categories
-            </button>
-          )}
-        </div>
-        {displayableTags.length > 0 && (
-          <div>
-            <span className="text-sm font-medium text-text-muted mr-2">Tags:</span>
-            {displayableTags.map(
-              (
-                tag, // Assuming displayableTags elements also have 'id' that might be a number
-              ) => (
-                <button
-                  key={tag.id}
-                  onClick={() => toggleFilter(String(tag.id), 'tag')} // Convert tag.id to string
-                  className={cn(
-                    'px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors',
-                    selectedTagIds.includes(String(tag.id)) // Convert tag.id to string for includes check
-                      ? 'bg-secondary text-black-200 border-secondary'
-                      : 'bg-transparent text-text-default border-border-default hover:bg-bg-subtle',
-                  )}
-                >
-                  {tag.name}
-                </button>
-              ),
-            )}
-            {selectedTagIds.length > 0 && (
-              <button
-                onClick={() => setSelectedTagIds([])}
-                className="px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors bg-accent/20 text-accent border-accent/50 hover:bg-accent/30"
-              >
-                Clear Tags
-              </button>
-            )}
-          </div>
-        )}
-      </div>
-
       {/* Artifacts List */}
-      <div ref={parentRef} className="border-t border-border-default">
+      <div ref={parentRef} className="border-t border-foreground">
         {filteredAndSortedArtifacts.map((artifact) => {
           const category = artifact['pb-artifact-category']
           const categoryName =
@@ -303,7 +307,7 @@ export function OpenSourceArtifactsClient({
           return (
             <div
               key={artifact.id} // React keys can be numbers or strings
-              className="border-b border-border-default"
+              className="border-b border-foreground"
               onMouseEnter={() => setHoveredItemId(String(artifact.id))} // Convert artifact.id to string
               onMouseLeave={() => setHoveredItemId(null)}
             >

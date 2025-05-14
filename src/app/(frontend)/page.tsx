@@ -10,7 +10,6 @@ import IntroText from '@/components/home/IntroText'
 import { ProjectGalleryClient } from '@/components/home/ProjectGalleryClient'
 import { fetchProjectsPage } from '@/app/actions'
 import { H2 } from '@typography'
-import InnerWrapper from '@/components/layout/InnerWrapper'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
