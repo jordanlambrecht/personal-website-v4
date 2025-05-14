@@ -10,6 +10,7 @@ import IntroText from '@/components/home/IntroText'
 import { ProjectGalleryClient } from '@/components/home/ProjectGalleryClient'
 import { fetchProjectsPage } from '@/app/actions'
 import { H2 } from '@typography'
+import InnerWrapper from '@/components/layout/InnerWrapper'
 import { getPayload } from 'payload'
 import config from '@payload-config'
 
@@ -140,7 +141,7 @@ export default async function HomePage() {
   const initialData = await fetchProjectsPage(1, PAGE_SIZE) // Fetch page 1
 
   return (
-    <div className="max-w-7xl">
+    <InnerWrapper>
       {/* --- Intro Section --- */}
       <section className="grid grid-cols-1 gap-x-12 md:grid-cols-5">
         <div className="relative col-span-3 overflow-hidden md:h-auto">
@@ -175,6 +176,6 @@ export default async function HomePage() {
           pageSize={PAGE_SIZE}
         />
       </div>
-    </div>
+    </InnerWrapper>
   )
 }
