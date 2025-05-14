@@ -15,28 +15,28 @@ const SuggestedTextColorInfo: React.FC = () => {
   const [suggestedColor, setSuggestedColor] = useState<string>('#000000')
 
   // Log the fields object to see its structure
-  console.log('All fields state received:', fields)
+  // console.log('All fields state received:', fields)
 
   useEffect(() => {
-    console.log('useEffect - bgColorValue:', bgColorValue)
+    // console.log('useEffect - bgColorValue:', bgColorValue)
 
     if (bgColorValue && typeof bgColorValue === 'string' && bgColorValue.length >= 6) {
       try {
         const contrastColor = getContrastTextColor(bgColorValue)
-        console.log('useEffect - Calculated contrastColor:', contrastColor)
+        // console.log('useEffect - Calculated contrastColor:', contrastColor)
         setSuggestedColor(contrastColor)
       } catch (error) {
-        console.error('useEffect - Error calculating contrast:', error)
+        // console.error('useEffect - Error calculating contrast:', error)
         setSuggestedColor('#000000')
       }
     } else {
-      console.log('useEffect - bgColorValue is invalid or empty, resetting suggestion.')
+      // console.log('useEffect - bgColorValue is invalid or empty, resetting suggestion.')
       setSuggestedColor('#000000')
     }
     // --- Dependency array still uses the extracted value ---
   }, [bgColorValue])
 
-  console.log('Rendering with suggestedColor:', suggestedColor)
+  // console.log('Rendering with suggestedColor:', suggestedColor)
 
   return (
     <div style={{ marginTop: '10px', color: '#666', fontSize: '0.85em' }}>

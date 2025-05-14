@@ -25,7 +25,7 @@ const ensureProductDesignProjectType: CollectionBeforeChangeHook = async ({
 
     if (designTypeQuery.docs.length > 0) {
       const designTypeId = designTypeQuery.docs[0].id
-      console.log(`(${operation}) Setting projectType for Product Design to ID: ${designTypeId}`)
+      // console.log(`(${operation}) Setting projectType for Product Design to ID: ${designTypeId}`)
       data.projectType = designTypeId
     } else {
       console.error('CRITICAL: Could not find Label named "Product Design". Please create it.')

@@ -171,9 +171,9 @@ export const OtherProjects: CollectionConfig = {
       required: true,
       hasMany: false,
       validate: async (value, { operation }) => {
-        console.log(`--- Validating projectLabel during ${operation} ---`)
-        console.log('Value received:', value)
-        console.log('Type of value:', typeof value)
+        // console.log(`--- Validating projectLabel during ${operation} ---`)
+        // console.log('Value received:', value)
+        // console.log('Type of value:', typeof value)
 
         if (
           (value === null || typeof value === 'undefined' || value === '') &&
@@ -183,7 +183,7 @@ export const OtherProjects: CollectionConfig = {
           return 'Project Label is required.'
         }
 
-        console.log('--- Validation Passed ---')
+        // console.log('--- Validation Passed ---')
         return true
       },
       admin: {

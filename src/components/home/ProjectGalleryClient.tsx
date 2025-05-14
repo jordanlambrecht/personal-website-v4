@@ -73,7 +73,7 @@ export function ProjectGalleryClient({
 
   const loadMoreProjects = () => {
     const nextPage = currentPage + 1
-    console.log(`loadMoreProjects: Fetching page ${nextPage} with filter ${selectedLabelId}`)
+    // console.log(`loadMoreProjects: Fetching page ${nextPage} with filter ${selectedLabelId}`)
     startTransition(async () => {
       try {
         const newData = await fetchProjectsPage(nextPage, pageSize, selectedLabelId)
@@ -81,9 +81,9 @@ export function ProjectGalleryClient({
         //   `loadMoreProjects: Received ${newData.projects.length} projects, hasNextPage: ${newData.hasNextPage}`,
         // )
         setDisplayedProjects((prevProjects) => {
-          console.log(
-            `loadMoreProjects: Appending ${newData.projects.length} projects to previous ${prevProjects.length}`,
-          )
+          // console.log(
+          //   `loadMoreProjects: Appending ${newData.projects.length} projects to previous ${prevProjects.length}`,
+          // )
           return [...prevProjects, ...newData.projects]
         })
         setCurrentPage(nextPage)

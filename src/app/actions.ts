@@ -161,9 +161,9 @@ export async function fetchProjectsPage(
   const projectsForPage = combinedProjectsSorted.slice(startIndex, endIndex)
   const hasNextPage = endIndex < totalDocs
 
-  console.log(
-    `Page: ${page}, Limit: ${limit}, LabelId: ${labelId}, Fetched: [PD:${fetchPD}, OP:${fetchOP}, L:${fetchL}], Total Filtered Docs: ${totalDocs}, Returned Count: ${projectsForPage.length}, Calculated hasNext: ${hasNextPage}`,
-  )
+  // console.log(
+  //   `Page: ${page}, Limit: ${limit}, LabelId: ${labelId}, Fetched: [PD:${fetchPD}, OP:${fetchOP}, L:${fetchL}], Total Filtered Docs: ${totalDocs}, Returned Count: ${projectsForPage.length}, Calculated hasNext: ${hasNextPage}`,
+  // )
 
   return { projects: projectsForPage, hasNextPage }
 }

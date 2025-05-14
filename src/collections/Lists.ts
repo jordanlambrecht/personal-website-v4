@@ -21,7 +21,7 @@ const ensureListProjectType: CollectionBeforeChangeHook = async ({ data, req, op
 
     if (listTypeQuery.docs.length > 0) {
       const listTypeId = listTypeQuery.docs[0].id
-      console.log(`(${operation}) Setting projectType for List to ID: ${listTypeId}`)
+      // console.log(`(${operation}) Setting projectType for List to ID: ${listTypeId}`)
       data.projectType = listTypeId
     } else {
       console.error('CRITICAL: Could not find ProjectType named "List". Please create it.')

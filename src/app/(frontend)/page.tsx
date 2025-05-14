@@ -51,7 +51,7 @@ export default async function HomePage() {
   const productDesignLabelDefinition = allLabelsRaw.find((l) => l.name === 'Product Design')
 
   // --- Fetch counts for each label ---
-  console.log('\n--- Starting Label Count Calculation ---')
+  // console.log('\n--- Starting Label Count Calculation ---')
   const labelsWithCounts: LabelWithCount[] = await Promise.all(
     allLabelsRaw.map(async (label): Promise<LabelWithCount> => {
       let count = 0
@@ -66,63 +66,63 @@ export default async function HomePage() {
       // If a label can apply to BOTH PD and OP, this logic is flawed.
       const isOtherLabel = !isListLabel && !isProductDesignLabel
 
-      console.log(`\nCalculating count for Label: "${labelName}" (ID: ${labelId})`)
-      console.log(
-        `  Is List: ${isListLabel}, Is PD: ${isProductDesignLabel}, Is Other: ${isOtherLabel}`,
-      )
+      // console.log(`\nCalculating count for Label: "${labelName}" (ID: ${labelId})`)
+      // console.log(
+      //   `  Is List: ${isListLabel}, Is PD: ${isProductDesignLabel}, Is Other: ${isOtherLabel}`,
+      // )
 
       try {
         if (isProductDesignLabel && siteSettings.showProductDesigns) {
           // Check global toggle
-          console.log(`  Querying Product Designs for projectType: ${labelId}`)
+          // console.log(`  Querying Product Designs for projectType: ${labelId}`)
           const pdCountData = await payload.find({
             collection: 'product-design',
             where: { _status: { equals: 'published' }, projectType: { equals: labelId } },
             limit: 0,
             depth: 0,
           })
-          console.log(`  Product Designs count: ${pdCountData.totalDocs}`)
+          // console.log(`  Product Designs count: ${pdCountData.totalDocs}`)
           count += pdCountData.totalDocs
         } else {
-          console.log(`  Skipping Product Designs query (Label is not PD or PD section disabled).`)
+          // console.log(`  Skipping Product Designs query (Label is not PD or PD section disabled).`)
         }
 
         if (isOtherLabel && siteSettings.showOtherProjects) {
           // Check global toggle
-          console.log(`  Querying Other Projects for projectLabel: ${labelId}`)
+          // console.log(`  Querying Other Projects for projectLabel: ${labelId}`)
           const opCountData = await payload.find({
             collection: 'other-projects',
             where: { _status: { equals: 'published' }, projectLabel: { equals: labelId } },
             limit: 0,
             depth: 0,
           })
-          console.log(`  Other Projects count: ${opCountData.totalDocs}`)
+          // console.log(`  Other Projects count: ${opCountData.totalDocs}`)
           count += opCountData.totalDocs
         } else {
-          console.log(
-            `  Skipping Other Projects query (Label is not Other or OP section disabled).`,
-          )
+          // console.log(
+          //   `  Skipping Other Projects query (Label is not Other or OP section disabled).`,
+          // )
         }
 
         if (isListLabel && siteSettings.showLists) {
           // Check global toggle
-          console.log(`  Querying Lists count`)
+          // console.log(`  Querying Lists count`)
           const listCountData = await payload.find({
             collection: 'lists',
             where: { _status: { equals: 'published' } },
             limit: 0,
             depth: 0,
           })
-          console.log(`  Lists count: ${listCountData.totalDocs}`)
+          // console.log(`  Lists count: ${listCountData.totalDocs}`)
           count += listCountData.totalDocs
         } else {
-          console.log(`  Skipping Lists query (Label is not List or Lists section disabled).`)
+          // console.log(`  Skipping Lists query (Label is not List or Lists section disabled).`)
         }
 
-        console.log(`  ==> Final calculated count for "${labelName}": ${count}`)
+        // console.log(`  ==> Final calculated count for "${labelName}": ${count}`)
       } catch (error) {
         console.error(`Error fetching count for label "${label.name}" (${label.id}):`, error)
-        console.log(`  ==> Error resulted in count 0 for "${labelName}"`)
+        // console.log(`  ==> Error resulted in count 0 for "${labelName}"`)
       }
 
       return { ...label, projectCount: count }
@@ -131,11 +131,11 @@ export default async function HomePage() {
 
   // Filter out labels with zero projects before passing to client
   const availableLabelsWithProjects = labelsWithCounts.filter((l) => l.projectCount > 0)
-  console.log('\n--- Finished Label Count Calculation ---')
-  console.log(
-    'Labels with count > 0 being passed to client:',
-    availableLabelsWithProjects.map((l) => ({ name: l.name, count: l.projectCount })),
-  )
+  // console.log('\n--- Finished Label Count Calculation ---')
+  // console.log(
+  //   'Labels with count > 0 being passed to client:',
+  //   availableLabelsWithProjects.map((l) => ({ name: l.name, count: l.projectCount })),
+  // )
 
   // --- Fetch Initial Page (Page 1) using the Server Action logic ---
   const initialData = await fetchProjectsPage(1, PAGE_SIZE) // Fetch page 1
