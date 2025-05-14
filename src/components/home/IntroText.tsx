@@ -12,7 +12,10 @@ const IntroText = () => {
         I&apos;m Jordan Lambrecht, a Professional Something or Another based out of Lincoln,
         Nebraska.
       </P>
-
+      <P className="w-full md:text-balance">
+        In more specific terms, I&apos;m a creative director and strategic leader with expertise in
+        motion design, brand storytelling, marketing, and building high-performing creative teams.
+      </P>
       <P className="w-full md:text-balance">
         Creating well-designed and personal moments that make people happy gets me out of bed in the
         morning - and keeps me up at night. As such, an off button is not part of my programming, be
