@@ -1,10 +1,41 @@
 // /src/app/(frontend)/pixel-bakery/page.tsx
+
 import Link from 'next/link'
 import { PageHeading } from '@/components/ui/PageHeading'
+import { getPayload } from 'payload'
+import config from '@/payload.config'
+import { OpenSourceDocument, PbArtifactCategory, PbArtifactTag } from '@/payload-types'
+import { OpenSourceArtifactsClient } from './OpenSourceArtifacts.client'
+import { H2, P } from '@typography'
 
-export default function PixelBakeryPage() {
+export default async function PixelBakeryPage() {
+  const payload = await getPayload({ config })
+
+  const artifactsData = await payload.find({
+    collection: 'open-source-documents',
+    limit: 100,
+    depth: 2, // To populate category, tags, and documentFile (media)
+    where: {
+      _status: { equals: 'published' },
+    },
+  })
+
+  const categoriesData = await payload.find({
+    collection: 'pb-artifact-categories',
+    limit: 100,
+  })
+
+  const tagsData = await payload.find({
+    collection: 'pb-artifact-tags',
+    limit: 100,
+  })
+
+  const artifacts = artifactsData.docs as OpenSourceDocument[]
+  const categories = categoriesData.docs as PbArtifactCategory[]
+  const tags = tagsData.docs as PbArtifactTag[]
+
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-6xl mx-auto">
       <PageHeading title="Pixel Bakery" />
 
       <div className="mb-10">
@@ -13,77 +44,31 @@ export default function PixelBakeryPage() {
             <p className="text-gray-400">Pixel Bakery Image</p>
           </div>
         </div>
-
-        <p className="mb-4 text-lg text-gray-700">
-          I&apos;m the Director and Founder of Pixel Bakery Design Studio and sit on the Board of
-          Directors for the Lux Center for the Arts. Sometimes I host workshops, create tutorials,
-          and do some public speaking.
-        </p>
-
-        <p className="mb-4 text-lg text-gray-700">
-          Pixel Bakery is a creative studio based in Lincoln, Nebraska, specializing in animation,
-          design, and development. We work with clients of all sizes to create memorable and
-          impactful visual experiences.
-        </p>
-
-        <p className="mb-6 text-lg text-gray-700">
-          Our team is passionate about crafting content that leaves a lasting impression. From brand
-          identity and web development to animation and social media content, we help businesses
-          tell their stories in engaging ways.
-        </p>
-
-        <div className="mt-8">
-          <Link
-            href="https://pixelbakery.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 text-white transition-colors rounded-md bg-amber-500 hover:bg-amber-600"
-          >
-            Visit Pixel Bakery
-          </Link>
-        </div>
       </div>
 
-      <div className="mb-10">
-        <h2 className="mb-4 text-2xl font-bold">Services</h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-xs">
-            <h3 className="mb-2 text-xl font-semibold">Animation</h3>
-            <p className="text-gray-700">2D and 3D animation services for brands and businesses.</p>
-          </div>
-          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-xs">
-            <h3 className="mb-2 text-xl font-semibold">Design</h3>
-            <p className="text-gray-700">Branding, print, and digital design that stands out.</p>
-          </div>
-          <div className="p-4 bg-white border border-gray-200 rounded-md shadow-xs">
-            <h3 className="mb-2 text-xl font-semibold">Development</h3>
-            <p className="text-gray-700">Web development and interactive experiences.</p>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="mb-4 text-2xl font-bold">Get in Touch</h2>
-        <p className="mb-4 text-lg text-gray-700">
-          Interested in working with Pixel Bakery? Visit our website or reach out directly to learn
-          more.
-        </p>
-        <div className="flex space-x-4">
-          <Link
-            href="mailto:hello@pixelbakery.com"
-            className="inline-flex items-center px-4 py-2 transition-colors bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            Contact Us
-          </Link>
-          <Link
-            href="https://pixelbakery.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center px-4 py-2 transition-colors bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-          >
-            Visit Website
-          </Link>
-        </div>
+      {/* Open Source Artifacts Section */}
+      <div className="my-16">
+        <H2>Open-Source Artifacts</H2>
+        <P>
+          One of my closely-held personal values is that knowledge should be shared. We built some
+          pretty useful things over the years, and I want to share it with you rather than let it
+          collect digital dust. I hope you find it useful.
+        </P>
+        <P>
+          I've packaged our most valuable resources: client onboarding workflows, project
+          managementframeworks, creative brief templates, production timelines, and quality
+          assurance checklists, etc etc.
+        </P>
+        <P>
+          Some were born from spectacular failures, others from gradual refinement. Some are
+          incomplete, some are crazy intricate. None are perfect, but all are battle-tested. Take
+          what works, improve what doesn't, and build something better.
+        </P>
+        <OpenSourceArtifactsClient
+          initialArtifacts={artifacts}
+          allCategories={categories}
+          allTags={tags}
+        />
       </div>
     </div>
   )

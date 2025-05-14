@@ -1,5 +1,5 @@
 // src/payload.config.ts
-// import { s3Storage } from '@payloadcms/storage-s3'
+import { s3Storage } from '@payloadcms/storage-s3'
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
@@ -15,15 +15,25 @@ import {
   Media,
   ProductDesigns,
   OtherProjects,
-  // MediaWithPrefix,
+  PbArtifactCategories,
   ProductFiles,
+  OpenSourceDocuments,
   Labels,
+  PbArtifactTags,
 } from '@/collections'
 import { SiteSettings } from '@/globals/SiteSettings'
 import { getServerSideURL } from '@/utils/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
+
+// Check if 'generate:types' is in the command line arguments
+const isGeneratingTypes = process.argv.includes('generate:types')
+
+// Define the string prefix to be used in the S3 plugin configuration.
+// This acts as a default if the hook in Media.ts doesn't set `doc.prefix`,
+// and ensures `generate:types` receives a string.
+const s3CollectionConfigPrefix = isGeneratingTypes ? 'placeholder_for_types/' : 'uploads_default/'
 
 export default buildConfig({
   admin: {
@@ -33,7 +43,18 @@ export default buildConfig({
     },
   },
   globals: [SiteSettings],
-  collections: [ProductDesigns, OtherProjects, ProductFiles, Users, Media, Lists, Labels],
+  collections: [
+    ProductDesigns,
+    OtherProjects,
+    ProductFiles,
+    Users,
+    Media,
+    Lists,
+    Labels,
+    PbArtifactCategories,
+    PbArtifactTags,
+    OpenSourceDocuments,
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -49,20 +70,21 @@ export default buildConfig({
   sharp,
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
-    // s3Storage({
-    //   collections: {
-    //     media: true,
-    //   },
-    //   bucket: process.env.S3_BUCKET,
-    //   config: {
-    //     credentials: {
-    //       accessKeyId: process.env.S3_ACCESS_KEY_ID,
-    //       secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-    //     },
-    //     region: process.env.S3_REGION,
-    //     // ... Other S3 configuration
-    //   },
-    // }),
+    s3Storage({
+      collections: {
+        media: {
+          prefix: s3CollectionConfigPrefix,
+        },
+      },
+      bucket: process.env.S3_BUCKET!,
+      config: {
+        credentials: {
+          accessKeyId: process.env.S3_ACCESS_KEY_ID!,
+          secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
+        },
+        region: process.env.S3_REGION!,
+      },
+    }),
     seoPlugin({
       collections: ['product-design', 'lists', 'other-projects'],
       uploadsCollection: 'media',

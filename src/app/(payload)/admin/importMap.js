@@ -33,6 +33,7 @@ import { default as default_063b091a21546a9c1ce3231c1f5e1a23 } from '../../../co
 import { default as default_fdee63428da12144ee77146dc01bb4c7 } from '../../../components/payload/LabelSelector.tsx'
 import { default as default_ffe2efba737dd7baf572ccbf9add17f6 } from '../../../components/payload/ColorCell.tsx'
 import { ColorPickerFieldComponent as ColorPickerFieldComponent_95f860801d0381344387ae1d8e2f4d24 } from '@innovixx/payload-color-picker-field/components'
+import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
 
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -69,5 +70,6 @@ export const importMap = {
   "./components/payload/ProjectTypeCell.tsx#default": default_063b091a21546a9c1ce3231c1f5e1a23,
   "./components/payload/LabelSelector.tsx#default": default_fdee63428da12144ee77146dc01bb4c7,
   "./components/payload/ColorCell.tsx#default": default_ffe2efba737dd7baf572ccbf9add17f6,
-  "@innovixx/payload-color-picker-field/components#ColorPickerFieldComponent": ColorPickerFieldComponent_95f860801d0381344387ae1d8e2f4d24
+  "@innovixx/payload-color-picker-field/components#ColorPickerFieldComponent": ColorPickerFieldComponent_95f860801d0381344387ae1d8e2f4d24,
+  "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24
 }

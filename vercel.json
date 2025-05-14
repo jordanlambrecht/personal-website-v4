@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/media/:path*",
+      "destination": "https://d2df35hvi8o8np.cloudfront.net/:path*"
+    }
+  ]
+}
