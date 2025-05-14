@@ -54,8 +54,9 @@ export function OpenSourceArtifactsClient({
       if (Array.isArray(artifact['pb-artifact-tag'])) {
         artifact['pb-artifact-tag'].forEach((tag) => {
           if (typeof tag === 'object' && tag !== null && 'id' in tag) {
-            tagIds.add(tag.id)
+            tagIds.add(String(tag.id)) // Convert number to string here
           } else if (typeof tag === 'string') {
+            // This case handles if the tag itself is already a string ID (less likely if populated)
             tagIds.add(tag)
           }
         })
@@ -65,7 +66,8 @@ export function OpenSourceArtifactsClient({
   }, [initialArtifacts])
 
   const displayableTags = useMemo(() => {
-    return allTags.filter((tag) => activeTagIdsInContent.has(tag.id))
+    // Ensure allTags.id is also treated as a string for comparison if it's a number
+    return allTags.filter((tag) => activeTagIdsInContent.has(String(tag.id)))
   }, [allTags, activeTagIdsInContent])
 
   const filteredAndSortedArtifacts = useMemo(() => {
@@ -97,16 +99,19 @@ export function OpenSourceArtifactsClient({
       })
     }
 
+    // Category Filter
     if (selectedCategoryIds.length > 0) {
       filtered = filtered.filter((artifact) => {
         const category = artifact['pb-artifact-category']
         if (typeof category === 'object' && category !== null && 'id' in category) {
-          return selectedCategoryIds.includes(category.id)
+          // Ensure category.id is treated as a string for comparison
+          return selectedCategoryIds.includes(String(category.id))
         }
         return false
       })
     }
 
+    // Tag Filter
     if (selectedTagIds.length > 0) {
       filtered = filtered.filter((artifact) => {
         const tags = artifact['pb-artifact-tag']
@@ -114,7 +119,7 @@ export function OpenSourceArtifactsClient({
           return tags.some((tag) => {
             const tagId =
               typeof tag === 'object' && tag !== null && 'id' in tag
-                ? tag.id
+                ? String(tag.id) // Convert number to string here
                 : typeof tag === 'string'
                   ? tag
                   : null
@@ -212,12 +217,12 @@ export function OpenSourceArtifactsClient({
           <span className="text-sm font-medium text-text-muted mr-2">Categories:</span>
           {allCategories.map((cat) => (
             <button
-              key={cat.id}
-              onClick={() => toggleFilter(cat.id, 'category')}
+              key={cat.id} // key can remain a number or string, React handles it
+              onClick={() => toggleFilter(String(cat.id), 'category')} // Convert cat.id to string
               className={cn(
                 'px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors',
-                selectedCategoryIds.includes(cat.id)
-                  ? 'bg-primary text-black-200 border-primary' // text-black-200 for contrast
+                selectedCategoryIds.includes(String(cat.id)) // Convert cat.id to string for includes check
+                  ? 'bg-primary text-black-200 border-primary'
                   : 'bg-transparent text-text-default border-border-default hover:bg-bg-subtle',
               )}
             >
@@ -236,20 +241,24 @@ export function OpenSourceArtifactsClient({
         {displayableTags.length > 0 && (
           <div>
             <span className="text-sm font-medium text-text-muted mr-2">Tags:</span>
-            {displayableTags.map((tag) => (
-              <button
-                key={tag.id}
-                onClick={() => toggleFilter(tag.id, 'tag')}
-                className={cn(
-                  'px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors',
-                  selectedTagIds.includes(tag.id)
-                    ? 'bg-secondary text-black-200 border-secondary' // text-black-200 for contrast on secondary
-                    : 'bg-transparent text-text-default border-border-default hover:bg-bg-subtle',
-                )}
-              >
-                {tag.name}
-              </button>
-            ))}
+            {displayableTags.map(
+              (
+                tag, // Assuming displayableTags elements also have 'id' that might be a number
+              ) => (
+                <button
+                  key={tag.id}
+                  onClick={() => toggleFilter(String(tag.id), 'tag')} // Convert tag.id to string
+                  className={cn(
+                    'px-2.5 py-1 text-xs border rounded-full mr-1.5 mb-1.5 transition-colors',
+                    selectedTagIds.includes(String(tag.id)) // Convert tag.id to string for includes check
+                      ? 'bg-secondary text-black-200 border-secondary'
+                      : 'bg-transparent text-text-default border-border-default hover:bg-bg-subtle',
+                  )}
+                >
+                  {tag.name}
+                </button>
+              ),
+            )}
             {selectedTagIds.length > 0 && (
               <button
                 onClick={() => setSelectedTagIds([])}
@@ -292,9 +301,9 @@ export function OpenSourceArtifactsClient({
 
           return (
             <div
-              key={artifact.id}
+              key={artifact.id} // React keys can be numbers or strings
               className="border-b border-border-default"
-              onMouseEnter={() => setHoveredItemId(artifact.id)}
+              onMouseEnter={() => setHoveredItemId(String(artifact.id))} // Convert artifact.id to string
               onMouseLeave={() => setHoveredItemId(null)}
             >
               <Link
@@ -331,7 +340,7 @@ export function OpenSourceArtifactsClient({
                     {fileTypeDisplay}
                   </span>
                   <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center text-text-muted group-hover:text-primary transition-opacity duration-150 opacity-0 group-hover:opacity-100">
-                    {hoveredItemId === artifact.id &&
+                    {hoveredItemId === String(artifact.id) && // Convert artifact.id to string for comparison
                       (artifact.resourceType === 'file' ? (
                         <DownloadIcon className="w-5 h-5" />
                       ) : (
