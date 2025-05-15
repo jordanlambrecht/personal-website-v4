@@ -1,7 +1,20 @@
 // /src/app/not-found.tsx
 import Link from 'next/link'
+import { usePlausible } from 'next-plausible'
+import { useEffect } from 'react'
 
 export default function NotFound() {
+  const plausible = usePlausible()
+
+  useEffect(() => {
+    plausible('404-page', {
+      props: {
+        url: window.location.href,
+        referrer: document.referrer || 'None',
+      },
+    })
+  }, [plausible])
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center">
       <h1 className="mb-4 text-6xl font-bold">404</h1>

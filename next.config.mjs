@@ -1,4 +1,4 @@
-// next.config.mjs
+import { withPlausibleProxy } from 'next-plausible'
 import { withPayload } from '@payloadcms/next/withPayload'
 
 /** @type {import('next').NextConfig} */
@@ -29,4 +29,14 @@ const nextConfig = {
   },
 }
 
-export default withPayload(nextConfig, { devBundleServerPackages: false })
+export default withPayload(
+  {
+    devBundleServerPackages: false, // Moved to the correct place
+  },
+  withPlausibleProxy(
+    {
+      customDomain: 'https://analytics.jordy.world',
+    },
+    nextConfig,
+  ),
+)
