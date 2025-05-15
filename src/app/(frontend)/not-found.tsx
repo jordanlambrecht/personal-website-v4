@@ -1,4 +1,5 @@
 // /src/app/not-found.tsx
+'use client'
 import Link from 'next/link'
 import { usePlausible } from 'next-plausible'
 import { useEffect } from 'react'
