@@ -60,7 +60,9 @@
   button, button * {
     @apply cursor-pointer;
   }
-
+ ul,li{
+    @apply max-w-lg;
+  }
   p,
   ul,
   li { /* 'a' is styled separately below */

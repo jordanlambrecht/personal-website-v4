@@ -40,19 +40,19 @@ export default async function PixelBakeryPage() {
     <>
       <PageHeading title="Pixel Bakery" />
 
-      <section className="mb-6 lg:mb-0">
-        <div className="grid grid-cols-1 gap-x-12 lg:grid-cols-6  lg:max-h-dvh">
-          <div className="col-span-1 relative mb-8 overflow-hidden bg-gray-100 rounded-sm aspect-16/9 lg:hidden">
+      <section className="mb-6 lg:mb-3 w-full">
+        <div className="grid grid-cols-1 gap-x-12 md:grid-cols-2 lg:grid-cols-5  lg:max-h-dvh">
+          <div className="col-span-1 relative mb-8 overflow-hidden bg-gray-100 rounded-sm aspect-16/9 md:hidden">
             <div className="flex items-center justify-center h-full">
               <Image src={PbOffice01} alt="Pixel Bakery Office" fill className="object-cover" />
             </div>
           </div>
-          <div className="lg:col-span-2 relative mb-8 overflow-hidden bg-gray-100 rounded-sm w-full  aspect-3/4 hidden lg:block max-h-[80%]">
+          <div className="col-span-1 lg:col-span-3 relative mb-8 overflow-hidden bg-gray-100 rounded-sm w-full  aspect-3/4 hidden md:block max-h-[80%]">
             <div className="flex items-center justify-center h-full scale-110">
               <Image src={PbOffice02} alt="Pixel Bakery Office" fill className="object-cover" />
             </div>
           </div>
-          <div className="col-span-1 lg:col-span-3">
+          <div className="col-span-1 lg:col-span-2">
             <P>
               <Link href="https://pixelbakery.com"> Pixel Bakery Design Studio</Link> was a
               multidisciplinary production studio that tells brand stories using motion design,
