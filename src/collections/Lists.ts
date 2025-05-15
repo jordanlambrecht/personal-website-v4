@@ -61,7 +61,6 @@ export const Lists: CollectionConfig = {
       name: 'emoji',
       label: 'Icon Emoji',
       type: 'text',
-      maxLength: 4,
       admin: {
         description: 'Optional: An emoji to display as an icon.',
         width: '20%',

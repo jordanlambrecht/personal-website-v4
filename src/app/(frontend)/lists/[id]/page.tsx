@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link' // Import Link
 import { PageHeading } from '@/components/ui/PageHeading'
 import { List } from '@/payload-types'
 import { getPayload } from 'payload' // Import getPayload
@@ -47,6 +48,13 @@ export default async function ListDetailPage({ params }: { params: Promise<ListP
 
   return (
     <>
+      {/* Back button */}
+      <div className="mb-4">
+        <Link href="/lists" className="text-foreground hover:text-foreground/50 ">
+          &larr; Back to all lists
+        </Link>
+      </div>
+
       {/* Use the list title for the PageHeading */}
       <PageHeading title={list.title} description={list.subheader || 'A list of things.'} />
 

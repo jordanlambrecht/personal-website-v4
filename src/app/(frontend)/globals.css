@@ -72,8 +72,12 @@
     @apply  text-orange hover:text-orange/50 underline underline-offset-4;
 
   }
-
-
+  ul.list-bullet {
+      @apply list-disc pl-4 list-outside;
+    }
+  ul.list-bullet li {
+    @apply py-1;
+  }
   h1,
   h2,
   h3,
@@ -82,6 +86,78 @@
   h6 {
     color: var(--color-text-default); /* Use themed default text color */
     @apply font-bold;
+  }
+  .payload-richtext ul.list-check > li > input[type="checkbox"],
+  .payload-richtext ul.list-check > li > p > input[type="checkbox"]
+  {
+    /* Reset default appearance */
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    @apply inline-block relative border-1 border-foreground bg-bg-subtle rounded-md w-5 h-5 align-middle -top-0.75;
+
+
+
+    margin-right: 0.6em; /* Space between checkbox and text */
+    vertical-align: -0.2em; /* Fine-tune vertical alignment with text */
+    transition: background-color 0.2s, border-color 0.2s;
+    pointer-events: none; /* Makes the input non-interactive with the mouse */
+  }
+    /* Focus state for accessibility */
+  .payload-richtext ul.list-check > li > input[type="checkbox"]:focus {
+    outline: 2px solid var(--color-primary); /* Or your focus ring color variable */
+    outline-offset: 2px;
+    border-color: var(--color-primary);
+  }
+   .payload-richtext ul.list-check > li > input[type="checkbox"]:checked {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+  }
+   .payload-richtext ul.list-check > li > input[type="checkbox"]::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    width: 0.3em;  /* Width of the checkmark lines */
+    height: 0.6em; /* Height of the checkmark lines */
+    border-style: solid;
+    /* Checkmark color - should contrast with --color-primary.
+       Using a variable for text on primary background is best.
+       If not available, white is a common fallback. */
+    border-color: var(--color-text-on-primary, white);
+    border-width: 0 0.15em 0.15em 0; /* Creates the "L" shape for the checkmark */
+    transform: translate(-50%, -50%) rotate(45deg);
+    opacity: 0;
+    transition: opacity 0.1s ease-in-out;
+  }
+  .payload-richtext ul.list-check > li > input[type="checkbox"]:checked::before {
+    opacity: 1; /* Show checkmark when checked */
+  }
+
+  /* Style for the label text when the item is checked */
+  /* Leverages the class added by Lexical to the <li> element */
+  .payload-richtext ul.list-check > li.list-item-checkbox-checked > label {
+    text-decoration: line-through;
+    color: var(--color-text-muted, #6b7280); /* Use your muted text color variable */
+  }
+
+  /* Ensure list items with checkboxes don't have default bullets
+     (Lexical already adds list-style-type: none; inline, but this is a good fallback) */
+  .payload-richtext ul.list-check > li {
+    list-style-type: none !important; /* Override if necessary */
+    padding-left: 0 !important; /* Reset padding */
+    display: flex; /* Align checkbox and label nicely */
+    align-items: flex-start; /* Align items to the start of the cross axis */
+    margin-bottom: 0.5em; /* Add some space between checklist items */
+  }
+
+  .payload-richtext ul.list-check > li > label {
+    display: inline; /* Or inline-block if more control is needed */
+    line-height: 1.2em; /* Match checkbox height for better alignment */
+    /* Allow label to take remaining space */
+    flex-grow: 1;
   }
 }
 

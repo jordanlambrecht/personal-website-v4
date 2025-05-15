@@ -6,7 +6,7 @@ import Image from 'next/image'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { PinIcon } from 'lucide-react'
 import Link from 'next/link'
-import { P } from '@typography'
+import { H3, P } from '@typography'
 
 export default async function ProductDesignPage() {
   const productDesignsData = await getDocuments<ProductDesign>({
@@ -96,7 +96,7 @@ export default async function ProductDesignPage() {
               <div className="absolute inset-0 z-20 transition-opacity duration-300 opacity-0 bg-linear-to-t from-black/70 to-transparent group-hover:opacity-100">
                 {' '}
                 <div className="absolute bottom-0 left-0 p-4 text-white">
-                  <h3 className="mb-1 text-lg font-bold">{design.title}</h3>
+                  <H3 className="text-smoke">{design.title}</H3>
                   {design.datePublished && (
                     <p className="text-sm text-gray-200">
                       {new Date(design.datePublished).toLocaleDateString()}

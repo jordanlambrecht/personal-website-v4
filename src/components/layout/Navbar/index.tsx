@@ -139,17 +139,17 @@ export function Navbar({ navItems }: NavbarProps) {
                   animate="visible"
                   exit="hidden"
                 >
-                  <div className="px-2 py-1 space-y-1 sm:px-3 bg-background">
+                  <div className="transition-all duration-300 ease-in px-2 py-1 space-y-1 sm:px-3 bg-background">
                     {/* Mobile Menu Items */}
                     {navItems.map((item) => (
                       <div
-                        className="leading-none dark:bg-black hover:bg-lime hover:text-lime z-50"
+                        className="leading-none dark:bg-black  hover:text-orange dark:hover:text-lime z-50"
                         key={item.href}
                       >
                         <Link
                           href={item.href}
                           className={cn(
-                            'block leading-none px-3 py-1 rounded-md  font-medium transition-colors duration-300 ease-in text-ghost sm:text-center',
+                            'block leading-none px-3 py-1 rounded-md  font-medium transition-colors duration-300 ease-in  sm:text-center dark:hover:border-2  dark:border-lime',
                             isActive(item.href) ? 'text-primary dark:bg-lime dark:text-black' : '',
                           )}
                           onClick={() => setIsMenuOpen(false)}
@@ -171,7 +171,7 @@ export function Navbar({ navItems }: NavbarProps) {
             <Logo />
           </Link>
         </div>
-        <div className="hidden md:flex md:items-center md:gap-x-8 md:order-last leading-none hover:text-primar">
+        <div className="transition-all duration-300 hidden md:flex md:items-center md:gap-x-8 md:order-last leading-none hover:text-primary">
           {navItems.map((item) => (
             <Link
               key={item.href}

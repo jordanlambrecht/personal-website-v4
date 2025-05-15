@@ -221,12 +221,17 @@ export function ProjectGalleryClient({
                 />
 
                 {/* --- Icons Container --- */}
-                {(project.pinned || project.favorited) && (
-                  <div className="absolute right-2 top-2 z-20 flex items-center gap-1 rounded-sm bg-background/80 p-1.5 text-foreground backdrop-blur-xs">
+                {project.pinned && (
+                  <div className="absolute right-2 top-2 z-20 flex items-center gap-1 rounded-sm bg-smoke p-1.5 text-black ">
                     {/* Pinned Icon */}
                     {project.pinned && <PinIcon className="w-4 h-4" />}
-                    {/* Favorited Icon */}
-                    {project.favorited && <StarIcon className="w-4 h-4 text-yellow-500" />}
+                  </div>
+                )}
+                {project.favorited && (
+                  <div className="absolute right-2 top-2 z-20 flex items-center gap-1 rounded-sm bg-smoke p-1.5 text-lime ">
+                    {/* Pinned Icon */}
+
+                    {project.favorited && <StarIcon className="w-4 h-4 stroke-lime fill-lime" />}
                   </div>
                 )}
 
