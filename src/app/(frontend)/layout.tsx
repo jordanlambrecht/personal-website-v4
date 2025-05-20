@@ -76,12 +76,11 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       <html
         lang="en"
         className={`${fontFunnelSans.variable} ${fontFunnelDisplay.variable} ${fontFields.variable} ${fontMono.variable} antialiased`}
-        suppressHydrationWarning // Good for theme toggling
+        suppressHydrationWarning //For darkmode toggling
       >
         <head>
           <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         </head>
-        {/* Apply themed background and text color to the body */}
         <body className="transition-colors duration-300 bg-[var(--color-background)] text-[var(--color-foreground)] px-6 sm:px-10 md:px-12 lg:px-12">
           <div className="flex flex-col min-h-screen md:max-w-5xl lg:max-w-7xl mx-auto">
             <LogoProvider>

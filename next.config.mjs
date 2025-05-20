@@ -6,7 +6,17 @@ const nextConfig = {
   reactStrictMode: false,
   trailingSlash: false,
   compress: true,
-  turbopack: {},
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
+    },
+  },
+  experimental: {
+    viewTransition: true,
+  },
   async headers() {
     return [
       {
