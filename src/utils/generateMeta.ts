@@ -31,7 +31,7 @@ export const generateMeta = async (args: {
 
   const title = titleBase
     ? titleBase + ' | Jordan Lambrecht'
-    : 'Jordan Lambrecht | Product Designer & Developer' // TODO: Update default title
+    : 'Jordan Lambrecht | Creative Leader & Strategist'
 
   const description = 'description' in doc ? doc.description : undefined
 
@@ -43,10 +43,12 @@ export const generateMeta = async (args: {
         : '/'
   return {
     description:
-      description || 'Personal website for Jordan Lambrecht, a product designer and developer.',
+      description ||
+      'Hi, I&apos;m Jordan Lambrecht, a creative leader and strategist from the Midwest.',
     openGraph: mergeOpenGraph({
       description:
-        description || 'Personal website for Jordan Lambrecht, a product designer and developer.',
+        description ||
+        'Hi, I&apos;m Jordan Lambrecht, a creative leader and strategist from the Midwest.',
       images: ogImage
         ? [
             {
