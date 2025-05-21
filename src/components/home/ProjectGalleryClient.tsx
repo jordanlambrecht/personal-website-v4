@@ -226,7 +226,7 @@ export function ProjectGalleryClient({
                         projectId: project.id,
                         projectTitle: project.title,
                         projectType: project.label?.name || 'unlabeled',
-                        collection: project.collectionSlug,
+                        projectCollection: project.collectionSlug,
                       },
                     })
                   }}

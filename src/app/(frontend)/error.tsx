@@ -12,11 +12,11 @@ export default function Error({ error, reset }: { error: Error; reset: () => voi
     // Track error in Plausible
     plausible('Error', {
       props: {
-        message: error.message,
-        name: error.name,
-        stack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
-        url: typeof window !== 'undefined' ? window.location.pathname : '',
-        timestamp: new Date().toISOString(),
+        errorMessage: error.message,
+        errorName: error.name,
+        errorStack: process.env.NODE_ENV === 'development' ? error.stack : undefined,
+        errorUrl: typeof window !== 'undefined' ? window.location.pathname : '',
+        errorTimestamp: new Date().toISOString(),
       },
     })
   }, [error, plausible])

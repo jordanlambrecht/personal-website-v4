@@ -181,10 +181,10 @@ export function OpenSourceArtifactsClient({
       // Track the filter change
       plausible('Filter', {
         props: {
-          type: type,
-          selection: id,
-          action: prev.includes(id) ? 'removed' : 'added',
-          count: newSelection.length,
+          artifactType: type,
+          artifactSelection: id,
+          artifactAction: prev.includes(id) ? 'removed' : 'added',
+          artifactCount: newSelection.length,
           section: 'artifacts',
         },
       })

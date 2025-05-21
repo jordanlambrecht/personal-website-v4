@@ -37,7 +37,7 @@ export function ThemeToggle() {
       plausible('Theme', {
         props: {
           theme: theme,
-          action: 'active', // This distinguishes from initial theme
+          themeAction: 'active', // This distinguishes from initial theme
         },
       })
     }
@@ -49,7 +49,7 @@ export function ThemeToggle() {
       plausible('Theme', {
         props: {
           theme: theme,
-          action: 'initial',
+          themeAction: 'initial',
           prefersDark:
             typeof window !== 'undefined'
               ? window.matchMedia('(prefers-color-scheme: dark)').matches

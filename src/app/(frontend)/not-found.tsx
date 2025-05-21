@@ -10,8 +10,8 @@ export default function NotFound() {
   useEffect(() => {
     plausible('404-page', {
       props: {
-        path: window.location.pathname,
-        referrer: document.referrer || 'direct',
+        notFoundPath: window.location.pathname,
+        notFoundReferrer: document.referrer || 'direct',
       },
     })
   }, [plausible])

@@ -62,7 +62,7 @@ export function Navbar({ navItems }: NavbarProps) {
 
     plausible('Menu', {
       props: {
-        action: newState ? 'open' : 'close',
+        menuAction: newState ? 'open' : 'close',
       },
     })
   }
