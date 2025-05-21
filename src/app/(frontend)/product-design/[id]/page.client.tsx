@@ -1,6 +1,7 @@
 // /src/app/(frontend)/product-design/[id]/page.client.tsx
 'use client'
 
+import { H2 } from '@typography'
 import { useState } from 'react'
 import Image from 'next/image'
 import Lightbox from 'yet-another-react-lightbox'
@@ -16,7 +17,7 @@ type GalleryProps = {
   heroImage: { url: string; alt: string } | null
 }
 
-export const Gallery: React.FC<GalleryProps> = ({ images, heroImage }) => {
+export const Gallery = ({ images, heroImage }: GalleryProps) => {
   const [open, setOpen] = useState(false) // Control lightbox visibility
   const [index, setIndex] = useState(0) // Track which image is active
 
@@ -33,7 +34,7 @@ export const Gallery: React.FC<GalleryProps> = ({ images, heroImage }) => {
 
   return (
     <>
-      <h2 className="mt-12 mb-4 text-2xl font-bold">Gallery</h2>
+      <H2 className="mt-12 mb-4 text-2xl font-bold">Gallery</H2>
       <section className="grid grid-cols-2 gap-4 md:grid-cols-3">
         {images.map((image, idx) => (
           <div
