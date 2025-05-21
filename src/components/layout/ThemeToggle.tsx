@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { Sun, Moon } from 'lucide-react'
+import { usePlausible } from 'next-plausible'
 
 export function ThemeToggle() {
+  const plausible = usePlausible()
   const [isMounted, setIsMounted] = useState(false)
   const [theme, setTheme] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -30,11 +32,36 @@ export function ThemeToggle() {
       }
       // Persist the theme choice in localStorage
       localStorage.setItem('theme', theme)
+
+      // Track the theme after it changes or on initial load
+      plausible('Theme', {
+        props: {
+          theme: theme,
+          action: 'active', // This distinguishes from initial theme
+        },
+      })
     }
-  }, [theme, isMounted])
+  }, [theme, isMounted, plausible])
+
+  // Track initial theme preference separately (only once)
+  useEffect(() => {
+    if (isMounted) {
+      plausible('Theme', {
+        props: {
+          theme: theme,
+          action: 'initial',
+          prefersDark:
+            typeof window !== 'undefined'
+              ? window.matchMedia('(prefers-color-scheme: dark)').matches
+              : false,
+        },
+      })
+    }
+  }, [isMounted, plausible, theme])
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark')
+    // No need to track here as the above useEffect will fire after state changes
   }
 
   if (!isMounted) {

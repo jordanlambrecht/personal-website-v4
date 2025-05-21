@@ -12,6 +12,7 @@ import { ProductDesign, ProductFile } from '@/payload-types'
 import { H1, H2, P, H3 } from '@typography'
 import { Skeleton } from '@/components/ui/Skeleton'
 import { cn } from '@/utils'
+import { ScrollDepthTracker } from '@/components/ScrollDepthTracker'
 
 export default async function ProductDesignDetailPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params
@@ -90,178 +91,181 @@ export default async function ProductDesignDetailPage(props: { params: Promise<{
   const showButtonGroup = showMakerworld || showDownload || showPurchase
 
   return (
-    <article className="top-0 flex flex-col w-full gap-y-3 md:gap-y-6">
-      <H1 className="md:hidden">{design.title}</H1>
-      <div className="flex flex-col w-full md:flex-row md:gap-x-14">
-        {/* CONTENT */}
-        <div className="w-full md:w-3/5">
-          {/* Container for Image and Skeleton */}
-          <div className="relative mb-4 overflow-hidden rounded-sm aspect-4/3 bg-muted">
-            {/* Skeleton Loader*/}
-            <Skeleton className="absolute inset-0 w-full h-full" />
-            {/* Actual Image or Fallback */}
-            {image && image.url ? (
-              image.mimeType === 'video/webm' ? (
-                <video
-                  src={image.url}
-                  width={image.width || undefined} // Use dimensions from media if available
-                  height={image.height || undefined}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline // Important for mobile browsers
-                  className="relative z-10 object-cover w-full h-full" // Match existing Image classes
-                >
-                  Your browser does not support the video tag.
-                </video>
-              ) : (
-                <Image
-                  src={image.url}
-                  alt={design.title}
-                  width={image.width}
-                  height={image.height}
-                  unoptimized={true}
-                  className="relative z-10 object-cover w-full h-full" // Added relative and z-10
-                />
-              )
-            ) : (
-              <div className="relative z-10 flex items-center justify-center w-full h-full">
-                <p className="text-lg text-muted-foreground">No image available.</p>{' '}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* RIGHT COLUMN */}
-        <div className="flex flex-col justify-start w-full h-auto text-left md:w-2/5 md:gap-y-6">
-          <div>
-            <Link
-              href="/product-design"
-              className="inline-flex items-center mt-0 mb-1 text-amber-600 hover:text-amber-700"
-            >
-              ← Back to all product designs
-            </Link>
-            <H1 className="hidden md:block">{design.title}</H1>
-            {design.details ? (
-              <div className="mb-4 prose">
-                <RichText data={design.details} />
-              </div>
-            ) : design.description ? (
-              <P className="text-gray-700 whitespace-pre-line">{design.description}</P>
-            ) : null}
-            {/*
-            {design.datePublished && (
-              <p className="mt-4 text-gray-600">Published on {formatDate(design.datePublished)}</p>
-            )} */}
-
-            {design.tags && design.tags.length > 0 && (
-              <div className="mt-4">
-                <H2>Tags</H2>
-                <div className="flex flex-wrap gap-2">
-                  {design.tags.map((tagObj, index) => (
-                    <span
-                      key={index}
-                      className="inline-flex items-center px-3 py-1 text-sm text-gray-800 bg-gray-100 rounded-full"
-                    >
-                      <Tag size={14} className="mr-1" />
-                      {tagObj.tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Download file info */}
-            {downloadFile && downloadFile.fileDescription && (
-              <div className="p-4 mt-4 rounded-md bg-gray-50">
-                <H3 className="font-medium text-md">File Information</H3>
-                <P className="text-sm text-gray-600">{downloadFile.fileDescription}</P>
-
-                {downloadFile.fileType && (
-                  <P className="mt-1 text-sm text-gray-600">
-                    Type: {downloadFile.fileType.toUpperCase()}
-                  </P>
-                )}
-
-                {downloadFile.fileSize && (
-                  <P className="text-sm text-gray-600">
-                    Size:{' '}
-                    {downloadFile.fileSize > 1024
-                      ? `${(downloadFile.fileSize / 1024).toFixed(2)} MB`
-                      : `${downloadFile.fileSize} KB`}
-                  </P>
-                )}
-              </div>
-            )}
-          </div>
-
-          <div className="my-4">
-            {showButtonGroup ? (
-              <div className="flex flex-wrap w-full gap-2">
-                {showMakerworld && design.makerWorldLink && (
-                  <Link
-                    href={design.makerWorldLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={cn(buttonVariants({ variant: 'primary', size: 'sm' }), 'gap-x-2')}
-                    aria-label="View on Makerworld"
+    <>
+      <article className="top-0 flex flex-col w-full gap-y-3 md:gap-y-6">
+        <H1 className="md:hidden">{design.title}</H1>
+        <div className="flex flex-col w-full md:flex-row md:gap-x-14">
+          {/* CONTENT */}
+          <div className="w-full md:w-3/5">
+            {/* Container for Image and Skeleton */}
+            <div className="relative mb-4 overflow-hidden rounded-sm aspect-4/3 bg-muted">
+              {/* Skeleton Loader*/}
+              <Skeleton className="absolute inset-0 w-full h-full" />
+              {/* Actual Image or Fallback */}
+              {image && image.url ? (
+                image.mimeType === 'video/webm' ? (
+                  <video
+                    src={image.url}
+                    width={image.width || undefined} // Use dimensions from media if available
+                    height={image.height || undefined}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline // Important for mobile browsers
+                    className="relative z-10 object-cover w-full h-full" // Match existing Image classes
                   >
-                    MakerWorld
-                    <LinkIcon width={15} height={15} />
-                  </Link>
-                )}
-
-                {showDownload && downloadUrl ? (
-                  <Link
-                    href={downloadUrl}
-                    download
-                    className="inline-flex items-center px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 gap-x-2"
-                    aria-label="Download project files"
-                  >
-                    Download
-                    <DownloadIcon width={15} height={15} />
-                  </Link>
+                    Your browser does not support the video tag.
+                  </video>
                 ) : (
-                  <Button className="inline-flex px-4 py-2 text-gray-500 bg-gray-200 rounded-md">
-                    Content download coming soon
-                  </Button>
-                )}
-
-                {showPurchase && design.purchaseLink && (
-                  <Link
-                    href={design.purchaseLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 gap-x-2"
-                    aria-label="Purchase design"
-                  >
-                    Buy
-                    <LinkIcon width={15} height={15} />
-                  </Link>
-                )}
-              </div>
-            ) : (
-              <div className="flex justify-center w-full my-4">
-                <div className="inline-flex px-4 py-2 text-gray-500 bg-gray-200 rounded-md">
-                  Content download coming soon
+                  <Image
+                    src={image.url}
+                    alt={design.title}
+                    width={image.width}
+                    height={image.height}
+                    unoptimized={true}
+                    className="relative z-10 object-cover w-full h-full" // Added relative and z-10
+                  />
+                )
+              ) : (
+                <div className="relative z-10 flex items-center justify-center w-full h-full">
+                  <p className="text-lg text-muted-foreground">No image available.</p>{' '}
                 </div>
-              </div>
-            )}
+              )}
+            </div>
+          </div>
+
+          {/* RIGHT COLUMN */}
+          <div className="flex flex-col justify-start w-full h-auto text-left md:w-2/5 md:gap-y-6">
+            <div>
+              <Link
+                href="/product-design"
+                className="inline-flex items-center mt-0 mb-1 text-amber-600 hover:text-amber-700"
+              >
+                ← Back to all product designs
+              </Link>
+              <H1 className="hidden md:block">{design.title}</H1>
+              {design.details ? (
+                <div className="mb-4 prose">
+                  <RichText data={design.details} />
+                </div>
+              ) : design.description ? (
+                <P className="text-gray-700 whitespace-pre-line">{design.description}</P>
+              ) : null}
+              {/*
+              {design.datePublished && (
+                <p className="mt-4 text-gray-600">Published on {formatDate(design.datePublished)}</p>
+              )} */}
+
+              {design.tags && design.tags.length > 0 && (
+                <div className="mt-4">
+                  <H2>Tags</H2>
+                  <div className="flex flex-wrap gap-2">
+                    {design.tags.map((tagObj, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 text-sm text-gray-800 bg-gray-100 rounded-full"
+                      >
+                        <Tag size={14} className="mr-1" />
+                        {tagObj.tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Download file info */}
+              {downloadFile && downloadFile.fileDescription && (
+                <div className="p-4 mt-4 rounded-md bg-gray-50">
+                  <H3 className="font-medium text-md">File Information</H3>
+                  <P className="text-sm text-gray-600">{downloadFile.fileDescription}</P>
+
+                  {downloadFile.fileType && (
+                    <P className="mt-1 text-sm text-gray-600">
+                      Type: {downloadFile.fileType.toUpperCase()}
+                    </P>
+                  )}
+
+                  {downloadFile.fileSize && (
+                    <P className="text-sm text-gray-600">
+                      Size:{' '}
+                      {downloadFile.fileSize > 1024
+                        ? `${(downloadFile.fileSize / 1024).toFixed(2)} MB`
+                        : `${downloadFile.fileSize} KB`}
+                    </P>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <div className="my-4">
+              {showButtonGroup ? (
+                <div className="flex flex-wrap w-full gap-2">
+                  {showMakerworld && design.makerWorldLink && (
+                    <Link
+                      href={design.makerWorldLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={cn(buttonVariants({ variant: 'primary', size: 'sm' }), 'gap-x-2')}
+                      aria-label="View on Makerworld"
+                    >
+                      MakerWorld
+                      <LinkIcon width={15} height={15} />
+                    </Link>
+                  )}
+
+                  {showDownload && downloadUrl ? (
+                    <Link
+                      href={downloadUrl}
+                      download
+                      className="inline-flex items-center px-4 py-2 text-white bg-blue-500 rounded-md hover:bg-blue-600 gap-x-2"
+                      aria-label="Download project files"
+                    >
+                      Download
+                      <DownloadIcon width={15} height={15} />
+                    </Link>
+                  ) : (
+                    <Button className="inline-flex px-4 py-2 text-gray-500 bg-gray-200 rounded-md">
+                      Content download coming soon
+                    </Button>
+                  )}
+
+                  {showPurchase && design.purchaseLink && (
+                    <Link
+                      href={design.purchaseLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 gap-x-2"
+                      aria-label="Purchase design"
+                    >
+                      Buy
+                      <LinkIcon width={15} height={15} />
+                    </Link>
+                  )}
+                </div>
+              ) : (
+                <div className="flex justify-center w-full my-4">
+                  <div className="inline-flex px-4 py-2 text-gray-500 bg-gray-200 rounded-md">
+                    Content download coming soon
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Extra written content section */}
-      {design.enableWrittenContent && design.extraRichTextContent && (
-        <div className="mt-8 prose max-w-none">
-          <RichText data={design.extraRichTextContent} />
-        </div>
-      )}
+        {/* Extra written content section */}
+        {design.enableWrittenContent && design.extraRichTextContent && (
+          <div className="mt-8 prose max-w-none">
+            <RichText data={design.extraRichTextContent} />
+          </div>
+        )}
 
-      {/* Gallery/Lightbox section */}
-      {extraImages.length > 0 && design.enableExtraImages && (
-        <Gallery images={extraImages} heroImage={heroImage} />
-      )}
-    </article>
+        {/* Gallery/Lightbox section */}
+        {extraImages.length > 0 && design.enableExtraImages && (
+          <Gallery images={extraImages} heroImage={heroImage} />
+        )}
+      </article>
+      <ScrollDepthTracker pageType="product-design" pagePath={`/product-design/${design.slug}`} />
+    </>
   )
 }

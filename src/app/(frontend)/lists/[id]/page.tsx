@@ -1,17 +1,15 @@
 import { notFound } from 'next/navigation'
-import Link from 'next/link' // Import Link
+import Link from 'next/link'
 import { PageHeading } from '@/components/ui/PageHeading'
 import { List } from '@/payload-types'
-import { getPayload } from 'payload' // Import getPayload
-import config from '@/payload.config' // Import your Payload config
-import { RichText } from '@payloadcms/richtext-lexical/react' // Import RichText renderer
+import { getPayload } from 'payload'
+import config from '@/payload.config'
+import { RichText } from '@payloadcms/richtext-lexical/react'
 
-// Define the expected params shape
 interface ListPageParams {
   id: string
 }
 
-// Make the component async and accept params
 export default async function ListDetailPage({ params }: { params: Promise<ListPageParams> }) {
   const resolvedParams = await params
   const { id } = resolvedParams
@@ -27,24 +25,14 @@ export default async function ListDetailPage({ params }: { params: Promise<ListP
     list = await payload.findByID({
       collection: 'lists',
       id: id,
-      // Optionally add depth if you need related data populated
-      // depth: 1,
     })
   } catch (error) {
-    // Handle potential errors during fetch (e.g., invalid ID format from Payload)
     console.error('Error fetching list:', error)
-    // Let Payload's potential notFound error bubble up or fall through to the check below
   }
-
-  // If the list wasn't found (findByID returns null or throws), show a 404 page
+  // If the list is not found, return a 404 page
   if (!list) {
     notFound()
   }
-
-  // Optional: Check if the list status is 'published' if you have such a field
-  // if (list.status !== 'published') {
-  //   notFound();
-  // }
 
   return (
     <>
@@ -60,7 +48,6 @@ export default async function ListDetailPage({ params }: { params: Promise<ListP
 
       {/* Render the 'things' rich text field */}
       {list.things ? (
-        // Ensure you have appropriate styling for the rich text output
         <div className="mt-6 prose prose-lg dark:prose-invert max-w-none">
           <RichText data={list.things} />
         </div>
@@ -70,17 +57,3 @@ export default async function ListDetailPage({ params }: { params: Promise<ListP
     </>
   )
 }
-
-// Optional: Generate Static Params (similar logic, using getPayload)
-// export async function generateStaticParams() {
-//   const payload = await getPayload({ config });
-//   const lists = await payload.find({
-//     collection: 'lists',
-//     limit: 100, // Fetch all lists you want to pre-render
-//     where: { status: { equals: 'published' } } // Only published ones
-//   });
-//
-//   return lists.docs.map((list) => ({
-//     id: list.id,
-//   }));
-// }

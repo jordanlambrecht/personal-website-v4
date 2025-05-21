@@ -8,12 +8,19 @@ import {
   PbArtifactTag,
   Media as MediaType,
 } from '@/payload-types'
-import { ArrowEast, DownloadIcon, SearchIcon } from '@/components/ui/icons' // Assuming SearchIcon exists
+import { ArrowEast, DownloadIcon, SearchIcon } from '@/components/ui/icons'
 import autoAnimate from '@formkit/auto-animate'
 import { cn } from '@/utils/helpers'
 import { P } from '@/components/typography'
+import { usePlausible } from 'next-plausible'
 
-const getFileExtension = (media?: MediaType | string | null): string => {
+function getFileExtension(file: MediaType | undefined): string {
+  if (!file || !file.filename) return 'unknown'
+  const parts = file.filename.split('.')
+  return parts.length > 1 ? parts[parts.length - 1].toLowerCase() : 'unknown'
+}
+
+const getFileExtensionOld = (media?: MediaType | string | null): string => {
   if (typeof media === 'object' && media?.filename) {
     return media.filename.split('.').pop()?.toUpperCase() || 'FILE'
   }
@@ -29,6 +36,8 @@ export function OpenSourceArtifactsClient({
   allCategories: PbArtifactCategory[]
   allTags: PbArtifactTag[]
 }) {
+  const plausible = usePlausible()
+
   const [sortConfig, setSortConfig] = useState<{
     key: 'title' | 'category'
     direction: 'asc' | 'desc'
@@ -165,8 +174,58 @@ export function OpenSourceArtifactsClient({
 
   const toggleFilter = (id: string, type: 'category' | 'tag') => {
     const setter = type === 'category' ? setSelectedCategoryIds : setSelectedTagIds
-    setter((prev) => (prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]))
+
+    setter((prev) => {
+      const newSelection = prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+
+      // Track the filter change
+      plausible('Filter', {
+        props: {
+          type: type,
+          selection: id,
+          action: prev.includes(id) ? 'removed' : 'added',
+          count: newSelection.length,
+          section: 'artifacts',
+        },
+      })
+
+      return newSelection
+    })
   }
+
+  // Function to track download/click
+  const trackArtifactEvent = (artifact: OpenSourceDocument, type: 'file' | 'link') => {
+    plausible(type === 'file' ? 'Download' : 'ExternalLink', {
+      props: {
+        title: artifact.title || 'Untitled',
+        fileType: type === 'file' ? getFileExtension(artifact.documentFile as MediaType) : 'LINK',
+        category:
+          typeof artifact['pb-artifact-category'] === 'object' &&
+          artifact['pb-artifact-category'] !== null &&
+          'name' in artifact['pb-artifact-category']
+            ? artifact['pb-artifact-category'].name
+            : 'Uncategorized',
+      },
+    })
+  }
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm && searchTerm.trim().length > 2) {
+        plausible('Search', {
+          props: {
+            term: searchTerm,
+            results: filteredAndSortedArtifacts.length,
+            section: 'artifacts',
+          },
+        })
+      }
+    }, 1000)
+
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [searchTerm, filteredAndSortedArtifacts.length, plausible])
 
   return (
     <div className="mt-12">
@@ -306,9 +365,9 @@ export function OpenSourceArtifactsClient({
 
           return (
             <div
-              key={artifact.id} // React keys can be numbers or strings
+              key={artifact.id}
               className="border-b border-foreground"
-              onMouseEnter={() => setHoveredItemId(String(artifact.id))} // Convert artifact.id to string
+              onMouseEnter={() => setHoveredItemId(String(artifact.id))}
               onMouseLeave={() => setHoveredItemId(null)}
             >
               <Link
@@ -316,6 +375,7 @@ export function OpenSourceArtifactsClient({
                 target={isExternalLink ? '_blank' : undefined}
                 rel={isExternalLink ? 'noopener noreferrer' : undefined}
                 className="flex items-center justify-between py-3 px-1.5 hover:bg-bg-subtle transition-colors duration-150 group"
+                onClick={() => trackArtifactEvent(artifact, isExternalLink ? 'link' : 'file')}
               >
                 <div className="flex-grow mr-4 min-w-0">
                   <h3 className="text-sm md:text-base font-medium text-text-default group-hover:text-primary transition-colors truncate">
@@ -345,7 +405,7 @@ export function OpenSourceArtifactsClient({
                     {fileTypeDisplay}
                   </span>
                   <div className="w-6 h-6 flex-shrink-0 flex items-center justify-center text-text-muted group-hover:text-primary transition-opacity duration-150 opacity-0 group-hover:opacity-100">
-                    {hoveredItemId === String(artifact.id) && // Convert artifact.id to string for comparison
+                    {hoveredItemId === String(artifact.id) &&
                       (artifact.resourceType === 'file' ? (
                         <DownloadIcon className="w-5 h-5" />
                       ) : (

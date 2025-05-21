@@ -13,7 +13,7 @@ const IntroText = () => {
         Nebraska.
       </P>
       <P className="w-full md:text-balance">
-        In more specific terms, I&apos;m a creative director and strategic leader with expertise in
+        In more specific terms, I&apos;m a Creative Director and strategic leader with expertise in
         motion design, brand storytelling, marketing, and building high-performing creative teams.
       </P>
       <P className="w-full md:text-balance">

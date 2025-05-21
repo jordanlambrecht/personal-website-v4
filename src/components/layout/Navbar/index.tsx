@@ -8,6 +8,7 @@ import { Menu, X } from 'lucide-react'
 import { cn } from '@/utils/helpers'
 import { ThemeToggle, Logo } from '@/components/layout'
 import { motion, AnimatePresence } from 'framer-motion'
+import { usePlausible } from 'next-plausible'
 
 interface NavItem {
   href: string
@@ -21,6 +22,7 @@ interface NavbarProps {
 export function Navbar({ navItems }: NavbarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const pathname = usePathname()
+  const plausible = usePlausible()
 
   useEffect(() => {
     // Close menu on route change
@@ -51,9 +53,30 @@ export function Navbar({ navItems }: NavbarProps) {
     visible: { opacity: 1, y: '0%', transition: { duration: 0.3, ease: 'easeIn' } },
   }
 
-  // Height of the static top controls bar (ThemeToggle and Menu button)
-  // Adjust this based on the actual height of that bar.
-  const topControlsBarHeight = '56px' // Example: h-10 (40px) + py-2 (8px*2=16px) = 56px
+  const topControlsBarHeight = '56px'
+
+  // Track menu toggle
+  const toggleMenu = () => {
+    const newState = !isMenuOpen
+    setIsMenuOpen(newState)
+
+    plausible('Menu', {
+      props: {
+        action: newState ? 'open' : 'close',
+      },
+    })
+  }
+
+  // Track nav item clicks
+  const handleNavClick = (label: string) => {
+    plausible('Navigation', {
+      props: {
+        destination: label,
+        isMobile: window.innerWidth < 768, // Track if mobile or desktop navigation
+      },
+    })
+    setIsMenuOpen(false)
+  }
 
   return (
     <nav className="w-full py-6 mx-auto">
@@ -61,16 +84,15 @@ export function Navbar({ navItems }: NavbarProps) {
         {/* Mobile Navigation Area */}
         <div className="relative w-full md:hidden mb-16">
           {' '}
-          {/* Reduced mb from 16 to 4 as panel is absolute */}
           {/* Mobile Top Controls: Theme Toggle & Menu Button */}
           <div
             className="flex flex-row justify-end items-center px-4"
-            style={{ height: topControlsBarHeight, position: 'relative', zIndex: 20 }} // zIndex to keep controls on top
+            style={{ height: topControlsBarHeight, position: 'relative', zIndex: 20 }}
           >
             <ThemeToggle />
             <button
               type="button"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={toggleMenu}
               className="relative inline-flex items-center justify-center w-10 h-10 rounded-md cursor-pointer text-foreground hover:text-primary focus:outline-none"
               aria-controls="mobile-menu-panel"
               aria-expanded={isMenuOpen}
@@ -103,9 +125,9 @@ export function Navbar({ navItems }: NavbarProps) {
               </AnimatePresence>
             </button>
           </div>
-          {/* Animated Container for Logo and Menu Panel (Absolutely Positioned) */}
+          {/* Container for Logo and Menu Panel */}
           <motion.div
-            layout // Animates its own height and position if needed
+            layout
             className="absolute w-full flex justify-center items-center overflow-hidden"
             style={{
               top: topControlsBarHeight,
@@ -119,7 +141,7 @@ export function Navbar({ navItems }: NavbarProps) {
               {!isMenuOpen ? (
                 <motion.div
                   key="logo-display-area"
-                  className="w-auto py-4" // Added some padding for logo visual spacing if needed
+                  className="w-auto py-4"
                   variants={logoAnimation}
                   initial="slideDownAndFade"
                   animate="visible"
@@ -152,7 +174,7 @@ export function Navbar({ navItems }: NavbarProps) {
                             'block leading-none px-3 py-1 rounded-md  font-medium transition-colors duration-300 ease-in  sm:text-center dark:hover:border-2  dark:border-lime',
                             isActive(item.href) ? 'text-primary dark:bg-lime dark:text-black' : '',
                           )}
-                          onClick={() => setIsMenuOpen(false)}
+                          onClick={() => handleNavClick(item.label)}
                         >
                           {item.label}
                         </Link>

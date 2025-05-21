@@ -13,9 +13,8 @@ import { SiteSetting } from '@/payload-types'
 import { InnerWrapper, Footer, Navbar, LogoProvider } from '@/components/layout'
 
 export const metadata: Metadata = {
-  title: 'Jordan Lambrecht - Designer & Developer',
-  description:
-    'Personal website of Jordan Lambrecht, founder of Pixel Bakery and creator of various projects',
+  title: 'Jordan Lambrecht - Creative Leader, Designer, Strategist',
+  description: 'Hi, I&apos;m Jordan. Let&apos;s be friends.',
   icons: {
     icon: '/favicon.ico',
   },
@@ -43,8 +42,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
 
   const navItems: NavItem[] = allPossibleNavItems
     .filter((item) => {
-      // If a setting key is defined for the item, check its value in siteSettings
-      // Otherwise, always include the item
+      // If a setting key is defined for the item, check its value in siteSettings. Otherwise, always include the item
       if (item.setting) {
         return siteSettings[item.setting]
       }
@@ -70,6 +68,8 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
       trackOutboundLinks
       trackLocalhost={process.env.NODE_ENV !== 'production'}
       selfHosted
+      taggedEvents
+      trackFileDownloads
       customDomain="https://analytics.jordy.world"
       enabled
     >

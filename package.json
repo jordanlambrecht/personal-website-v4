@@ -21,8 +21,8 @@
     "lint:fix": "cross-env next lint --fix",
     "payload": "cross-env payload",
     "start": "cross-env next start",
-    "reinstall": "rm -rf node_modules && rm yarn.lock && rm -rf .next && yarn store prune && yarn install",
-    "wipe": "rm -rf node_modules && rm yarn.lock && rm -rf .next && yarn store prune"
+    "reinstall": "rm -rf node_modules && rm -rf pnpm-lock.yaml && rm -rf .next && pnpm store prune && pnpm install",
+    "wipe": "rm -rf node_modules && rm -rf pnpm-lock.yaml && rm -rf .next && pnpm store prune"
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",

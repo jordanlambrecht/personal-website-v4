@@ -13,6 +13,8 @@ import { PinIcon, StarIcon } from 'lucide-react'
 import { fetchProjectsPage } from '@/app/actions'
 import { getContrastTextColor } from '@/components/payload/accessibilityHelpers'
 import { H3 } from '@typography'
+import { usePlausible } from 'next-plausible'
+
 interface ProjectGalleryClientProps {
   initialProjects: UnifiedProject[]
   availableLabels: Label[]
@@ -26,6 +28,8 @@ export function ProjectGalleryClient({
   initialHasMore,
   pageSize,
 }: ProjectGalleryClientProps) {
+  const plausible = usePlausible()
+
   // console.log(
   //   `ProjectGalleryClient received initialProjects length: ${initialProjects.length}, initialHasMore: ${initialHasMore}`,
   // )
@@ -216,7 +220,17 @@ export function ProjectGalleryClient({
                 />
                 <Link
                   href={`/${project.collectionSlug}/${project.id}`}
-                  className="absolute inset-0 z-10"
+                  onClick={() => {
+                    plausible('ProjectClick', {
+                      props: {
+                        projectId: project.id,
+                        projectTitle: project.title,
+                        projectType: project.label?.name || 'unlabeled',
+                        collection: project.collectionSlug,
+                      },
+                    })
+                  }}
+                  className="group relative overflow-hidden rounded-lg block transform transition-all"
                   aria-label={`View ${project.title}`}
                 />
 
