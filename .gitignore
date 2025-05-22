@@ -41,3 +41,5 @@ next-env.d.ts
 # src/payload-generated-schema.ts
 .vscode/launch.json
 # src/payload-types.ts
+
+.env.prod

@@ -20,6 +20,9 @@ importers:
       '@payloadcms/next':
         specifier: ^3.38.0
         version: 3.38.0(@types/react@19.1.4)(graphql@16.11.0)(monaco-editor@0.52.2)(next@15.3.2(@babel/core@7.27.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.77.4))(payload@3.38.0(graphql@16.11.0)(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
+      '@payloadcms/plugin-nested-docs':
+        specifier: ^3.38.0
+        version: 3.38.0(payload@3.38.0(graphql@16.11.0)(typescript@5.8.3))
       '@payloadcms/plugin-redirects':
         specifier: ^3.38.0
         version: 3.38.0(payload@3.38.0(graphql@16.11.0)(typescript@5.8.3))
@@ -108,6 +111,9 @@ importers:
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
+      dotenv-cli:
+        specifier: ^8.0.0
+        version: 8.0.0
       eslint:
         specifier: ^9.27.0
         version: 9.27.0(jiti@2.4.2)
@@ -1807,6 +1813,11 @@ packages:
       react: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
       react-dom: ^19.0.0 || ^19.0.0-rc-65a56d0e-20241020
 
+  '@payloadcms/plugin-nested-docs@3.38.0':
+    resolution: {integrity: sha512-6aiFgCjjZBDIhQ+fEFptSetrnJFuraOQxzId0EG/a8NGU7lyv/YFt6HySlPFoOaTLK17qE4UThEHo4OEIJ7JlQ==}
+    peerDependencies:
+      payload: 3.38.0
+
   '@payloadcms/plugin-redirects@3.38.0':
     resolution: {integrity: sha512-sFlS96nstW+E5f/IV1fpyjFlL66dgHdN/pWIuR6QN8wwN/JtAkPnO5rXqt+IoTgU4z6+dcMINY9m3DPHUbM7kg==}
     peerDependencies:
@@ -2925,6 +2936,14 @@ packages:
 
   dot-case@3.0.4:
     resolution: {integrity: sha512-Kv5nKlh6yRrdrGvxeJ2e5y2eRUpkUosIW4A2AS38zwSz27zu7ufDwQPi5Jhs3XAlGNetl3bmnGhQsMtkKJnj3w==}
+
+  dotenv-cli@8.0.0:
+    resolution: {integrity: sha512-aLqYbK7xKOiTMIRf1lDPbI+Y+Ip/wo5k3eyp6ePysVaSqbyxjyK3dK35BTxG+rmd7djf5q2UPs4noPNH+cj0Qw==}
+    hasBin: true
+
+  dotenv-expand@10.0.0:
+    resolution: {integrity: sha512-GopVGCpVS1UKH75VKHGuQFqS1Gusej0z4FyQkPdwjil2gNIv+LNsqBlboOzpJFZKVT95GkCyWJbBSdFEFUWI2A==}
+    engines: {node: '>=12'}
 
   dotenv@16.5.0:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
@@ -7108,6 +7127,10 @@ snapshots:
       - supports-color
       - typescript
 
+  '@payloadcms/plugin-nested-docs@3.38.0(payload@3.38.0(graphql@16.11.0)(typescript@5.8.3))':
+    dependencies:
+      payload: 3.38.0(graphql@16.11.0)(typescript@5.8.3)
+
   '@payloadcms/plugin-redirects@3.38.0(payload@3.38.0(graphql@16.11.0)(typescript@5.8.3))':
     dependencies:
       payload: 3.38.0(graphql@16.11.0)(typescript@5.8.3)
@@ -8425,6 +8448,15 @@ snapshots:
     dependencies:
       no-case: 3.0.4
       tslib: 2.8.1
+
+  dotenv-cli@8.0.0:
+    dependencies:
+      cross-spawn: 7.0.6
+      dotenv: 16.5.0
+      dotenv-expand: 10.0.0
+      minimist: 1.2.8
+
+  dotenv-expand@10.0.0: {}
 
   dotenv@16.5.0: {}
 
