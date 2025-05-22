@@ -45,7 +45,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
   const filteredLists = useMemo(() => {
     if (showFavoritesOnly) {
       // If showing only favorites, filter by the favorited flag
-      return initialLists.filter((list) => list.favorited)
+      return initialLists.filter((list) => list.sorting?.favorited)
     } else if (selectedYears.length === 0) {
       // If not showing favorites and no years selected, show all
       return initialLists
@@ -118,13 +118,13 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
           ? filteredLists.map((list) => (
               <Link
                 key={list.id}
-                href={`/lists/${list.id}`}
+                href={`/lists/${list.slug}`} // CHANGED: Use list.slug instead of list.id
                 className={`
                   inline-flex flex-col border-2 rounded-lg p-3 md:p-4
                   transition-colors duration-200
                   min-w-[150px] max-w-xs relative
                   ${
-                    list.favorited
+                    list.sorting?.favorited
                       ? 'bg-black border-black hover:bg-gray-800'
                       : 'border-black hover:bg-amber-50'
                   }
@@ -132,13 +132,13 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
               >
                 {/* --- Icons Container (Top Right) --- */}
                 <div className="absolute top-3 right-3 flex items-center gap-1.5">
-                  {list.favorited && (
-                    <StarIcon className="w-4 h-4 text-yellow-400 fill-yellow-400" /> // Yellow filled star
+                  {list.sorting?.favorited && ( // Use optional chaining if 'sorting' itself can be undefined
+                    <StarIcon className="w-4 h-4 text-yellow-400 fill-yellow-400" />
                   )}
-                  {list.pinned && (
+                  {list.sorting?.pinned && (
                     <PinIcon
                       className={`h-4 w-4 shrink-0 ${
-                        list.favorited ? 'text-gray-400' : 'text-black fill-black' // Adjust pin color on dark bg
+                        list.sorting?.favorited ? 'text-gray-400' : 'text-black fill-black'
                       }`}
                     />
                   )}
@@ -147,19 +147,19 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
 
                 {/* --- Emoji and Title --- */}
                 <div className="flex items-start w-full pr-8 mt-4 mb-1 gap-x-4">
-                  {list.emoji && (
+                  {list.content.emoji && (
                     <div
                       className={cn(
                         'shrink-0 mt-1  rounded-sm w-8 h-8 flex items-center justify-center',
-                        list.favorited ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-100',
+                        list.sorting?.favorited ? 'bg-gray-100 dark:bg-gray-700' : 'bg-gray-100', // Updated
                       )}
                     >
-                      <span className="text-base">{list.emoji}</span>
+                      <span className="text-base">{list.content.emoji}</span>
                     </div>
                   )}
                   <H2
                     className={`  hyphens-auto grow ${
-                      list.favorited ? 'text-white' : 'text-black'
+                      list.sorting?.favorited ? 'text-white' : 'text-black' // Updated
                     }`}
                   >
                     {list.title}
@@ -170,7 +170,9 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                 {/* Container for Date and Arrow */}
                 <div className="flex items-end justify-between w-full mt-auto gap-x-2 ">
                   {list.publishedAt && (
-                    <p className={`text-xs ${list.favorited ? 'text-gray-400' : 'text-gray-500'}`}>
+                    <p
+                      className={`text-xs ${list.sorting.favorited ? 'text-gray-400' : 'text-gray-500'}`}
+                    >
                       {new Date(list.publishedAt).toLocaleDateString('en-US', {
                         year: 'numeric',
                         month: 'short',
@@ -181,7 +183,7 @@ export function ListsClientPage({ initialLists, availableYears }: ListsClientPag
                   {!list.publishedAt && <div className="grow"></div>}
                   <span
                     className={`text-lg md:text-xl font-bold shrink-0 ${
-                      list.favorited ? 'text-gray-400' : 'text-black'
+                      list.sorting.favorited ? 'text-gray-400' : 'text-black'
                     }`}
                   >
                     →

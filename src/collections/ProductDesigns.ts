@@ -8,7 +8,7 @@ import {
   InlineToolbarFeature,
   lexicalEditor,
 } from '@payloadcms/richtext-lexical'
-
+import { slugField } from '@/fields/slug'
 const ensureProductDesignProjectType: CollectionBeforeChangeHook = async ({
   data,
   req,
@@ -199,8 +199,9 @@ export const ProductDesigns: CollectionConfig = {
       ],
     },
     {
-      type: 'collapsible',
-      label: 'Links & Such',
+      type: 'group',
+      name: 'sorting',
+      label: 'Sorting',
       admin: {
         position: 'sidebar',
       },
@@ -225,6 +226,15 @@ export const ProductDesigns: CollectionConfig = {
             description: 'Mark this list as a favorite.',
           },
         },
+      ],
+    },
+    {
+      type: 'collapsible',
+      label: 'Links & Such',
+      admin: {
+        position: 'sidebar',
+      },
+      fields: [
         {
           type: 'checkbox',
           name: 'enableMakerworld',
@@ -311,14 +321,15 @@ export const ProductDesigns: CollectionConfig = {
         },
       ],
     },
-    {
-      name: 'slug',
-      type: 'text',
-      admin: {
-        position: 'sidebar',
-        description: 'URL-friendly version of the title (auto-generated if left blank)',
-      },
-    },
+    // {
+    //   name: 'slug',
+    //   type: 'text',
+    //   admin: {
+    //     position: 'sidebar',
+    //     description: 'URL-friendly version of the title (auto-generated if left blank)',
+    //   },
+    // },
+    ...slugField(),
   ],
 }
 

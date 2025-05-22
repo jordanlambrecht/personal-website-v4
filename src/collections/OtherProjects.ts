@@ -20,7 +20,7 @@ export const languages = {
   yml: 'yaml',
   yaml: 'yaml',
 }
-
+import { slugField } from '@/fields/slug'
 export const OtherProjects: CollectionConfig = {
   slug: 'other-projects',
   admin: {
@@ -195,8 +195,17 @@ export const OtherProjects: CollectionConfig = {
       },
     },
     {
-      type: 'collapsible',
-      label: 'Project Details',
+      name: 'projectLink',
+      type: 'text',
+      admin: {
+        position: 'sidebar',
+        description: 'Link to the project (GitHub, etc.)',
+      },
+    },
+    {
+      type: 'group',
+      label: 'Sorting',
+      name: 'sorting',
       admin: {
         position: 'sidebar',
       },
@@ -214,14 +223,6 @@ export const OtherProjects: CollectionConfig = {
           admin: {
             position: 'sidebar',
             description: 'Mark this list as a favorite.',
-          },
-        },
-
-        {
-          name: 'projectLink',
-          type: 'text',
-          admin: {
-            description: 'Link to the project (GitHub, etc.)',
           },
         },
       ],
@@ -250,28 +251,11 @@ export const OtherProjects: CollectionConfig = {
         },
       ],
     },
-    {
-      name: 'slug',
-      type: 'text',
-      admin: {
-        position: 'sidebar',
-        description: 'URL-friendly version of the title (auto-generated if left blank)',
+    ...slugField('title', {
+      slugOverrides: {
+        unique: false,
       },
-      hooks: {
-        beforeValidate: [
-          ({ value, data }) => {
-            if (!value && data?.title) {
-              return data.title
-                .toLowerCase()
-                .replace(/[^\w\s-]/g, '')
-                .replace(/\s+/g, '-')
-                .replace(/-+/g, '-')
-            }
-            return value
-          },
-        ],
-      },
-    },
+    }),
   ],
 }
 

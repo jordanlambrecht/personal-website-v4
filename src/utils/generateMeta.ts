@@ -1,6 +1,13 @@
 import type { Metadata } from 'next'
 
-import type { Media, Config, OtherProject, ProductDesign, List } from '@/payload-types'
+import type {
+  Media,
+  Config,
+  OtherProject,
+  ProductDesign,
+  List,
+  OpenSourceDocument,
+} from '@/payload-types'
 
 import { mergeOpenGraph } from '@/utils/mergeOpenGraph'
 import { getServerSideURL } from '@/utils/getURL'
@@ -8,8 +15,7 @@ import { getServerSideURL } from '@/utils/getURL'
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
 
-  let url = serverUrl + '/website-template-OG.webp' // TODO: need to update default image
-
+  let url = serverUrl + '/images/jordan-plant-store.jpg'
   if (image && typeof image === 'object' && 'url' in image) {
     const ogUrl = 'sizes' in image && (image.sizes as { og?: { url?: string } })?.og?.url
 
@@ -20,7 +26,7 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
 }
 
 export const generateMeta = async (args: {
-  doc: Partial<OtherProject> | Partial<ProductDesign> | Partial<List>
+  doc: Partial<OtherProject> | Partial<ProductDesign> | Partial<List> | Partial<OpenSourceDocument>
 }): Promise<Metadata> => {
   const { doc } = args || {}
 
@@ -57,7 +63,8 @@ export const generateMeta = async (args: {
           ]
         : undefined,
       title,
-      url: path,
+      // url: path,
+      url: Array.isArray(doc?.slug) ? doc?.slug.join('/') : '/',
     }),
     title,
   }

@@ -23,10 +23,10 @@ export default async function ProductDesignPage() {
   // --- Manually sort the array after fetching ---
   const sortedDesigns = productDesignsData.docs.sort((a, b) => {
     // Prioritize pinned items
-    if (a.pinned && !b.pinned) {
+    if (a.sorting.pinned && !b.sorting.pinned) {
       return -1 // a comes first
     }
-    if (!a.pinned && b.pinned) {
+    if (!a.sorting.pinned && b.sorting.pinned) {
       return 1 // b comes first
     }
     // If pinning is the same, sort by datePublished (newest first)
@@ -105,7 +105,7 @@ export default async function ProductDesignPage() {
                 </div>
               </div>
             </div>
-            {design.pinned && (
+            {design.sorting.pinned && (
               <div className="absolute right-2 top-2 z-20 rounded-sm bg-background/80 p-1.5 text-foreground">
                 <PinIcon className="w-4 h-4" />
               </div>

@@ -238,14 +238,16 @@ export function ProjectGalleryClient({
                 {project.pinned && (
                   <div className="absolute right-2 top-2 z-20 flex items-center gap-1 rounded-sm bg-smoke p-1.5 text-black ">
                     {/* Pinned Icon */}
-                    {project.pinned && <PinIcon className="w-4 h-4" />}
+                    {project.sorting_pinned && <PinIcon className="w-4 h-4" />}
                   </div>
                 )}
-                {project.favorited && (
+                {project.sorting_favorited && (
                   <div className="absolute right-2 top-2 z-20 flex items-center gap-1 rounded-sm bg-smoke p-1.5 text-lime ">
                     {/* Pinned Icon */}
 
-                    {project.favorited && <StarIcon className="w-4 h-4 stroke-lime fill-lime" />}
+                    {project.sorting_favorited && (
+                      <StarIcon className="w-4 h-4 stroke-lime fill-lime" />
+                    )}
                   </div>
                 )}
 

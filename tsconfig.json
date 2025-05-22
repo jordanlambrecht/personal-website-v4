@@ -25,6 +25,7 @@
       "@components": ["./src/components/index.ts"],
       "@typography": ["./src/components/typography/index.ts"],
       "@utils": ["src/utils/index.ts"],
+      "@hooks": ["src/hooks/index.ts"],
       "@lib/*": ["./src/lib/*"]
     },
     "target": "ES2022"

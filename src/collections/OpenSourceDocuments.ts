@@ -1,5 +1,5 @@
 import type { CollectionConfig } from 'payload'
-
+import { slugField } from '@/fields/slug'
 export const OpenSourceDocuments: CollectionConfig = {
   slug: 'open-source-documents',
   admin: {
@@ -15,7 +15,7 @@ export const OpenSourceDocuments: CollectionConfig = {
     maxPerDoc: 10,
   },
   access: {
-    read: () => true, // Publicly readable
+    read: () => true,
   },
   fields: [
     {
@@ -107,6 +107,7 @@ export const OpenSourceDocuments: CollectionConfig = {
         // },
       },
     },
+    ...slugField(),
   ],
   timestamps: true,
 }
