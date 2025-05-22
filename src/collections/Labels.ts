@@ -26,6 +26,7 @@ export const Labels: CollectionConfig = {
           type: 'text',
           label: 'Category Name',
           required: true,
+          index: true,
           unique: true,
           admin: {
             width: '50%',

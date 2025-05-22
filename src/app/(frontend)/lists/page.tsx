@@ -18,10 +18,10 @@ export default async function ListsPage() {
   // --- Manually sort the array after fetching ---
   const sortedLists = listsData.docs.sort((a, b) => {
     // Prioritize pinned items (true comes first)
-    if (a.pinned && !b.pinned) {
+    if (a.sorting.pinned && !b.sorting.pinned) {
       return -1 // a comes first
     }
-    if (!a.pinned && b.pinned) {
+    if (!a.sorting.pinned && b.sorting.pinned) {
       return 1 // b comes first
     }
     // If both have the same pinned status, sort by publishedAt descending

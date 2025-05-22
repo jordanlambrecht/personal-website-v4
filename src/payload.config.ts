@@ -1,13 +1,11 @@
 // src/payload.config.ts
-import { s3Storage } from '@payloadcms/storage-s3'
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { seoPlugin } from '@payloadcms/plugin-seo'
-import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { plugins } from './plugins'
 
 import {
   Lists,
@@ -25,6 +23,8 @@ import {
 } from '@/collections'
 import { SiteSettings, SiteDistractions, SiteSocialLinks } from '@/globals'
 import { getServerSideURL } from '@/utils/getURL'
+
+import { s3Storage } from '@payloadcms/storage-s3'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -74,6 +74,7 @@ export default buildConfig({
   sharp,
   cors: [getServerSideURL()].filter(Boolean),
   plugins: [
+    ...plugins,
     s3Storage({
       collections: {
         media: {
@@ -90,30 +91,6 @@ export default buildConfig({
           secretAccessKey: process.env.S3_SECRET_ACCESS_KEY!,
         },
         region: process.env.S3_REGION!,
-      },
-    }),
-    seoPlugin({
-      collections: ['product-design', 'lists', 'other-projects'],
-      uploadsCollection: 'media',
-      generateTitle: ({ doc }) => `Website.com — ${doc.title}`,
-      generateDescription: ({ doc }) => doc.excerpt,
-    }),
-    redirectsPlugin({
-      collections: ['product-design', 'lists', 'other-projects'],
-      overrides: {
-        fields: ({ defaultFields }) => {
-          return [
-            ...defaultFields,
-            {
-              type: 'text',
-              name: 'customField',
-            },
-          ]
-        },
-      },
-      redirectTypes: ['301', '302'],
-      redirectTypeFieldOverride: {
-        label: 'Redirect Type (Overridden)',
       },
     }),
   ],

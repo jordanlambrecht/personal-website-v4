@@ -2,6 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const Links: CollectionConfig = {
   slug: 'links',
+  defaultPopulate: {
+    url: true,
+  },
   admin: {
     useAsTitle: 'title',
     description: 'Manage links.',

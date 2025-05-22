@@ -6,6 +6,7 @@
  * and re-run `payload generate:db-schema` to regenerate this file.
  */
 
+import type {} from '@payloadcms/db-postgres'
 import {
   pgTable,
   index,
@@ -17,6 +18,7 @@ import {
   jsonb,
   boolean,
   timestamp,
+  type AnyPgColumn,
   numeric,
   pgEnum,
 } from '@payloadcms/db-postgres/drizzle/pg-core'
@@ -73,6 +75,18 @@ export const enum__open_source_documents_v_version_status = pgEnum(
 )
 export const enum_redirects_to_type = pgEnum('enum_redirects_to_type', ['reference', 'custom'])
 export const enum_redirects_type = pgEnum('enum_redirects_type', ['301', '302'])
+export const enum_payload_jobs_log_task_slug = pgEnum('enum_payload_jobs_log_task_slug', [
+  'inline',
+  'schedulePublish',
+])
+export const enum_payload_jobs_log_state = pgEnum('enum_payload_jobs_log_state', [
+  'failed',
+  'succeeded',
+])
+export const enum_payload_jobs_task_slug = pgEnum('enum_payload_jobs_task_slug', [
+  'inline',
+  'schedulePublish',
+])
 
 export const product_design_tags = pgTable(
   'product_design_tags',
@@ -89,6 +103,30 @@ export const product_design_tags = pgTable(
       columns: [columns['_parentID']],
       foreignColumns: [product_design.id],
       name: 'product_design_tags_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const product_design_breadcrumbs = pgTable(
+  'product_design_breadcrumbs',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    doc: integer('doc_id').references(() => product_design.id, {
+      onDelete: 'set null',
+    }),
+    url: varchar('url'),
+    label: varchar('label'),
+  },
+  (columns) => ({
+    _orderIdx: index('product_design_breadcrumbs_order_idx').on(columns._order),
+    _parentIDIdx: index('product_design_breadcrumbs_parent_id_idx').on(columns._parentID),
+    product_design_breadcrumbs_doc_idx: index('product_design_breadcrumbs_doc_idx').on(columns.doc),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [product_design.id],
+      name: 'product_design_breadcrumbs_parent_id_fk',
     }).onDelete('cascade'),
   }),
 )
@@ -110,8 +148,8 @@ export const product_design = pgTable(
     'visibility_visibility-collection-page': boolean(
       'visibility_visibility_collection_page',
     ).default(true),
-    pinned: boolean('pinned').default(false),
-    favorited: boolean('favorited').default(false),
+    sorting_pinned: boolean('sorting_pinned').default(false),
+    sorting_favorited: boolean('sorting_favorited').default(false),
     enableMakerworld: boolean('enable_makerworld').default(false),
     enableDownload: boolean('enable_download').default(false),
     enablePurchase: boolean('enable_purchase').default(false),
@@ -129,9 +167,13 @@ export const product_design = pgTable(
       precision: 3,
     }),
     slug: varchar('slug'),
+    slugLock: boolean('slug_lock').default(true),
     meta_title: varchar('meta_title'),
     meta_description: varchar('meta_description'),
     meta_image: integer('meta_image_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    parent: integer('parent_id').references((): AnyPgColumn => product_design.id, {
       onDelete: 'set null',
     }),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
@@ -156,9 +198,11 @@ export const product_design = pgTable(
     product_design_project_type_idx: index('product_design_project_type_idx').on(
       columns.projectType,
     ),
+    product_design_slug_idx: uniqueIndex('product_design_slug_idx').on(columns.slug),
     product_design_meta_meta_image_idx: index('product_design_meta_meta_image_idx').on(
       columns.meta_image,
     ),
+    product_design_parent_idx: index('product_design_parent_idx').on(columns.parent),
     product_design_updated_at_idx: index('product_design_updated_at_idx').on(columns.updatedAt),
     product_design_created_at_idx: index('product_design_created_at_idx').on(columns.createdAt),
     product_design__status_idx: index('product_design__status_idx').on(columns._status),
@@ -212,6 +256,35 @@ export const _product_design_v_version_tags = pgTable(
   }),
 )
 
+export const _product_design_v_version_breadcrumbs = pgTable(
+  '_product_design_v_version_breadcrumbs',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: serial('id').primaryKey(),
+    doc: integer('doc_id').references(() => product_design.id, {
+      onDelete: 'set null',
+    }),
+    url: varchar('url'),
+    label: varchar('label'),
+    _uuid: varchar('_uuid'),
+  },
+  (columns) => ({
+    _orderIdx: index('_product_design_v_version_breadcrumbs_order_idx').on(columns._order),
+    _parentIDIdx: index('_product_design_v_version_breadcrumbs_parent_id_idx').on(
+      columns._parentID,
+    ),
+    _product_design_v_version_breadcrumbs_doc_idx: index(
+      '_product_design_v_version_breadcrumbs_doc_idx',
+    ).on(columns.doc),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [_product_design_v.id],
+      name: '_product_design_v_version_breadcrumbs_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
 export const _product_design_v = pgTable(
   '_product_design_v',
   {
@@ -234,8 +307,8 @@ export const _product_design_v = pgTable(
     'version_visibility_visibility-collection-page': boolean(
       'version_visibility_visibility_collection_page',
     ).default(true),
-    version_pinned: boolean('version_pinned').default(false),
-    version_favorited: boolean('version_favorited').default(false),
+    version_sorting_pinned: boolean('version_sorting_pinned').default(false),
+    version_sorting_favorited: boolean('version_sorting_favorited').default(false),
     version_enableMakerworld: boolean('version_enable_makerworld').default(false),
     version_enableDownload: boolean('version_enable_download').default(false),
     version_enablePurchase: boolean('version_enable_purchase').default(false),
@@ -253,9 +326,13 @@ export const _product_design_v = pgTable(
       precision: 3,
     }),
     version_slug: varchar('version_slug'),
+    version_slugLock: boolean('version_slug_lock').default(true),
     version_meta_title: varchar('version_meta_title'),
     version_meta_description: varchar('version_meta_description'),
     version_meta_image: integer('version_meta_image_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
+    version_parent: integer('version_parent_id').references(() => product_design.id, {
       onDelete: 'set null',
     }),
     version_updatedAt: timestamp('version_updated_at', {
@@ -295,9 +372,15 @@ export const _product_design_v = pgTable(
     _product_design_v_version_version_project_type_idx: index(
       '_product_design_v_version_version_project_type_idx',
     ).on(columns.version_projectType),
+    _product_design_v_version_version_slug_idx: index(
+      '_product_design_v_version_version_slug_idx',
+    ).on(columns.version_slug),
     _product_design_v_version_meta_version_meta_image_idx: index(
       '_product_design_v_version_meta_version_meta_image_idx',
     ).on(columns.version_meta_image),
+    _product_design_v_version_version_parent_idx: index(
+      '_product_design_v_version_version_parent_idx',
+    ).on(columns.version_parent),
     _product_design_v_version_version_updated_at_idx: index(
       '_product_design_v_version_version_updated_at_idx',
     ).on(columns.version_updatedAt),
@@ -386,15 +469,16 @@ export const other_projects = pgTable(
     projectLabel: integer('project_label_id').references(() => labels.id, {
       onDelete: 'set null',
     }),
-    pinned: boolean('pinned'),
-    favorited: boolean('favorited').default(false),
     projectLink: varchar('project_link'),
+    sorting_pinned: boolean('sorting_pinned'),
+    sorting_favorited: boolean('sorting_favorited').default(false),
     dateCompleted: timestamp('date_completed', {
       mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
     slug: varchar('slug'),
+    slugLock: boolean('slug_lock').default(true),
     meta_title: varchar('meta_title'),
     meta_description: varchar('meta_description'),
     meta_image: integer('meta_image_id').references(() => media.id, {
@@ -419,6 +503,7 @@ export const other_projects = pgTable(
     other_projects_project_label_idx: index('other_projects_project_label_idx').on(
       columns.projectLabel,
     ),
+    other_projects_slug_idx: uniqueIndex('other_projects_slug_idx').on(columns.slug),
     other_projects_meta_meta_image_idx: index('other_projects_meta_meta_image_idx').on(
       columns.meta_image,
     ),
@@ -500,15 +585,16 @@ export const _other_projects_v = pgTable(
     version_projectLabel: integer('version_project_label_id').references(() => labels.id, {
       onDelete: 'set null',
     }),
-    version_pinned: boolean('version_pinned'),
-    version_favorited: boolean('version_favorited').default(false),
     version_projectLink: varchar('version_project_link'),
+    version_sorting_pinned: boolean('version_sorting_pinned'),
+    version_sorting_favorited: boolean('version_sorting_favorited').default(false),
     version_dateCompleted: timestamp('version_date_completed', {
       mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
     version_slug: varchar('version_slug'),
+    version_slugLock: boolean('version_slug_lock').default(true),
     version_meta_title: varchar('version_meta_title'),
     version_meta_description: varchar('version_meta_description'),
     version_meta_image: integer('version_meta_image_id').references(() => media.id, {
@@ -548,6 +634,9 @@ export const _other_projects_v = pgTable(
     _other_projects_v_version_version_project_label_idx: index(
       '_other_projects_v_version_version_project_label_idx',
     ).on(columns.version_projectLabel),
+    _other_projects_v_version_version_slug_idx: index(
+      '_other_projects_v_version_version_slug_idx',
+    ).on(columns.version_slug),
     _other_projects_v_version_meta_version_meta_image_idx: index(
       '_other_projects_v_version_meta_version_meta_image_idx',
     ).on(columns.version_meta_image),
@@ -744,16 +833,16 @@ export const lists = pgTable(
   'lists',
   {
     id: serial('id').primaryKey(),
-    emoji: varchar('emoji'),
-    title: varchar('title'),
-    subheader: varchar('subheader'),
-    things: jsonb('things'),
     publishedAt: timestamp('published_at', { mode: 'string', withTimezone: true, precision: 3 }),
+    title: varchar('title'),
     images: integer('images_id').references(() => media.id, {
       onDelete: 'set null',
     }),
-    pinned: boolean('pinned').default(false),
-    favorited: boolean('favorited').default(false),
+    content_emoji: varchar('content_emoji'),
+    content_subheader: varchar('content_subheader'),
+    content_things: jsonb('content_things'),
+    sorting_pinned: boolean('sorting_pinned').default(false),
+    sorting_favorited: boolean('sorting_favorited').default(false),
     'visibility_visibility-home': boolean('visibility_visibility_home').default(true),
     'visibility_visibility-collection-page': boolean(
       'visibility_visibility_collection_page',
@@ -761,6 +850,8 @@ export const lists = pgTable(
     projectType: integer('project_type_id').references(() => labels.id, {
       onDelete: 'set null',
     }),
+    slug: varchar('slug'),
+    slugLock: boolean('slug_lock').default(true),
     meta_title: varchar('meta_title'),
     meta_description: varchar('meta_description'),
     meta_image: integer('meta_image_id').references(() => media.id, {
@@ -783,6 +874,7 @@ export const lists = pgTable(
       'lists_visibility_visibility_visibility_collection_page_idx',
     ).on(columns['visibility_visibility-collection-page']),
     lists_project_type_idx: index('lists_project_type_idx').on(columns.projectType),
+    lists_slug_idx: uniqueIndex('lists_slug_idx').on(columns.slug),
     lists_meta_meta_image_idx: index('lists_meta_meta_image_idx').on(columns.meta_image),
     lists_updated_at_idx: index('lists_updated_at_idx').on(columns.updatedAt),
     lists_created_at_idx: index('lists_created_at_idx').on(columns.createdAt),
@@ -797,20 +889,20 @@ export const _lists_v = pgTable(
     parent: integer('parent_id').references(() => lists.id, {
       onDelete: 'set null',
     }),
-    version_emoji: varchar('version_emoji'),
-    version_title: varchar('version_title'),
-    version_subheader: varchar('version_subheader'),
-    version_things: jsonb('version_things'),
     version_publishedAt: timestamp('version_published_at', {
       mode: 'string',
       withTimezone: true,
       precision: 3,
     }),
+    version_title: varchar('version_title'),
     version_images: integer('version_images_id').references(() => media.id, {
       onDelete: 'set null',
     }),
-    version_pinned: boolean('version_pinned').default(false),
-    version_favorited: boolean('version_favorited').default(false),
+    version_content_emoji: varchar('version_content_emoji'),
+    version_content_subheader: varchar('version_content_subheader'),
+    version_content_things: jsonb('version_content_things'),
+    version_sorting_pinned: boolean('version_sorting_pinned').default(false),
+    version_sorting_favorited: boolean('version_sorting_favorited').default(false),
     'version_visibility_visibility-home': boolean('version_visibility_visibility_home').default(
       true,
     ),
@@ -820,6 +912,8 @@ export const _lists_v = pgTable(
     version_projectType: integer('version_project_type_id').references(() => labels.id, {
       onDelete: 'set null',
     }),
+    version_slug: varchar('version_slug'),
+    version_slugLock: boolean('version_slug_lock').default(true),
     version_meta_title: varchar('version_meta_title'),
     version_meta_description: varchar('version_meta_description'),
     version_meta_image: integer('version_meta_image_id').references(() => media.id, {
@@ -859,6 +953,9 @@ export const _lists_v = pgTable(
     _lists_v_version_version_project_type_idx: index(
       '_lists_v_version_version_project_type_idx',
     ).on(columns.version_projectType),
+    _lists_v_version_version_slug_idx: index('_lists_v_version_version_slug_idx').on(
+      columns.version_slug,
+    ),
     _lists_v_version_meta_version_meta_image_idx: index(
       '_lists_v_version_meta_version_meta_image_idx',
     ).on(columns.version_meta_image),
@@ -971,6 +1068,13 @@ export const open_source_documents = pgTable(
     documentLink: integer('document_link_id').references(() => links.id, {
       onDelete: 'set null',
     }),
+    slug: varchar('slug'),
+    slugLock: boolean('slug_lock').default(true),
+    meta_title: varchar('meta_title'),
+    meta_description: varchar('meta_description'),
+    meta_image: integer('meta_image_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
@@ -992,6 +1096,10 @@ export const open_source_documents = pgTable(
     open_source_documents_document_link_idx: index('open_source_documents_document_link_idx').on(
       columns.documentLink,
     ),
+    open_source_documents_slug_idx: uniqueIndex('open_source_documents_slug_idx').on(columns.slug),
+    open_source_documents_meta_meta_image_idx: index(
+      'open_source_documents_meta_meta_image_idx',
+    ).on(columns.meta_image),
     open_source_documents_updated_at_idx: index('open_source_documents_updated_at_idx').on(
       columns.updatedAt,
     ),
@@ -1064,6 +1172,13 @@ export const _open_source_documents_v = pgTable(
     version_documentLink: integer('version_document_link_id').references(() => links.id, {
       onDelete: 'set null',
     }),
+    version_slug: varchar('version_slug'),
+    version_slugLock: boolean('version_slug_lock').default(true),
+    version_meta_title: varchar('version_meta_title'),
+    version_meta_description: varchar('version_meta_description'),
+    version_meta_image: integer('version_meta_image_id').references(() => media.id, {
+      onDelete: 'set null',
+    }),
     version_updatedAt: timestamp('version_updated_at', {
       mode: 'string',
       withTimezone: true,
@@ -1102,6 +1217,12 @@ export const _open_source_documents_v = pgTable(
     _open_source_documents_v_version_version_document_link_idx: index(
       '_open_source_documents_v_version_version_document_link_idx',
     ).on(columns.version_documentLink),
+    _open_source_documents_v_version_version_slug_idx: index(
+      '_open_source_documents_v_version_version_slug_idx',
+    ).on(columns.version_slug),
+    _open_source_documents_v_version_meta_version_meta_image_idx: index(
+      '_open_source_documents_v_version_meta_version_meta_image_idx',
+    ).on(columns.version_meta_image),
     _open_source_documents_v_version_version_updated_at_idx: index(
       '_open_source_documents_v_version_version_updated_at_idx',
     ).on(columns.version_updatedAt),
@@ -1163,7 +1284,6 @@ export const redirects = pgTable(
     to_type: enum_redirects_to_type('to_type').default('reference'),
     to_url: varchar('to_url'),
     type: enum_redirects_type('type').notNull(),
-    customField: varchar('custom_field'),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
@@ -1223,6 +1343,73 @@ export const redirects_rels = pgTable(
   }),
 )
 
+export const payload_jobs_log = pgTable(
+  'payload_jobs_log',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    executedAt: timestamp('executed_at', {
+      mode: 'string',
+      withTimezone: true,
+      precision: 3,
+    }).notNull(),
+    completedAt: timestamp('completed_at', {
+      mode: 'string',
+      withTimezone: true,
+      precision: 3,
+    }).notNull(),
+    taskSlug: enum_payload_jobs_log_task_slug('task_slug').notNull(),
+    taskID: varchar('task_i_d').notNull(),
+    input: jsonb('input'),
+    output: jsonb('output'),
+    state: enum_payload_jobs_log_state('state').notNull(),
+    error: jsonb('error'),
+  },
+  (columns) => ({
+    _orderIdx: index('payload_jobs_log_order_idx').on(columns._order),
+    _parentIDIdx: index('payload_jobs_log_parent_id_idx').on(columns._parentID),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [payload_jobs.id],
+      name: 'payload_jobs_log_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
+export const payload_jobs = pgTable(
+  'payload_jobs',
+  {
+    id: serial('id').primaryKey(),
+    input: jsonb('input'),
+    completedAt: timestamp('completed_at', { mode: 'string', withTimezone: true, precision: 3 }),
+    totalTried: numeric('total_tried').default('0'),
+    hasError: boolean('has_error').default(false),
+    error: jsonb('error'),
+    taskSlug: enum_payload_jobs_task_slug('task_slug'),
+    queue: varchar('queue').default('default'),
+    waitUntil: timestamp('wait_until', { mode: 'string', withTimezone: true, precision: 3 }),
+    processing: boolean('processing').default(false),
+    updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+    createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 })
+      .defaultNow()
+      .notNull(),
+  },
+  (columns) => ({
+    payload_jobs_completed_at_idx: index('payload_jobs_completed_at_idx').on(columns.completedAt),
+    payload_jobs_total_tried_idx: index('payload_jobs_total_tried_idx').on(columns.totalTried),
+    payload_jobs_has_error_idx: index('payload_jobs_has_error_idx').on(columns.hasError),
+    payload_jobs_task_slug_idx: index('payload_jobs_task_slug_idx').on(columns.taskSlug),
+    payload_jobs_queue_idx: index('payload_jobs_queue_idx').on(columns.queue),
+    payload_jobs_wait_until_idx: index('payload_jobs_wait_until_idx').on(columns.waitUntil),
+    payload_jobs_processing_idx: index('payload_jobs_processing_idx').on(columns.processing),
+    payload_jobs_updated_at_idx: index('payload_jobs_updated_at_idx').on(columns.updatedAt),
+    payload_jobs_created_at_idx: index('payload_jobs_created_at_idx').on(columns.createdAt),
+  }),
+)
+
 export const payload_locked_documents = pgTable(
   'payload_locked_documents',
   {
@@ -1268,6 +1455,7 @@ export const payload_locked_documents_rels = pgTable(
     'pb-artifact-tagsID': integer('pb_artifact_tags_id'),
     'open-source-documentsID': integer('open_source_documents_id'),
     redirectsID: integer('redirects_id'),
+    'payload-jobsID': integer('payload_jobs_id'),
   },
   (columns) => ({
     order: index('payload_locked_documents_rels_order_idx').on(columns.order),
@@ -1312,6 +1500,9 @@ export const payload_locked_documents_rels = pgTable(
     payload_locked_documents_rels_redirects_id_idx: index(
       'payload_locked_documents_rels_redirects_id_idx',
     ).on(columns.redirectsID),
+    payload_locked_documents_rels_payload_jobs_id_idx: index(
+      'payload_locked_documents_rels_payload_jobs_id_idx',
+    ).on(columns['payload-jobsID']),
     parentFk: foreignKey({
       columns: [columns['parent']],
       foreignColumns: [payload_locked_documents.id],
@@ -1381,6 +1572,11 @@ export const payload_locked_documents_rels = pgTable(
       columns: [columns['redirectsID']],
       foreignColumns: [redirects.id],
       name: 'payload_locked_documents_rels_redirects_fk',
+    }).onDelete('cascade'),
+    'payload-jobsIdFk': foreignKey({
+      columns: [columns['payload-jobsID']],
+      foreignColumns: [payload_jobs.id],
+      name: 'payload_locked_documents_rels_payload_jobs_fk',
     }).onDelete('cascade'),
   }),
 )
@@ -1559,6 +1755,21 @@ export const relations_product_design_tags = relations(product_design_tags, ({ o
     relationName: 'tags',
   }),
 }))
+export const relations_product_design_breadcrumbs = relations(
+  product_design_breadcrumbs,
+  ({ one }) => ({
+    _parentID: one(product_design, {
+      fields: [product_design_breadcrumbs._parentID],
+      references: [product_design.id],
+      relationName: 'breadcrumbs',
+    }),
+    doc: one(product_design, {
+      fields: [product_design_breadcrumbs.doc],
+      references: [product_design.id],
+      relationName: 'doc',
+    }),
+  }),
+)
 export const relations_product_design_rels = relations(product_design_rels, ({ one }) => ({
   parent: one(product_design, {
     fields: [product_design_rels.parent],
@@ -1595,6 +1806,14 @@ export const relations_product_design = relations(product_design, ({ one, many }
     references: [media.id],
     relationName: 'meta_image',
   }),
+  parent: one(product_design, {
+    fields: [product_design.parent],
+    references: [product_design.id],
+    relationName: 'parent',
+  }),
+  breadcrumbs: many(product_design_breadcrumbs, {
+    relationName: 'breadcrumbs',
+  }),
   _rels: many(product_design_rels, {
     relationName: '_rels',
   }),
@@ -1606,6 +1825,21 @@ export const relations__product_design_v_version_tags = relations(
       fields: [_product_design_v_version_tags._parentID],
       references: [_product_design_v.id],
       relationName: 'version_tags',
+    }),
+  }),
+)
+export const relations__product_design_v_version_breadcrumbs = relations(
+  _product_design_v_version_breadcrumbs,
+  ({ one }) => ({
+    _parentID: one(_product_design_v, {
+      fields: [_product_design_v_version_breadcrumbs._parentID],
+      references: [_product_design_v.id],
+      relationName: 'version_breadcrumbs',
+    }),
+    doc: one(product_design, {
+      fields: [_product_design_v_version_breadcrumbs.doc],
+      references: [product_design.id],
+      relationName: 'doc',
     }),
   }),
 )
@@ -1649,6 +1883,14 @@ export const relations__product_design_v = relations(_product_design_v, ({ one, 
     fields: [_product_design_v.version_meta_image],
     references: [media.id],
     relationName: 'version_meta_image',
+  }),
+  version_parent: one(product_design, {
+    fields: [_product_design_v.version_parent],
+    references: [product_design.id],
+    relationName: 'version_parent',
+  }),
+  version_breadcrumbs: many(_product_design_v_version_breadcrumbs, {
+    relationName: 'version_breadcrumbs',
   }),
   _rels: many(_product_design_v_rels, {
     relationName: '_rels',
@@ -1826,6 +2068,11 @@ export const relations_open_source_documents = relations(
       references: [links.id],
       relationName: 'documentLink',
     }),
+    meta_image: one(media, {
+      fields: [open_source_documents.meta_image],
+      references: [media.id],
+      relationName: 'meta_image',
+    }),
     _rels: many(open_source_documents_rels, {
       relationName: '_rels',
     }),
@@ -1869,6 +2116,11 @@ export const relations__open_source_documents_v = relations(
       references: [links.id],
       relationName: 'version_documentLink',
     }),
+    version_meta_image: one(media, {
+      fields: [_open_source_documents_v.version_meta_image],
+      references: [media.id],
+      relationName: 'version_meta_image',
+    }),
     _rels: many(_open_source_documents_v_rels, {
       relationName: '_rels',
     }),
@@ -1899,6 +2151,18 @@ export const relations_redirects_rels = relations(redirects_rels, ({ one }) => (
 export const relations_redirects = relations(redirects, ({ many }) => ({
   _rels: many(redirects_rels, {
     relationName: '_rels',
+  }),
+}))
+export const relations_payload_jobs_log = relations(payload_jobs_log, ({ one }) => ({
+  _parentID: one(payload_jobs, {
+    fields: [payload_jobs_log._parentID],
+    references: [payload_jobs.id],
+    relationName: 'log',
+  }),
+}))
+export const relations_payload_jobs = relations(payload_jobs, ({ many }) => ({
+  log: many(payload_jobs_log, {
+    relationName: 'log',
   }),
 }))
 export const relations_payload_locked_documents_rels = relations(
@@ -1973,6 +2237,11 @@ export const relations_payload_locked_documents_rels = relations(
       fields: [payload_locked_documents_rels.redirectsID],
       references: [redirects.id],
       relationName: 'redirects',
+    }),
+    'payload-jobsID': one(payload_jobs, {
+      fields: [payload_locked_documents_rels['payload-jobsID']],
+      references: [payload_jobs.id],
+      relationName: 'payload-jobs',
     }),
   }),
 )
@@ -2065,10 +2334,15 @@ type DatabaseSchema = {
   enum__open_source_documents_v_version_status: typeof enum__open_source_documents_v_version_status
   enum_redirects_to_type: typeof enum_redirects_to_type
   enum_redirects_type: typeof enum_redirects_type
+  enum_payload_jobs_log_task_slug: typeof enum_payload_jobs_log_task_slug
+  enum_payload_jobs_log_state: typeof enum_payload_jobs_log_state
+  enum_payload_jobs_task_slug: typeof enum_payload_jobs_task_slug
   product_design_tags: typeof product_design_tags
+  product_design_breadcrumbs: typeof product_design_breadcrumbs
   product_design: typeof product_design
   product_design_rels: typeof product_design_rels
   _product_design_v_version_tags: typeof _product_design_v_version_tags
+  _product_design_v_version_breadcrumbs: typeof _product_design_v_version_breadcrumbs
   _product_design_v: typeof _product_design_v
   _product_design_v_rels: typeof _product_design_v_rels
   other_projects_tags: typeof other_projects_tags
@@ -2093,6 +2367,8 @@ type DatabaseSchema = {
   _open_source_documents_v_rels: typeof _open_source_documents_v_rels
   redirects: typeof redirects
   redirects_rels: typeof redirects_rels
+  payload_jobs_log: typeof payload_jobs_log
+  payload_jobs: typeof payload_jobs
   payload_locked_documents: typeof payload_locked_documents
   payload_locked_documents_rels: typeof payload_locked_documents_rels
   payload_preferences: typeof payload_preferences
@@ -2105,9 +2381,11 @@ type DatabaseSchema = {
   site_social_links_social_links: typeof site_social_links_social_links
   site_social_links: typeof site_social_links
   relations_product_design_tags: typeof relations_product_design_tags
+  relations_product_design_breadcrumbs: typeof relations_product_design_breadcrumbs
   relations_product_design_rels: typeof relations_product_design_rels
   relations_product_design: typeof relations_product_design
   relations__product_design_v_version_tags: typeof relations__product_design_v_version_tags
+  relations__product_design_v_version_breadcrumbs: typeof relations__product_design_v_version_breadcrumbs
   relations__product_design_v_rels: typeof relations__product_design_v_rels
   relations__product_design_v: typeof relations__product_design_v
   relations_other_projects_tags: typeof relations_other_projects_tags
@@ -2132,6 +2410,8 @@ type DatabaseSchema = {
   relations__open_source_documents_v: typeof relations__open_source_documents_v
   relations_redirects_rels: typeof relations_redirects_rels
   relations_redirects: typeof relations_redirects
+  relations_payload_jobs_log: typeof relations_payload_jobs_log
+  relations_payload_jobs: typeof relations_payload_jobs
   relations_payload_locked_documents_rels: typeof relations_payload_locked_documents_rels
   relations_payload_locked_documents: typeof relations_payload_locked_documents
   relations_payload_preferences_rels: typeof relations_payload_preferences_rels

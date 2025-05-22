@@ -80,6 +80,7 @@ export interface Config {
     'pb-artifact-tags': PbArtifactTag;
     'open-source-documents': OpenSourceDocument;
     redirects: Redirect;
+    'payload-jobs': PayloadJob;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -112,6 +113,7 @@ export interface Config {
     'pb-artifact-tags': PbArtifactTagsSelect<false> | PbArtifactTagsSelect<true>;
     'open-source-documents': OpenSourceDocumentsSelect<false> | OpenSourceDocumentsSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
@@ -134,7 +136,13 @@ export interface Config {
     collection: 'users';
   };
   jobs: {
-    tasks: unknown;
+    tasks: {
+      schedulePublish: TaskSchedulePublish;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
     workflows: unknown;
   };
 }
@@ -214,14 +222,16 @@ export interface ProductDesign {
     'visibility-home'?: boolean | null;
     'visibility-collection-page'?: boolean | null;
   };
-  /**
-   * Pinned items appear first on the main page.
-   */
-  pinned?: boolean | null;
-  /**
-   * Mark this list as a favorite.
-   */
-  favorited?: boolean | null;
+  sorting?: {
+    /**
+     * Pinned items appear first on the main page.
+     */
+    pinned?: boolean | null;
+    /**
+     * Mark this list as a favorite.
+     */
+    favorited?: boolean | null;
+  };
   enableMakerworld?: boolean | null;
   enableDownload?: boolean | null;
   enablePurchase?: boolean | null;
@@ -242,10 +252,8 @@ export interface ProductDesign {
         id?: string | null;
       }[]
     | null;
-  /**
-   * URL-friendly version of the title (auto-generated if left blank)
-   */
   slug?: string | null;
+  slugLock?: boolean | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -254,6 +262,15 @@ export interface ProductDesign {
      */
     image?: (number | null) | Media;
   };
+  parent?: (number | null) | ProductDesign;
+  breadcrumbs?:
+    | {
+        doc?: (number | null) | ProductDesign;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -388,15 +405,17 @@ export interface OtherProject {
     'visibility-collection-page'?: boolean | null;
   };
   projectLabel: number | Label;
-  pinned?: boolean | null;
-  /**
-   * Mark this list as a favorite.
-   */
-  favorited?: boolean | null;
   /**
    * Link to the project (GitHub, etc.)
    */
   projectLink?: string | null;
+  sorting?: {
+    pinned?: boolean | null;
+    /**
+     * Mark this list as a favorite.
+     */
+    favorited?: boolean | null;
+  };
   dateCompleted?: string | null;
   tags?:
     | {
@@ -404,10 +423,8 @@ export interface OtherProject {
         id?: string | null;
       }[]
     | null;
-  /**
-   * URL-friendly version of the title (auto-generated if left blank)
-   */
   slug?: string | null;
+  slugLock?: boolean | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -476,6 +493,16 @@ export interface OpenSourceDocument {
    * Provide a link to the document (e.g., Google Drive, Dropbox).
    */
   documentLink?: (number | null) | Link;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
@@ -580,38 +607,41 @@ export interface User {
  */
 export interface List {
   id: number;
-  /**
-   * Optional: An emoji to display as an icon.
-   */
-  emoji?: string | null;
-  title: string;
-  subheader?: string | null;
-  things?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
-  content?: {};
   publishedAt?: string | null;
+  title: string;
   images?: (number | null) | Media;
-  /**
-   * Pinned lists may be displayed more prominently.
-   */
-  pinned?: boolean | null;
-  /**
-   * Mark this list as a favorite.
-   */
-  favorited?: boolean | null;
+  content?: {
+    /**
+     * Optional: An emoji to display as an icon.
+     */
+    emoji?: string | null;
+    subheader?: string | null;
+    things?: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    } | null;
+  };
+  sorting?: {
+    /**
+     * Pinned lists may be displayed more prominently.
+     */
+    pinned?: boolean | null;
+    /**
+     * Mark this list as a favorite.
+     */
+    favorited?: boolean | null;
+  };
   visibility?: {
     'visibility-home'?: boolean | null;
     'visibility-collection-page'?: boolean | null;
@@ -620,6 +650,8 @@ export interface List {
    * Automatically assigned to the "List" project type.
    */
   projectType?: (number | null) | Label;
+  slug?: string | null;
+  slugLock?: boolean | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -638,6 +670,9 @@ export interface List {
  */
 export interface Redirect {
   id: number;
+  /**
+   * You will need to rebuild the website when changing this field.
+   */
   from: string;
   to?: {
     type?: ('reference' | 'custom') | null;
@@ -657,7 +692,98 @@ export interface Redirect {
     url?: string | null;
   };
   type: '301' | '302';
-  customField?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'schedulePublish';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -719,6 +845,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'redirects';
         value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'payload-jobs';
+        value: number | PayloadJob;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -781,8 +911,12 @@ export interface ProductDesignSelect<T extends boolean = true> {
         'visibility-home'?: T;
         'visibility-collection-page'?: T;
       };
-  pinned?: T;
-  favorited?: T;
+  sorting?:
+    | T
+    | {
+        pinned?: T;
+        favorited?: T;
+      };
   enableMakerworld?: T;
   enableDownload?: T;
   enablePurchase?: T;
@@ -798,12 +932,22 @@ export interface ProductDesignSelect<T extends boolean = true> {
         id?: T;
       };
   slug?: T;
+  slugLock?: T;
   meta?:
     | T
     | {
         title?: T;
         description?: T;
         image?: T;
+      };
+  parent?: T;
+  breadcrumbs?:
+    | T
+    | {
+        doc?: T;
+        url?: T;
+        label?: T;
+        id?: T;
       };
   updatedAt?: T;
   createdAt?: T;
@@ -829,9 +973,13 @@ export interface OtherProjectsSelect<T extends boolean = true> {
         'visibility-collection-page'?: T;
       };
   projectLabel?: T;
-  pinned?: T;
-  favorited?: T;
   projectLink?: T;
+  sorting?:
+    | T
+    | {
+        pinned?: T;
+        favorited?: T;
+      };
   dateCompleted?: T;
   tags?:
     | T
@@ -840,6 +988,7 @@ export interface OtherProjectsSelect<T extends boolean = true> {
         id?: T;
       };
   slug?: T;
+  slugLock?: T;
   meta?:
     | T
     | {
@@ -944,15 +1093,22 @@ export interface DocsSelect<T extends boolean = true> {
  * via the `definition` "lists_select".
  */
 export interface ListsSelect<T extends boolean = true> {
-  emoji?: T;
-  title?: T;
-  subheader?: T;
-  things?: T;
-  content?: T | {};
   publishedAt?: T;
+  title?: T;
   images?: T;
-  pinned?: T;
-  favorited?: T;
+  content?:
+    | T
+    | {
+        emoji?: T;
+        subheader?: T;
+        things?: T;
+      };
+  sorting?:
+    | T
+    | {
+        pinned?: T;
+        favorited?: T;
+      };
   visibility?:
     | T
     | {
@@ -960,6 +1116,8 @@ export interface ListsSelect<T extends boolean = true> {
         'visibility-collection-page'?: T;
       };
   projectType?: T;
+  slug?: T;
+  slugLock?: T;
   meta?:
     | T
     | {
@@ -1017,6 +1175,15 @@ export interface OpenSourceDocumentsSelect<T extends boolean = true> {
   resourceType?: T;
   documentFile?: T;
   documentLink?: T;
+  slug?: T;
+  slugLock?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
@@ -1035,7 +1202,37 @@ export interface RedirectsSelect<T extends boolean = true> {
         url?: T;
       };
   type?: T;
-  customField?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1196,6 +1393,23 @@ export interface SiteSocialLinksSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSchedulePublish".
+ */
+export interface TaskSchedulePublish {
+  input: {
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
+    doc?: {
+      relationTo: 'lists';
+      value: number | List;
+    } | null;
+    global?: string | null;
+    user?: (number | null) | User;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

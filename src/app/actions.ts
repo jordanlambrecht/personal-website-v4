@@ -112,8 +112,8 @@ export async function fetchProjectsPage(
       image: typeof item.image === 'object' ? item.image : null,
       collectionSlug: 'product-design' as const,
       date: item.datePublished,
-      pinned: item.pinned,
-      favorited: item.favorited,
+      pinned: item.sorting_pinned,
+      favorited: item.sorting_favorited,
       label: productDesignLabel || null,
     })),
     ...otherProjects.docs.map((item) => ({
@@ -122,8 +122,8 @@ export async function fetchProjectsPage(
       image: typeof item.image === 'object' ? item.image : null,
       collectionSlug: 'other-projects' as const,
       date: item.dateCompleted,
-      pinned: item.pinned,
-      favorited: item.favorited,
+      pinned: item.sorting_pinned,
+      favorited: item.sorting_favorited,
       label:
         typeof item.projectLabel === 'number'
           ? allLabels.find((l) => l.id === item.projectLabel) || null
@@ -137,8 +137,8 @@ export async function fetchProjectsPage(
       image: null,
       collectionSlug: 'lists' as const,
       date: item.publishedAt,
-      pinned: item.pinned,
-      favorited: item.favorited,
+      pinned: item.sorting_pinned,
+      favorited: item.sorting_favorited,
       label: listLabel || null,
     })),
   ]
