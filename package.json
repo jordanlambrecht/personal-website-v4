@@ -28,7 +28,7 @@
     "@formkit/auto-animate": "^0.8.2",
     "@innovixx/payload-color-picker-field": "^2.0.2",
     "@payloadcms/db-postgres": "^3.38.0",
-    "@payloadcms/next": "^3.38.0",
+    "@payloadcms/next": "^3.44.0",
     "@payloadcms/plugin-redirects": "^3.38.0",
     "@payloadcms/plugin-seo": "^3.38.0",
     "@payloadcms/richtext-lexical": "^3.38.0",
