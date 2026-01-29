@@ -42,7 +42,7 @@
     "date-fns": "^4.1.0",
     "framer-motion": "^12.12.1",
     "lucide-react": "0.511.0",
-    "next": "^15.3.2",
+    "next": "^16.1.5",
     "next-plausible": "^3.12.4",
     "next-sitemap": "^4.2.3",
     "payload": "^3.38.0",
